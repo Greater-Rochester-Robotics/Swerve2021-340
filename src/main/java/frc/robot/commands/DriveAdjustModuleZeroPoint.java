@@ -8,18 +8,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 
 public class DriveAdjustModuleZeroPoint extends CommandBase {
   /**
    * Creates a new DriveAdjustModuleZeroPoint.
-   */
+   * 
+   * Each module has a different 0 angle. To solve this, physically angle each module straight. 
+   * Then, tell all modules its current position is at 0. 
+   */ 
   public DriveAdjustModuleZeroPoint() {
-    //TODO:addRequirements use addRequirements() and pull the subSystem object from RobotContainer
+    addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    // Call the stop all command onto all the modules so they can freely spin.
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

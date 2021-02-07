@@ -205,4 +205,13 @@ public class SwerveDrive extends SubsystemBase {
     
   }
 
+  /**
+   * Lets all the modules spin freely.
+   */
+  public void stopAllModules(){
+    for (int i=0; i<4; i++){
+      swerveModules[i].stopAll();
+    }
+  }
+
 }

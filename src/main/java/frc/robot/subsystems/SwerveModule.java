@@ -48,8 +48,6 @@ public class SwerveModule{
      * @param canCoderID The CAN ID of the rotation sensor 
      */  
     public SwerveModule(int driveMotorID,int rotationMotorID,int canCoderID){
-        //TODO:change this to a TalonFX, check all uses of driveMotor for the right syntax
-        //TODO:ask Rob if this is done
         driveMotor = new TalonFX(driveMotorID);
         
         rotationMotor = new CANSparkMax(rotationMotorID , MotorType.kBrushless);
@@ -114,7 +112,7 @@ public class SwerveModule{
         //rotationEncoder.
     }
 
-    //TODO:create a means of setting the value of the CANCoder(use setPosition of the CANCoder)
+    //TODO:create a means of setting the value of the CANCoder(use configMag of the CANCoder)
 
     /**
      * @return the position of the module in degrees, should limit from -180 to 180

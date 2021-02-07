@@ -24,7 +24,7 @@ public class DriveOneModule extends CommandBase {
   public DriveOneModule(int moduleNumber) {
     //use addRequirements() and pull the subSystem object from RobotContainer
     addRequirements(RobotContainer.swerveDrive);
-    //assigns the passed module number to the field of similiar name
+    //assigns the passed module number to the field of similar name
     moduleNum = moduleNumber;
 
 
