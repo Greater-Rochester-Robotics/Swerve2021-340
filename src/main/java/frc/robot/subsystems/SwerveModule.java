@@ -106,13 +106,21 @@ public class SwerveModule{
         return driveMotor.getSensorCollection().getIntegratedSensorVelocity();
     }
 
-    //TODO:create a reset for the driveMotor encoder
-
-    public void resetEncoder(){
-        //rotationEncoder.
+    //TODO: creates a reset for the driveMotor encoder
+    //Is this what Rob meant?
+    public void resetDriveMotorEncoder(){
+        setDriveMotor(0.0);
     }
 
-    //TODO:create a means of setting the value of the CANCoder(use configMag of the CANCoder)
+    
+    /**
+     * Set the angle of the rotation sensor
+     * 
+     * @param value a number between -180 and 180, where 0 is straight ahead
+     */
+    public void setRotateSensor(double value){
+        rotateSensor.configMagnetOffset(value, 0);
+    }
 
     /**
      * @return the position of the module in degrees, should limit from -180 to 180

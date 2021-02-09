@@ -8,19 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.RobotContainer;
 
 public class DriveResetAllModulePositionsToZero extends InstantCommand {
   /**
    * Creates a new DriveResetAllModulePositionsToZero.
    */
   public DriveResetAllModulePositionsToZero() {
-    //TODO:addRequirements use addRequirements() and pull the subSystem object from RobotContainer
+    addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //TODO:Call the reset function to zero all of the modules 
+    
   }
 
 }

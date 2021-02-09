@@ -7,8 +7,10 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.SwerveDrive.kSwerveModule;
 
 public class DriveAdjustModuleZeroPoint extends CommandBase {
   /**
@@ -31,18 +33,24 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO:read the position of all modules and print them
+    //read the position of all modules and print them
+    double[] modAngles = RobotContainer.swerveDrive.getAllModuleAngles();
+    //TODO: test smartdashboard outputs
+    SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO:Call the reset function to zero all of the modules 
+    //DriveResetAllModulePositionsToZero should handle this 
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;//TODO: Creat a condition to end this command, so when that condition is met, the modules are zerooed
+    return false;
   }
 }

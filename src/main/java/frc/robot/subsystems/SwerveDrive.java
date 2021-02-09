@@ -38,7 +38,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public enum kSwerveModule{
     frontLeft(0) , rearLeft(1) , rearRight(2) , frontRight(3);
-    private int num;
+    public int num;
     private kSwerveModule(int number){
       num = number;
     }
@@ -51,7 +51,7 @@ public class SwerveDrive extends SubsystemBase {
    * Creates a new SwerveDrive.
    */
   public SwerveDrive() {
-    //TODO:add CANCoder adddress as third param, already named as rotation sensor in constants
+    //adds CANCoder address as third param, already named as rotation sensor in constants
     // Constructs the swerve modules 
     frontLeft = new SwerveModule(Constants.FRONT_LEFT_MOVE_MOTOR, Constants.FRONT_LEFT_ROTATE_MOTOR, Constants.FRONT_LEFT_ROTATE_SENSOR);
     rearLeft = new SwerveModule(Constants.REAR_LEFT_MOVE_MOTOR, Constants.REAR_LEFT_ROTATE_MOTOR, Constants.REAR_LEFT_ROTATE_SENSOR);
@@ -212,6 +212,18 @@ public class SwerveDrive extends SubsystemBase {
     for (int i=0; i<4; i++){
       swerveModules[i].stopAll();
     }
+  }
+
+  public double[] getAllModuleAngles(){
+    double[] moduleAngles = new double[4];
+    for(int i=0; i<4; i++){
+      moduleAngles[i]=swerveModules[i].getPosInDeg();
+    }
+    return moduleAngles;
+  }
+
+  public void resetAllModules(){
+    
   }
 
 }
