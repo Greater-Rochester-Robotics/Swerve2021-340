@@ -18,6 +18,7 @@ public class DriveFieldCentric extends CommandBase {
    */
   public DriveFieldCentric() {
     // Use addRequirements() here to declare subsystem dependencies.
+    //TODO:AddRewuirements, this uses the drive, so we need to say it
   }
 
   // Called when the command is initially scheduled.

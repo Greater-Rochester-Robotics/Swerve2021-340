@@ -49,10 +49,15 @@ public class SwerveModule{
      */  
     public SwerveModule(int driveMotorID,int rotationMotorID,int canCoderID){
         driveMotor = new TalonFX(driveMotorID);
+        //TODO:Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
         
         rotationMotor = new CANSparkMax(rotationMotorID , MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();//reset the motor controller, wipe old stuff
-    
+        //TODO:set rotationMotor brake mode, so motors stop on a dime
+        //TODO:enable voltage compensation mode 12V for the rotation motor
+        //TODO:Set smartCurrentLimit for the rotationMotor maybe 40A?
+        //TODO:Set motor inverted(set to true)
+
         rotateSensor = new CANCoder(canCoderID);
         rotateSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
         // rotationSensor = rotationMotor.getAnalog(CANAnalog.AnalogMode.kAbsolute);//switch to the CANCoder requires not doing this
@@ -68,20 +73,55 @@ public class SwerveModule{
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
         rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
+        //TODO:use setOutput on the rotatePID(this will make sure we don't stall the motor, or give tooo much power)
     }
 
+    /**
+     * This method is used to pull and compute the currentAngle
+     *  so the sensor is called once, additionally position of
+     *  the module is computed here.
+     */
     protected synchronized void periodicThread(){
-        
+        //this.currentDegAngle = rotateSensor.getAbsolutePosition();
+        //this.currentAngle = Math.toRadians(this.currentDegAngle);
         this.currentAngle = Math.toRadians(rotateSensor.getAbsolutePosition());
+        //average the angle between this cycle and the previous
         double averAngle = (this.currentAngle + this.prevAngle)/2;
+        //pull the distance travelled by the driveMotor
         this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition();
+        //find the distance travelled since the previous cycle
         double deltaPos = this.currentPosition - this.prevPosition;
         
-        this.positionArray[0]+= Math.sin(averAngle)*deltaPos;
-        this.positionArray[1]+= Math.cos(averAngle)*deltaPos;
+        //add the distance travelled, in each the X and Y, too the total distance for this module
+        this.positionArray[0]+= Math.cos(averAngle)*deltaPos;
+        this.positionArray[1]+= Math.sin(averAngle)*deltaPos;
 
+        //store the current distance and angle for the next cycle
         this.prevAngle = this.currentAngle;
         this.prevPosition = this.currentPosition;
+    }
+
+    /**
+     * This method returns the array of distance traveled by the module in X and Y
+     * @return distance in X(0) and Y(1), units based on 
+     */
+    public double[] getModulePosition(){
+        return this.positionArray;
+    }
+    
+    /**
+     * Resets the positional array to [0.0, 0.0]
+     */
+    public void resetPositionArray(){
+        this.resetPositionArray(new double[]{0.0,0.0});
+    }
+
+    /**
+     * Resets the positional array to the input posArray
+     * @param posArray a two value array where X is the first value and Y is the second
+     */
+    public void resetPositionArray(double[] posArray){
+        this.positionArray = posArray;
     }
 
     /**
@@ -94,7 +134,6 @@ public class SwerveModule{
     }
 
     /**
-     * 
      * @return the distance the drive wheel has traveled
      */
     public double getDriveDistance(){
@@ -102,19 +141,30 @@ public class SwerveModule{
         return driveMotor.getSensorCollection().getIntegratedSensorPosition();
     }
 
+    /**
+     * 
+     * @return speed of the drive wheel
+     */
     public double getDriveVelocity(){
         return driveMotor.getSensorCollection().getIntegratedSensorVelocity();
     }
 
-    //TODO: creates a reset for the driveMotor encoder
-    //Is this what Rob meant?
+    /**
+     * A method to set the position of the drive encoder to zero
+     * essentially resetting it.
+     */
     public void resetDriveMotorEncoder(){
-        setDriveMotor(0.0);
+        //Is this what Rob meant? Rob:No
+        setDriveMotor(0.0);//this code sets the motor speed to 0.0
+        //TODO: create a reset for the driveMotor encoder, so set
+        // the motor to 0.0, do so by using .setSelectedSensorPosition()
     }
 
     
     /**
-     * Set the angle of the rotation sensor
+     * The CANCoder has a mechanical zero point, this is hard to move,
+     *  so this methood is used to set the offset of the CANCoder so
+     *  we can dictate the zero position.
      * 
      * @param value a number between -180 and 180, where 0 is straight ahead
      */
@@ -127,6 +177,16 @@ public class SwerveModule{
      */
     public double getPosInDeg(){ 
         return rotateSensor.getAbsolutePosition();
+    }
+
+    /**
+     * this is a function meant for testing by getting the count from
+     *  the rotational encoder which is internal to the NEO550.
+     * 
+     * @return the encoder count(no units, naturally just the count)
+     */
+    public double getEncCount(){
+        return rotationEncoder.getPosition();
     }
 
     /**
@@ -154,16 +214,6 @@ public class SwerveModule{
         // }else{
         //     return rotationSensor.getPosition() - Math.PI;
         // }
-    }
-
-    /**
-     * this is a function meant for testing by getting the count from
-     *  the rotational encoder which is internal to the NEO550.
-     * 
-     * @return the encoder count(no units, naturally just the count)
-     */
-    public double getEncCount(){
-        return rotationEncoder.getPosition();
     }
 
     /**
@@ -209,10 +259,14 @@ public class SwerveModule{
     }
 
     /**
-     * this method is used to stop the module completely.
+     * This method is used to stop the module completely. The
+     *  drive motor is switched to percent voltage and and 
+     *  output of 0.0 percent volts. The rotation motor's 
+     *  PIDController is set to DutyCyclevoltage control mode,
+     *  and output of 0.0% output
      */
     public void stopAll(){
         driveMotor.set(TalonFXControlMode.PercentOutput,0.0);
-        rotatePID.setReference(0.0,ControlType.kVoltage);
+        rotatePID.setReference(0.0,ControlType.kDutyCycle);
     }
 }

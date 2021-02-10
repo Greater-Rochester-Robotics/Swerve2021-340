@@ -17,10 +17,11 @@ package frc.robot;
  */
 public final class Constants {
     //Swerve conversion factors
-    public static final double VOLTAGE_TO_RAD_CONV_FACTOR = 2*Math.PI/3.3; //TODO:Check that this is right(with Elec)
+    public static final double VOLTAGE_TO_RAD_CONV_FACTOR = 2*Math.PI/3.3; //Not needed since using CANCoder
     public static final double RAD_TO_DEG_CONV_FACTOR = 180/Math.PI;
     public static final double DEG_TO_RAD_CONV_FACTOR = Math.PI/180;
     public static final double RAD_TO_ENC_CONV_FACTOR = 0.0;//TODO:find the radian to enc factor(Mech Team)
+    public static final double DRIVE_ENC_TO_METERS_FACTOR = 1.0;//TODO:find this ratio from mechanicla specs
     public static final double PI_OVER_TWO = Math.PI/2;
     public static final double THREE_PI_OVER_TWO = 3*PI_OVER_TWO;
     public static final double TWO_PI = 2*Math.PI;

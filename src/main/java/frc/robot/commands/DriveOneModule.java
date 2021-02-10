@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
@@ -26,33 +27,34 @@ public class DriveOneModule extends CommandBase {
     addRequirements(RobotContainer.swerveDrive);
     //assigns the passed module number to the field of similar name
     moduleNum = moduleNumber;
-
-
   }
   
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //TODO:Make sure to stop the module, by using a stopAll method from swerveDrive
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO:Write this code, drive one module test. Using driveOneModule
+    //check to see if there is a new angle input from the DPad
     if(Robot.robotContainer.getDriverDPad() != -1){
+      //TODO:Use Math.toRadians(), rotatePos must be in radians, not degrees
       rotatePos = Robot.robotContainer.getDriverDPad();
     }
 
+    //Set the one module we are working with to an angle and a speed
     RobotContainer.swerveDrive.driveOneModule(moduleNum, 
       Robot.robotContainer.getDriverAxis(Axis.LEFT_Y), 
-      rotatePos
-      );
+      rotatePos);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO:Make sure to stop the module, by using a stopAll method from SwerveDrive
+    //TODO:Make sure to stop the module, by using a stopAll method from swerveDrive
 
   }
 

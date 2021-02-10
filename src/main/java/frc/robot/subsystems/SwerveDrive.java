@@ -59,7 +59,6 @@ public class SwerveDrive extends SubsystemBase {
     frontRight = new SwerveModule(Constants.FRONT_RIGHT_MOVE_MOTOR, Constants.FRONT_RIGHT_ROTATE_MOTOR, Constants.FRONT_RIGHT_ROTATE_SENSOR);
     
      //This may seem repetitive, but it makes clear which module is which.
-    
     swerveModules = new SwerveModule[]{
       frontLeft,
       rearLeft,
@@ -99,17 +98,17 @@ public class SwerveDrive extends SubsystemBase {
       targetModuleAngles[i] = Math.atan2( targetModuleVectors[1][i] , targetModuleVectors[0][i] );
     }
 
-    // assign the angles to the swerve drive modules (use a for loop and setPosInRad())
+    // assign the angles to the swerve drive modules
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(targetModuleAngles[i]); 
     }
 
-    double[] curAngles = new double[4]; // pull the current angles of the modules(use a for loop and getPosInRad())
+    double[] curAngles = new double[4]; // pull the current angles of the modules
     for (int i=0; i<4; i++){
       curAngles[i] = swerveModules[i].getPosInRad();
     }
     
-
+    //create an empty array tto put output speeds in
     double[] targetMotorSpeeds = new double[4];
     //create a variable so we can find the maxSpeed
     double maxSpeed = 0.0;
@@ -159,9 +158,9 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * This function is meant to drive one module at a time for testing purposes.
-   * @param moduleNumber
-   * @param moveSpeed
-   * @param rotatePos
+   * @param moduleNumber which of the four modules(0-3) we are using
+   * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
+   * @param rotatePos 
    */
   public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos){
     //test that moduleNumber is between 0-3, return if not(return;)
@@ -180,8 +179,6 @@ public class SwerveDrive extends SubsystemBase {
   public void resetGyro(){
     //Resets the gyro(zero it)
     imu.reset();
-     
-    
   }
 
   /**
@@ -189,11 +186,8 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in radians
    */
   public double getGyroInRad(){
-  return imu.getAngle() * Math.PI/180 ;
-   //Pull and return gyro in radians
-    
-
-
+    return imu.getAngle() * Math.PI/180 ;
+    // Pull and return gyro in radians
   }
 
   /**
