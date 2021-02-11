@@ -97,16 +97,6 @@ public class SwerveDrive extends SubsystemBase {
     for(int i=0 ; i<4 ; i++){
       targetModuleAngles[i] = Math.atan2( targetModuleVectors[1][i] , targetModuleVectors[0][i] );
     }
-
-    // assign the angles to the swerve drive modules
-    for (int i=0; i<4; i++){
-      swerveModules[i].setPosInRad(targetModuleAngles[i]); 
-    }
-
-    double[] curAngles = new double[4]; // pull the current angles of the modules
-    for (int i=0; i<4; i++){
-      curAngles[i] = swerveModules[i].getPosInRad();
-    }
     
     //create an empty array tto put output speeds in
     double[] targetMotorSpeeds = new double[4];
@@ -129,6 +119,20 @@ public class SwerveDrive extends SubsystemBase {
       for(int i=0 ; i<4 ; i++){
         targetMotorSpeeds[i] = targetMotorSpeeds[i]/maxSpeed;
       }
+    //the following creates an effective deadzone
+    }else if(maxSpeed < Constants.MINIMUM_DRIVE_SPEED){
+      //if the maxSpeed is below the minimum movement speed, don't let the modules turn.
+      return;
+    }
+
+    // assign the angles to the swerve drive modules
+    for (int i=0; i<4; i++){
+      swerveModules[i].setPosInRad(targetModuleAngles[i]); 
+    }
+
+    double[] curAngles = new double[4]; // pull the current angles of the modules
+    for (int i=0; i<4; i++){
+      curAngles[i] = swerveModules[i].getPosInRad();
     }
 
     //Reduce power to motors until they align with the target angle(might remove later)
@@ -145,7 +149,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   /**
-   * 
+   * Drive the robot so that all directions are independent of the robots rotation
    * @param awaySpeed
    * @param lateralSpeed
    * @param rotSpeed
@@ -174,6 +178,16 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   /**
+   * A method to drive an arc with the robot
+   * @param speed
+   * @param arcCenterAngle
+   * @param arcRadius
+   */
+  public void driveArc(double speed,double arcCenterAngle,double arcRadius){
+
+  }
+  
+  /**
    * A function that allows the user to reset the gyro
    */
   public void resetGyro(){
@@ -200,7 +214,7 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   /**
-   * Lets all the modules spin freely.
+   * Stops all module motion, then lets all the modules spin freely.
    */
   public void stopAllModules(){
     for (int i=0; i<4; i++){

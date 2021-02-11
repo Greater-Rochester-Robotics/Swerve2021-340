@@ -73,7 +73,7 @@ public class SwerveModule{
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
         rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
-        //TODO:use setOutput on the rotatePID(this will make sure we don't stall the motor, or give tooo much power)
+        //TODO:use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
     }
 
     /**

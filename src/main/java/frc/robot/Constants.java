@@ -51,8 +51,11 @@ public final class Constants {
             {X_NEGATIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_2 , Y_NEGATIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_2},
             {X_POSITIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_3 , Y_NEGATIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_3}
         };
-
-    //Swerve PID constants
+    
+    //Swerve Drive Constants
+    public static final double MINIMUM_DRIVE_SPEED = 0.1;//the slowest the wheels can turn
+    
+    //Swerve rotation PID constants
     public static final double SWERVE_ROT_P_VALUE = 1.0;
     public static final double SWERVE_ROT_I_VALUE = 0.0;
     public static final double SWERVE_ROT_D_VALUE = 0.0;
