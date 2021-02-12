@@ -76,8 +76,8 @@ public class SwerveModule{
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
         rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
-        //TODO:use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
-        //rotatePID.setOutputRange(min,max);
+        
+        rotatePID.setOutputRange(Constants.SWERVE_ROT_PID_VOLTAGE_MINIMUM,Constants.SWERVE_ROT_PID_VOLTAGE_MAXIMUM);//use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
     }
 
     /**
@@ -158,10 +158,8 @@ public class SwerveModule{
      * essentially resetting it.
      */
     public void resetDriveMotorEncoder(){
-        //Is this what Rob meant? Rob:No
-        setDriveMotor(0.0);//this code sets the motor speed to 0.0
-        //TODO: create a reset for the driveMotor encoder, so set
-        // the motor to 0.0, do so by using .setSelectedSensorPosition()
+        
+        driveMotor.setSelectedSensorPosition(0.0);//this code sets the motor speed to 0.0
     }
 
     

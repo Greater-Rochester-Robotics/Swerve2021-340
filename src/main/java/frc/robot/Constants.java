@@ -61,7 +61,8 @@ public final class Constants {
     public static final double SWERVE_ROT_D_VALUE = 0.0;
     public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
     public static final double SWERVE_ROT_FF_VALUE = 0.0;
-
+    public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = 0.0;//TODO:Find the minimum voltage value of the PID
+    public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 0.0;//TODO:Find the maximum voltage value of the PID
     //SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 2;//module 0
     public static final int REAR_LEFT_ROTATE_MOTOR = 4;//module 1
