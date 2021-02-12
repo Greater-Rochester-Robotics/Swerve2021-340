@@ -231,6 +231,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void resetAllModules(){
+    for (int i=0; i<4; i++){
+      swerveModules[i].resetPositionArray();
+    }
     
   }
 
