@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
@@ -49,14 +50,16 @@ public class SwerveModule{
      */  
     public SwerveModule(int driveMotorID,int rotationMotorID,int canCoderID){
         driveMotor = new TalonFX(driveMotorID);
-        //TODO:Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
+        driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
+        //Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
         
         rotationMotor = new CANSparkMax(rotationMotorID , MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();//reset the motor controller, wipe old stuff
-        //TODO:set rotationMotor brake mode, so motors stop on a dime
-        //TODO:enable voltage compensation mode 12V for the rotation motor
-        //TODO:Set smartCurrentLimit for the rotationMotor maybe 40A?
-        //TODO:Set motor inverted(set to true)
+        
+        rotationMotor.setIdleMode(IdleMode.kBrake);//set rotationMotor brake mode, so motors stop on a dime
+        rotationMotor.enableVoltageCompensation(12);//enable voltage compensation mode 12V for the rotation motor
+        rotationMotor.setSmartCurrentLimit(40);//Set smartCurrentLimit for the rotationMotor maybe 40A?
+        driveMotor.setInverted(true);//Set motor inverted(set to true)
 
         rotateSensor = new CANCoder(canCoderID);
         rotateSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
@@ -74,6 +77,7 @@ public class SwerveModule{
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
         rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
         //TODO:use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
+        //rotatePID.setOutputRange(min,max);
     }
 
     /**
