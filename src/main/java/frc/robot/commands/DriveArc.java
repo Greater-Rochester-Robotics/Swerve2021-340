@@ -8,17 +8,28 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 
 public class DriveArc extends CommandBase {
-  
-  
+  private double driveSpd;
+  private double arcCenterAng;
+  private double arcRad;
+  private double arcDist;
+  private boolean tidLock;
+
   public DriveArc(double driveSpeed,double arcCenterAngle,double arcRadius, boolean tidalLock) {
-    //TODO: Call other constructor with massive arcDistance
+    
+    this(driveSpeed, arcCenterAngle, arcRadius, 100, tidalLock);
   }
   
   public DriveArc(double driveSpeed,double arcCenterAngle,double arcRadius,double arcDistance, boolean tidalLock) {
-    //TODO: pass all param to field values
-    //TODO:use addRequirements and put in the swerveDrive object
+    driveSpd = driveSpeed;
+    arcCenterAng = arcCenterAngle;
+    arcRad = arcRadius; 
+    arcDist = arcDistance;
+    tidLock = tidalLock;
+
+    addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called when the command is initially scheduled.
