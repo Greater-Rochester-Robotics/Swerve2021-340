@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
+import frc.robot.subsystems.SwerveDrive;
 
 /**
  * A command to test one module at a time, it takes that module as a constructor arguement
@@ -32,8 +33,8 @@ public class DriveOneModule extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //TODO:Make sure to stop the module, by using a stopAll method from swerveDrive
-
+    
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -54,8 +55,8 @@ public class DriveOneModule extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO:Make sure to stop the module, by using a stopAll method from swerveDrive
-
+    
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.

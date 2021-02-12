@@ -21,8 +21,8 @@ public class DriveResetAllModulePositionsToZero extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //TODO:Call the reset function to zero all of the modules 
-    
+    //Call the reset function to zero all of the modules 
+    RobotContainer.swerveDrive.resetAllModules();
   }
 
 }
