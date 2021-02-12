@@ -42,8 +42,7 @@ public class DriveOneModule extends CommandBase {
   public void execute() {
     //check to see if there is a new angle input from the DPad
     if(Robot.robotContainer.getDriverDPad() != -1){
-      //TODO:Use Math.toRadians(), rotatePos must be in radians, not degrees
-      rotatePos = Robot.robotContainer.getDriverDPad();
+      rotatePos = (int)Math.toRadians(Robot.robotContainer.getDriverDPad());
     }
 
     //Set the one module we are working with to an angle and a speed
