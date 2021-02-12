@@ -28,8 +28,14 @@ import frc.robot.Constants;
  */
 public class SwerveModule{
     private TalonFX driveMotor;
-    private CANCoder rotateSensor;
     private CANSparkMax rotationMotor;
+    // The rotateSensor is an absolute position sensor ranging from -180 to 180,
+    // We'll use it to tell where we are and where we want to be, but due to the dicontinuity
+    // from -180 to 180, it can't be used for motion. We use the rotationEncoder for that.
+    private CANCoder rotateSensor;
+    // The rotationEncoder is a built in relative position sensor on the sparkMax motor.
+    // It can't tell us our angle (like the rotateSensor), but it does not have the same discontinuity issue.
+    // So when we know how far we want to move, we can use the rotationEncoder to track our progress as we move.
     private CANEncoder rotationEncoder;
     // private CANAnalog rotationSensor;//switch to the CANCoder requires not doing this
     private CANPIDController rotatePID;
