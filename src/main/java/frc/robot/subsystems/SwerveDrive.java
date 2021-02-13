@@ -213,6 +213,10 @@ public class SwerveDrive extends SubsystemBase {
   public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos){
     //test that moduleNumber is between 0-3, return if not(return;)
     if (moduleNumber > 3 && moduleNumber < 0){
+      System.out.println("Module " + moduleNumber + " is out of bounds.");
+      return;
+    }else if(rotatePos<-Math.PI || rotatePos > Math.PI){
+      System.out.println("Input angle out of range.");
       return;
     }
     
@@ -362,10 +366,10 @@ public class SwerveDrive extends SubsystemBase {
     
   }
 
-  public double[] getAllModuleAngles(){
+  public double[] getAllAbsModuleAngles(){
     double[] moduleAngles = new double[4];
     for(int i=0; i<4; i++){
-      moduleAngles[i]=swerveModules[i].getPosInDeg();
+      moduleAngles[i]=swerveModules[i].getAbsPosInDeg();
     }
     return moduleAngles;
   }

@@ -12,7 +12,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
  */
 public class DriveStraightAtSpeed extends CommandBase {
   /** Creates a new DriveStraightAtSpeed. */
-  public DriveStraightAtSpeed(double speed, double angle,kDriveMode mode) {
+  public DriveStraightAtSpeed(double speed, double angle, kDriveMode mode) {
     //TODO: Use addRequirements() here to declare subsystem dependencies.
     //todo: pass inputs to field values
   }
