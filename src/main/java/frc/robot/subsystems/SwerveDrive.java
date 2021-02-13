@@ -286,6 +286,30 @@ public class SwerveDrive extends SubsystemBase {
   }
   
   /**
+   * This is a function to drive the robot straight in a set direction
+   * @param speed the speed the robot should drive, -1.0 to 1.0 in percentOutput, 
+   * @param angle the angle, robot centric, the robot should drive in, inRadians, from -pi to pi
+   * @param mode
+   */
+  public void driveStraight(double speed,double angle,kDriveMode mode){
+    //TODO:Sanitize inputs, both andgle and speed, speed must be sanitized based on mode
+    //TODO:set all modules to angle
+    double[] curAngles = new double[4]; // pull the current angles of the modules
+    for (int i=0; i<4; i++){
+      curAngles[i] = swerveModules[i].getPosInRad();
+    }
+
+    //
+    double[] targetMotorSpeeds = new double[4];
+
+    //Reduce power to motors until they align with the target angle(might remove later)
+    for(int i=0 ; i<4 ; i++){
+      targetMotorSpeeds[i] = speed*Math.cos(angle-curAngles[i]);
+    }
+    //TODO:set all modules to targetMotorSpeeds, use setDriveMotor if in percentOUtput, and setDriveSpeed if in velocity
+  }
+
+  /**
    * Stops all module motion, then lets all the modules spin freely.
    */
   public void stopAllModules(){
@@ -313,6 +337,9 @@ public class SwerveDrive extends SubsystemBase {
   //   //TODO:return a newly constructed Rotation2d object, it takes the angle in radians as a constructor arguement
   // }
 
+  public Pose2d getCurrentPose(){
+    return this.currentPosition;
+  }
   /**
    * This polls the onboard gyro, which, when the robot boots,
    * assumes and angle of zero, this needs to be positive when
