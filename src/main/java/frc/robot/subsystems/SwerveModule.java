@@ -11,6 +11,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANAnalog;
@@ -23,8 +26,9 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import frc.robot.Constants;
 
 /**
- * This is the class containing both motor controllers and 
- * all functions needed to run one swerve module.
+ * This is the class containing both motor controllers, the CANCodder and 
+ * all functions needed to run one swerve module. It has a periodic method
+ * that must be called periodically for it to work.
  */
 public class SwerveModule{
     private TalonFX driveMotor;
@@ -41,10 +45,11 @@ public class SwerveModule{
     private CANPIDController rotatePID;
     private boolean isInverted = false;//this is for a future function
     //these are for the periodic call thread
-    private volatile double currentAngle = 0.0;
+    private double currentDegAngle = 0.0;
     private volatile double prevAngle = 0.0;
     private volatile double currentPosition = 0.0;
     private volatile double prevPosition = 0.0;
+    private Rotation2d currentRotPos = new Rotation2d();
     private volatile double[] positionArray = new double[]{0.0,0.0};
 
     /**
@@ -58,7 +63,8 @@ public class SwerveModule{
         driveMotor = new TalonFX(driveMotorID);
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
         //Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
-        
+        //TODO: setup the PID on the TalonFX for velocity control
+
         rotationMotor = new CANSparkMax(rotationMotorID , MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();//reset the motor controller, wipe old stuff
         
@@ -91,24 +97,29 @@ public class SwerveModule{
      *  so the sensor is called once, additionally position of
      *  the module is computed here.
      */
-    protected synchronized void periodicThread(){
-        //this.currentDegAngle = rotateSensor.getAbsolutePosition();
-        //this.currentAngle = Math.toRadians(this.currentDegAngle);
-        this.currentAngle = Math.toRadians(rotateSensor.getAbsolutePosition());
+    public double[] periodic(){
+        //pull the current positon from the absolute rotation sesnors
+        this.currentDegAngle = rotateSensor.getAbsolutePosition();
+        this.currentRotPos = new Rotation2d(Math.toRadians(this.currentDegAngle));
+        // this.currentAngle = Math.toRadians(rotateSensor.getAbsolutePosition());
+
         //average the angle between this cycle and the previous
-        double averAngle = (this.currentAngle + this.prevAngle)/2;
+        double averAngle = (this.currentRotPos.getRadians()+this.prevAngle)/2;
+        // double averAngle = (this.currentAngle + this.prevAngle)/2;
+
         //pull the distance travelled by the driveMotor
         this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition();
         //find the distance travelled since the previous cycle
         double deltaPos = this.currentPosition - this.prevPosition;
         
-        //add the distance travelled, in each the X and Y, too the total distance for this module
-        this.positionArray[0]+= Math.cos(averAngle)*deltaPos;
-        this.positionArray[1]+= Math.sin(averAngle)*deltaPos;
+        //add the distance travelled, in each the X and Y, to the total distance for this module
+        double[] deltaPositionArray = new double[]{
+            deltaPos*this.currentRotPos.getCos(),deltaPos*this.currentRotPos.getSin()};
 
         //store the current distance and angle for the next cycle
-        this.prevAngle = this.currentAngle;
+        this.prevAngle = this.currentRotPos.getRadians();
         this.prevPosition = this.currentPosition;
+        return deltaPositionArray;
     }
 
     /**
@@ -118,7 +129,7 @@ public class SwerveModule{
     public double[] getModulePosition(){
         return this.positionArray;
     }
-    
+
     /**
      * Resets the positional array to [0.0, 0.0]
      */
@@ -135,12 +146,22 @@ public class SwerveModule{
     }
 
     /**
-     * Set the speed of the drive motor
+     * Set the speed of the drive motor in percent duty cycle
      * 
-     * @param value a number between -1.0 and 1.0, where 0.0 is not moving
+     * @param dutyCycle a number between -1.0 and 1.0, where 0.0 is not moving, as percent duty cycle
      */
-    public void setDriveMotor(double value){
-        driveMotor.set(TalonFXControlMode.PercentOutput,value*(isInverted?-1:0));
+    public void setDriveMotor(double dutyCycle){
+        driveMotor.set(TalonFXControlMode.PercentOutput,dutyCycle*(isInverted?-1:0));
+    }
+
+    /**
+     * Set the speed of the drive motor in meter per second,
+     * this relies on the PIDController built into the TalonFX.
+     * 
+     * @param speed a speed in meters per second
+     */
+    public void setDriveSpeed(double speed){
+        driveMotor.set(TalonFXControlMode.Velocity,speed*(isInverted?-1:0));
     }
 
     /**
@@ -164,8 +185,7 @@ public class SwerveModule{
      * essentially resetting it.
      */
     public void resetDriveMotorEncoder(){
-        
-        driveMotor.setSelectedSensorPosition(0.0);//this code sets the motor speed to 0.0
+        driveMotor.setSelectedSensorPosition(0.0);//this code sets the Drive position to 0.0
     }
 
     
@@ -185,6 +205,7 @@ public class SwerveModule{
      */
     public double getPosInDeg(){ 
         return rotateSensor.getAbsolutePosition();
+        //TODO:Above has to be checked, if the sensor is positive clockwise, fix(Need Robot)
     }
 
     /**
@@ -204,10 +225,9 @@ public class SwerveModule{
      * @return the position of the module in radians, should limit from -PI to PI
      */
     public double getPosInRad(){
-        // return this.currentPosition;//if we use the periodic call thread/method use this instead
-        return getPosInDeg()*Constants.DEG_TO_RAD_CONV_FACTOR;//(isInverted?0:Math.PI));
-        //TODO:Above has to be checked, if the sensor is positive clockwise, fix(Need Robot)
-        // double currentAngleRad = Math.toRadians(getPosInDeg());
+        // return this.currentRotPos.getRadians();//if we use the periodic call thread/method use this instead
+        return Math.toRadians(getPosInDeg());//(isInverted?0:Math.PI));
+        // double currentAngleRad = this.currentRotPos.getRadians();
         // //the following is a single line return, used with invertable drive
         // return isInverted?
         //     ((currentAngleRad <= 0.0)?currentAngleRad-180:-180+currentAngleRad):
@@ -240,7 +260,7 @@ public class SwerveModule{
         }
 
         // //This is for inverting the motor if target angle is 90-270 degrees away, invert 
-        // //To fix going the wrong way around the circle
+        // //To fix going the wrong way around the circle, distance is larger than 270
         // if(absDiff >= Constants.THREE_PI_OVER_TWO){
         //     //the distance the other way around the circle
         //     posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));

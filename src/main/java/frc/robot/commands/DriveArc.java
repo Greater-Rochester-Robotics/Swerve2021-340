@@ -30,16 +30,19 @@ public class DriveArc extends CommandBase {
     tidLock = tidalLock;
 
     addRequirements(RobotContainer.swerveDrive);
+    //TODO:call the generateArcAngles() method and store the array
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //somhow we need to get the distance traveled, and I dont want to reset the Pose, but might have to
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //TODO:call the driveArc() function, using the generated arcArray and speed, also use dutyCycle mode
   }
 
   // Called once the command ends or is interrupted.
