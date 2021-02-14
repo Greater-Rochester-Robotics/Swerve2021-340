@@ -19,7 +19,7 @@ import frc.robot.subsystems.SwerveDrive;
  */
 public class DriveOneModule extends CommandBase {
   private int moduleNum;
-  private int rotatePos = 0;
+  private double rotatePos = 0.0;
   /**
    * Creates a new DriveOneModule.
    */
@@ -42,8 +42,8 @@ public class DriveOneModule extends CommandBase {
   public void execute() {
     //check to see if there is a new angle input from the DPad
     if(Robot.robotContainer.getDriverDPad() != -1){
-      rotatePos = (int)Math.toRadians(Robot.robotContainer.getDriverDPad());
-      //TODO:rotatoePos can only be between -pi and pi, this returns 0 to 2pi
+      rotatePos = Math.toRadians(Robot.robotContainer.getDriverDPad());
+      rotatePos = (rotatePos - Math.PI);
     }
 
     //Set the one module we are working with to an angle and a speed
