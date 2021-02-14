@@ -20,7 +20,7 @@ public final class Constants {
     // public static final double VOLTAGE_TO_RAD_CONV_FACTOR = 2*Math.PI/3.3; //Not needed since using CANCoder
     // public static final double RAD_TO_DEG_CONV_FACTOR = 180/Math.PI;//removed in favor of Math.toDegrees()
     // public static final double DEG_TO_RAD_CONV_FACTOR = Math.PI/180;//removed in favor of Math.toRadians()
-    public static final double RAD_TO_ENC_CONV_FACTOR = 0.0;//TODO:find the radian to enc factor(Mech Team)
+    public static final double RAD_TO_ENC_CONV_FACTOR = 0.00248835;//TODO:find the radian to enc factor (Mech Team) :Double check this!
     public static final double DRIVE_ENC_TO_METERS_FACTOR = 1.0;//TODO:find this ratio from mechanicla specs
     public static final double PI_OVER_TWO = Math.PI/2;
     public static final double THREE_PI_OVER_TWO = 3*PI_OVER_TWO;
