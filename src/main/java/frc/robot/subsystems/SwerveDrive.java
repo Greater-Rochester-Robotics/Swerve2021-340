@@ -295,7 +295,7 @@ public class SwerveDrive extends SubsystemBase {
         return;
       }
     }
-
+    // TODO: Sanitize for mode velocity in the future
     //set each module to the angle in arcArray(the first value)
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(arcArray[0][i]); 
@@ -311,11 +311,8 @@ public class SwerveDrive extends SubsystemBase {
     for(int i=0 ; i<4 ; i++){
       swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
     }
-
-    
-
   }
-  
+
   /**
    * This is a function to drive the robot straight in a set direction
    * @param speed the speed the robot should drive, -1.0 to 1.0 in percentOutput, 
@@ -323,9 +320,34 @@ public class SwerveDrive extends SubsystemBase {
    * @param mode
    */
   public void driveStraight(double speed,double angle,kDriveMode mode){
-    //TODO:Sanitize inputs, both angle and speed, speed must be sanitized based on mode
-    //TODO:set all modules to angle
-    double[] curAngles = new double[4]; // pull the current angles of the modules
+    //Sanitize inputs, both angle and speed, speed must be sanitized based on mode
+    
+    if (mode.equals(kDriveMode.percentOutput)){
+      if (speed < -1.0){
+        speed = -1.0;
+      }
+      else if (speed > 1.0){
+        speed = 1.0;
+      }
+      else if (Math.abs(speed) < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
+        System.out.println("Drive speed too slow for robot to move! " + speed);
+        return;
+      }
+    if (mode.equals(kDriveMode.percentOutput)){
+      if (angle < -Math.PI){
+        angle = -Math.PI;
+      }
+      else if (angle > Math.PI){
+        angle = Math.PI;
+      }
+    }
+    // TODO: Sanitize for mode velocity in the future
+    //set all modules to angle
+    for (int i=0; i<4; i++){
+      swerveModules[i].setPosInRad(angle); 
+    }
+    // pull the current angles of the modules
+    double[] curAngles = new double[4]; 
     for (int i=0; i<4; i++){
       curAngles[i] = swerveModules[i].getPosInRad();
     }
@@ -337,8 +359,19 @@ public class SwerveDrive extends SubsystemBase {
     for(int i=0 ; i<4 ; i++){
       targetMotorSpeeds[i] = speed*Math.cos(angle-curAngles[i]);
     }
-    //TODO:set all modules to targetMotorSpeeds, use setDriveMotor if in percentOUtput, and setDriveSpeed if in velocity
+    //set all modules to targetMotorSpeeds, use setDriveMotor if in percentOUtput, and setDriveSpeed if in velocity
+    if (mode.equals(kDriveMode.percentOutput)){
+      for (int i=0; i<4; i++){
+        swerveModules[i].setDriveMotor(targetMotorSpeeds[i]);
+      }
+    }
+    else if (mode.equals(kDriveMode.velocity)){
+      for (int i=0; i<4; i++){
+        swerveModules[i].setDriveSpeed(targetMotorSpeeds[i]);
+      }
+    }
   }
+}
 
   /**
    * Stops all module motion, then lets all the modules spin freely.
