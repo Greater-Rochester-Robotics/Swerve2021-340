@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
@@ -12,9 +13,16 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
  */
 public class DriveStraightAtSpeed extends CommandBase {
   /** Creates a new DriveStraightAtSpeed. */
+  private double speed;
+  private double angle;
+  private kDriveMode mode;
+  
   public DriveStraightAtSpeed(double speed, double angle, kDriveMode mode) {
-    //TODO: Use addRequirements() here to declare subsystem dependencies.
-    //todo: pass inputs to field values
+    addRequirements(RobotContainer.swerveDrive);
+
+    this.speed = speed;
+    this.angle = angle;
+    this.mode = mode;
   }
 
   // Called when the command is initially scheduled.
@@ -24,13 +32,14 @@ public class DriveStraightAtSpeed extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO: call driveStraight passing in values from the constructor
+    //calls driveStraight passing in values from the constructor
+    RobotContainer.swerveDrive.driveStraight(speed, angle, mode);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    //TODO:call stopAllMotors
+  public void end(boolean interrupted){
+      RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.
