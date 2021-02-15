@@ -1,1 +1,27 @@
 ToDo List
+
+
+Swerve testing task list(on blocks)
+
+    instal roborio image 
+    load robot code 
+    update all can firmware 
+    check the robot canID (if possible keep snek canID from last year)
+    check sensor direction (positive direction is counter clockwise) 
+    check units on all sensors 
+    drive all rotation motors(check direction) 
+    check all drive motors(check direction)
+    run the DriveOneModule command on all modules separately  
+    run DriveStraightAtSpeed command 
+
+
+
+code task list
+
+    in swerve module we want to spin just in rotation motor
+    in swerveDrive use the previous function 
+    add command to use the swerve drive function
+    in swerve modules we want to drive just the drive motors
+    in swerveDrive use the previous function 
+    add command to use the swerve drive function
+    assign commands to buttons
