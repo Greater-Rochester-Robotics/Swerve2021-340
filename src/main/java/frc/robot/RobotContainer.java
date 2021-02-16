@@ -10,10 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.DriveOneModule;
+import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -27,6 +31,18 @@ public class RobotContainer {
   
   final Joystick driver = new Joystick(0);
   final Joystick coDriver = new Joystick(1);
+
+  final Button driverA = new JoystickButton(driver, 1);
+  final Button driverB = new JoystickButton(driver, 2);
+  final Button driverX = new JoystickButton(driver, 3);
+  final Button driverY = new JoystickButton(driver, 4);
+  final Button driverLB = new JoystickButton(driver, 5);
+  final Button driverRB = new JoystickButton(driver, 6);
+  final Button driverBack = new JoystickButton(driver, 7);
+  final Button driverStart = new JoystickButton(driver, 8);
+  final Button driverLS = new JoystickButton(driver, 9);
+  final Button driverRS = new JoystickButton(driver, 10);
+  
 
   public static SwerveDrive swerveDrive;
 
@@ -50,7 +66,18 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverA.whenPressed(new DriveOneModule(0));
+    driverB.whenPressed(new DriveOneModule(1));
+    driverX.whenPressed(new DriveOneModule(2));
+    driverY.whenPressed(new DriveOneModule(3));
+
+    driverA.whenReleased(new DriveStopAllModules());
+    driverB.whenReleased(new DriveStopAllModules());
+    driverX.whenReleased(new DriveStopAllModules());
+    driverY.whenReleased(new DriveStopAllModules());
+    
   }
+
 
 
   /**
