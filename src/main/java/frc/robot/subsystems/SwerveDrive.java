@@ -398,7 +398,6 @@ public class SwerveDrive extends SubsystemBase {
    * @return a Rotation2d object
    */
   public Rotation2d getGyroRotation2d(){
-    //TODO:return a newly constructed Rotation2d object, it takes the angle in radians as a constructor arguement
     return imu.getRotation2d();
   }
 
@@ -440,7 +439,9 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void printAllModuleAngles(){
     //TODO:Use a for loop to and print() all modules' angles(degrees) on one line, make sure to newline "\n" at the end  
-  }
+      
+    }
+  
 
   public void resetAllModules(){
     for (int i=0; i<4; i++){
