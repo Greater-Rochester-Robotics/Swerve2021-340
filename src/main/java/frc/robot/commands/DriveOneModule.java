@@ -7,12 +7,14 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.SwerveDrive.kSwerveModule;
 
 /**
  * A command to test one module at a time, it takes that module as a constructor arguement
@@ -45,6 +47,13 @@ public class DriveOneModule extends CommandBase {
       rotatePos = Math.toRadians(Robot.robotContainer.getDriverDPad());
       rotatePos = (rotatePos - Math.PI);
     }
+
+    double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
+    //TODO: test smartdashboard outputs
+    SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
 
     //Set the one module we are working with to an angle and a speed
     RobotContainer.swerveDrive.driveOneModule(moduleNum, 
