@@ -61,6 +61,8 @@ public final class Constants {
     //Swerve Drive Constants
     public static final double MINIMUM_DRIVE_SPEED = 0.1;//the slowest the wheels can turn, in m/s
     public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.1;//the slowest the wheels can turn, in duty cycle
+    public static final double MAXIMUM_VELOCITY = 1.0;
+    public static final double MAXIMUM_ACCELERATION = 1.0;
     
     //Swerve rotation PID constants
     public static final double SWERVE_ROT_P_VALUE = 1.0;

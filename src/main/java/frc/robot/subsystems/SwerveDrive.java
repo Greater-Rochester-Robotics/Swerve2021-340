@@ -458,9 +458,14 @@ public class SwerveDrive extends SubsystemBase {
    * a method to print all module positions for testing purposes
    */
   public void printAllModuleAngles(){
-    //TODO:Use a for loop to and print() all modules' angles(degrees) on one line, make sure to newline "\n" at the end  
-      
+    //Use a for loop to and print() all modules' angles(degrees) on one line, make sure to newline "\n" at the end  
+    System.out.print("Angle = ");
+  
+    for(int i=0; i<4; i++){
+      System.out.print(swerveModules[i].getAbsPosInDeg()+"\t");
     }
+    System.out.print("\n");
+  }
   
 
   public void resetAllModules(){
