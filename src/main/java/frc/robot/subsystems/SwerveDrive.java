@@ -454,6 +454,17 @@ public class SwerveDrive extends SubsystemBase {
     return moduleAngles;
   }
 
+  public double[] getAllModuleDistance(){
+    double[] moduleDistances = new double[4];
+    for(int i=0; i<4; i++){
+      moduleDistances[i]=swerveModules[i].getDriveDistance();
+    }
+    return moduleDistances;
+  }
+
+
+
+
   /**
    * a method to print all module positions for testing purposes
    */
