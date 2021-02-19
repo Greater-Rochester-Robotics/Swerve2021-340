@@ -40,6 +40,7 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
+    SmartDashboard.putNumber("gyroAngle",RobotContainer.swerveDrive.imu.getAngle());
   }
 
   // Called once the command ends or is interrupted.

@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.ExampleCommand;
@@ -76,6 +77,8 @@ public class RobotContainer {
     driverX.whenReleased(new DriveStopAllModules());
     driverY.whenReleased(new DriveStopAllModules());
     
+    driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
+
   }
 
 
