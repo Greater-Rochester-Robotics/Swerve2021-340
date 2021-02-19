@@ -18,11 +18,11 @@ public class DriveStraightTrapProfile extends CommandBase {
 
   /** Creates a new DriveStraightTrapProfile. */
   public DriveStraightTrapProfile(double angle,TrapezoidProfile.State target,TrapezoidProfile.State start) {
-    //TODO: Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.swerveDrive);
     //TODO:Pass angle to fields
     profile = new TrapezoidProfile(
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(0, 0),
+            new TrapezoidProfile.Constraints(Constants.MAXIMUM_VELOCITY, Constants.MAXIMUM_ACCELERATION),
             // Goal state
             target,
             // Initial state
@@ -41,6 +41,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void execute() {
     //TODO:use profile to create a speed to the motors
+    // TrapezoidProfile.State midPoint = profile.calculate(profile.);
     //TODO:use driveStraight method to pass values to the motor, should be in velocity mode
   }
 
