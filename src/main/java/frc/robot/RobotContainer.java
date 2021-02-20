@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveOneModule;
+import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -71,13 +72,14 @@ public class RobotContainer {
     driverB.whenPressed(new DriveOneModule(1));
     driverX.whenPressed(new DriveOneModule(2));
     driverY.whenPressed(new DriveOneModule(3));
-
+    
     driverA.whenReleased(new DriveStopAllModules());
     driverB.whenReleased(new DriveStopAllModules());
     driverX.whenReleased(new DriveStopAllModules());
     driverY.whenReleased(new DriveStopAllModules());
     
     driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
+    driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
 
   }
 

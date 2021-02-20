@@ -72,6 +72,7 @@ public class SwerveModule {
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
         // Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real
         // distance, DRIVE_ENC_TO_METERS_FACTOR
+         driveMotor.setInverted(true);// Set motor inverted(set to true)
         // TODO: setup the PID on the TalonFX for velocity control
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
@@ -80,7 +81,7 @@ public class SwerveModule {
         rotationMotor.setIdleMode(IdleMode.kBrake);// set rotationMotor brake mode, so motors stop on a dime
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
         rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor maybe 40A?
-        driveMotor.setInverted(true);// Set motor inverted(set to true)
+        rotationMotor.setInverted(true);
 
         rotateAbsSensor = new CANCoder(canCoderID);
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
@@ -148,18 +149,12 @@ public class SwerveModule {
      * Resets the positional array to [0.0, 0.0]
      */
     public void resetPositionArray() {
-        this.resetPositionArray(new double[] { 0.0, 0.0 });
+        
+        setRotateAbsSensor(0.0);
+        setRotateAbsSensor(-getAbsPosInDeg());
     }
 
-    /**
-     * Resets the positional array to the input posArray
-     * 
-     * @param posArray a two value array where X is the first value and Y is the
-     *                 second
-     */
-    public void resetPositionArray(double[] posArray) {
-        this.positionArray = posArray;
-    }
+    
 
     /**
      * Set the speed of the drive motor in percent duty cycle
@@ -168,7 +163,7 @@ public class SwerveModule {
      *                  percent duty cycle
      */
     public void setDriveMotor(double dutyCycle) {
-        driveMotor.set(TalonFXControlMode.PercentOutput, dutyCycle * (isInverted ? -1 : 0));
+        driveMotor.set(TalonFXControlMode.PercentOutput, dutyCycle * (isInverted ? -1 : 1));
     }
 
     /**
@@ -178,7 +173,7 @@ public class SwerveModule {
      * @param speed a speed in meters per second
      */
     public void setDriveSpeed(double speed) {
-        driveMotor.set(TalonFXControlMode.Velocity, speed * (isInverted ? -1 : 0));
+        driveMotor.set(TalonFXControlMode.Velocity, speed * (isInverted ? -1 : 1));
     }
 
     /**
@@ -304,10 +299,13 @@ public class SwerveModule {
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
 
+        System.out.println("Target Encoder Distance, targetPos, outputEncValue" + targetEncDistance + " " + targetPos + " " + outputEncValue);
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition);
     }
-
+    public void driveRotateMotor(double speed) {
+        this.rotationMotor.set(speed);
+    }
     /**
      * This method is used to stop the module completely. The drive motor is
      * switched to percent voltage and and output of 0.0 percent volts. The rotation

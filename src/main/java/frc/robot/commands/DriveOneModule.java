@@ -43,6 +43,7 @@ public class DriveOneModule extends CommandBase {
   @Override
   public void execute() {
     //check to see if there is a new angle input from the DPad
+    // System.out.println("Getting Driver pad" + Robot.robotContainer.getDriverDPad());
     if(Robot.robotContainer.getDriverDPad() != -1){
       rotatePos = Math.toRadians(Robot.robotContainer.getDriverDPad());
       rotatePos = (rotatePos - Math.PI);
@@ -55,6 +56,7 @@ public class DriveOneModule extends CommandBase {
     SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
 
+    // System.out.println("getting  kSwerveModule numbers!" + Robot.robotContainer.getDriverAxis(Axis.LEFT_Y) + " " + rotatePos);
     //Set the one module we are working with to an angle and a speed
     RobotContainer.swerveDrive.driveOneModule(moduleNum, 
       Robot.robotContainer.getDriverAxis(Axis.LEFT_Y), 

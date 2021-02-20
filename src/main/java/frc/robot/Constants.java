@@ -65,28 +65,28 @@ public final class Constants {
     public static final double MAXIMUM_ACCELERATION = 1.0;
     
     //Swerve rotation PID constants
-    public static final double SWERVE_ROT_P_VALUE = 1.0;
+    public static final double SWERVE_ROT_P_VALUE = 0.8;
     public static final double SWERVE_ROT_I_VALUE = 0.0;
     public static final double SWERVE_ROT_D_VALUE = 0.0;
     public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
-    public static final double SWERVE_ROT_FF_VALUE = 0.0;
+    public static final double SWERVE_ROT_FF_VALUE = 0.0001;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = 0.0;//TODO:Find the minimum voltage value of the PID
-    public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 0.0;//TODO:Find the maximum voltage value of the PID
+    public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
 
     //SparkMAX motor controllers
-    public static final int FRONT_LEFT_ROTATE_MOTOR = 2;//module 0
-    public static final int REAR_LEFT_ROTATE_MOTOR = 4;//module 1
-    public static final int REAR_RIGHT_MOVE_MOTOR = 5;//module 2
-    public static final int FRONT_RIGHT_ROTATE_MOTOR = 8;//module 3
+    public static final int FRONT_LEFT_ROTATE_MOTOR = 41;//module 0
+    public static final int REAR_LEFT_ROTATE_MOTOR = 44;//module 1
+    public static final int REAR_RIGHT_ROTATE_MOTOR = 47;//module 2
+    public static final int FRONT_RIGHT_ROTATE_MOTOR = 50;//module 3
 
 
     //CTRE motor and sensors
-    public static final int FRONT_LEFT_MOVE_MOTOR = 1;//module 0
-    public static final int FRONT_LEFT_ROTATE_SENSOR = 10;//module 0
-    public static final int REAR_LEFT_MOVE_MOTOR = 3;//module 1
-    public static final int REAR_LEFT_ROTATE_SENSOR = 11;//module 1
-    public static final int REAR_RIGHT_ROTATE_MOTOR = 6;//module 2
-    public static final int REAR_RIGHT_ROTATE_SENSOR = 12;//module 2
-    public static final int FRONT_RIGHT_MOVE_MOTOR = 7;//module 3
-    public static final int FRONT_RIGHT_ROTATE_SENSOR = 9;//module 3 
+    public static final int FRONT_LEFT_MOVE_MOTOR = 40;//module 0
+    public static final int FRONT_LEFT_ROTATE_SENSOR = 42;//module 0
+    public static final int REAR_LEFT_MOVE_MOTOR = 43;//module 1
+    public static final int REAR_LEFT_ROTATE_SENSOR = 45;//module 1
+    public static final int REAR_RIGHT_MOVE_MOTOR = 46;//module 2
+    public static final int REAR_RIGHT_ROTATE_SENSOR = 48;//module 2
+    public static final int FRONT_RIGHT_MOVE_MOTOR = 49;//module 3
+    public static final int FRONT_RIGHT_ROTATE_SENSOR = 51;//module 3 
 }
