@@ -30,9 +30,9 @@ public class DriveRobotCentric extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.swerveDrive.driveRobotCentric(
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y) ,
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_X) ,
-      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X) );
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.5 ,
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.5 ,
+      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*0.5 );
   }
 
   // Called once the command ends or is interrupted.

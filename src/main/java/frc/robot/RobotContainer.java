@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
+import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
+import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
@@ -81,6 +83,9 @@ public class RobotContainer {
     driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
     driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
 
+    driverStart.whenPressed(new DriveStraightAtSpeed(0.5, Math.toRadians(45), SwerveDrive.kDriveMode.percentOutput));
+    driverStart.whenReleased(new DriveStopAllModules());
+    driverBack.whenPressed(new DriveRobotCentric());
   }
 
 

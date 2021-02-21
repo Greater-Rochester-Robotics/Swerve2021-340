@@ -3,7 +3,7 @@ ToDo List
 
 Swerve testing task list(on blocks)
 
-    instal roborio image 
+    install roborio image 
     load robot code 
     update all can firmware 
     check the robot canID (if possible keep snek canID from last year)

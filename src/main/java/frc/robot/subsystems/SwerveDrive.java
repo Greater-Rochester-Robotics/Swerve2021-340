@@ -130,22 +130,22 @@ public class SwerveDrive extends SubsystemBase {
     double[] targetMoveVector = { forwardSpeed , strafeSpeed };//the direction we want the robot to move
 
     //create a 2d array for the goal output of each module(in vector component form)
-    double[][] targetModuleVectors = new double[2][4];
+    double[][] targetModuleVectors = new double[4][2];
     //create a vector for each module, one at a time
     for(int i=0 ; i<4 ; i++){
       //compute the x-component of the vector by adding the targetVector to the cross product with rotspeed
-      targetModuleVectors[0][i] =
-        targetMoveVector[0] - (rotSpeed*Constants.MODULE_UNIT_VECTORS[1][i] );
+      targetModuleVectors[i][0] =
+        targetMoveVector[0] - (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][1] );
       
       //compute the y-component of the vector by adding the targetVector to the cross product with rotspeed
-      targetModuleVectors[1][i] = 
-        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[0][i] );//TODO: check if this sign is right
+      targetModuleVectors[i][1] = 
+        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );//TODO: check if this sign is right
     }
 
     //generates angles for each module
     double[] targetModuleAngles = new double[4];
     for(int i=0 ; i<4 ; i++){
-      targetModuleAngles[i] = Math.atan2( targetModuleVectors[1][i] , targetModuleVectors[0][i] );
+      targetModuleAngles[i] = Math.atan2( targetModuleVectors[i][1] , targetModuleVectors[i][0] );
     }
     
     //create an empty array tto put output speeds in
@@ -156,8 +156,8 @@ public class SwerveDrive extends SubsystemBase {
     for(int i=0 ; i<4 ; i++){
       //find the length(power) for each direction vector
       targetMotorSpeeds[i] = Math.sqrt(
-        (targetModuleVectors[0][i]*targetModuleVectors[0][i]) +
-        (targetModuleVectors[1][i]*targetModuleVectors[1][i])   );
+        (targetModuleVectors[i][0]*targetModuleVectors[i][0]) +
+        (targetModuleVectors[i][1]*targetModuleVectors[i][1])   );
       //find and store the largest speed(all speeds are positive)
       if(maxSpeed < targetMotorSpeeds[i]){
         maxSpeed = targetMotorSpeeds[i];
@@ -239,6 +239,9 @@ public class SwerveDrive extends SubsystemBase {
    * @param arcAngleInRad the angle from the front of the robot to the point we wish to move around
    * @return an array of angles and scaled normalizations for speed management
    */
+  
+  //TODO:Fix all the two dimensional arrays
+
   public double[][] generateArcAngles(double arcRadius, double arcAngleInRad){
     //create a vector out of the arcAngle and length, this is from the
     // center of the robot to the center of the circle we are following
@@ -411,7 +414,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public Rotation2d getGyroRotation2d(){
     //return a newly constructed Rotation2d object, it takes the angle in radians as a constructor arguement
-    return imu.getRotation2d();
+    return new Rotation2d(getGyroInRad());
     //TODO:(with robot) check that counterclockwise rotation is positive
   }
 
@@ -422,7 +425,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in radians
    */
   public double getGyroInRad(){
-    return Math.toRadians(imu.getAngle());
+    return Math.toRadians(getGyroInDeg());
     // Pull and return gyro in radians
     //TODO:(with robot) check that counterclockwise rotation is positive
   }
@@ -434,7 +437,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in degrees
    */
   public double getGyroInDeg(){
-    return imu.getAngle();//Pull gyro in radians and convert to degrees
+    return imu.getGyroAngleX();//Pull gyro in radians and convert to degrees
     //TODO:(with robot) check that counterclockwise rotation is positive
   }
 
@@ -481,7 +484,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetAllModules(){
     for (int i=0; i<4; i++){
-      swerveModules[i].resetPositionArray();
+      swerveModules[i].resetPosition();
     }
   }
 

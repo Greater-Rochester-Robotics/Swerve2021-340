@@ -72,7 +72,7 @@ public class SwerveModule {
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
         // Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real
         // distance, DRIVE_ENC_TO_METERS_FACTOR
-         driveMotor.setInverted(true);// Set motor inverted(set to true)
+         driveMotor.setInverted(false);// Set motor inverted(set to true)
         // TODO: setup the PID on the TalonFX for velocity control
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
@@ -148,10 +148,11 @@ public class SwerveModule {
     /**
      * Resets the positional array to [0.0, 0.0]
      */
-    public void resetPositionArray() {
+    public void resetPosition() {
         
-        setRotateAbsSensor(0.0);
-        setRotateAbsSensor(-getAbsPosInDeg());
+        
+        setRotateAbsSensor(this.rotateAbsSensor.configGetMagnetOffset()-getAbsPosInDeg());
+        
     }
 
     
@@ -267,13 +268,16 @@ public class SwerveModule {
     public void setPosInRad(double targetPos) {
         double posDiff = targetPos - getPosInRad();
         double absDiff = Math.abs(posDiff);
-
+        // System.out.println("targetPos = " + targetPos);
         // if the distance is more than a half circle,we going the wrong way, fix
         if (absDiff > Math.PI) {
             // the distance the other way around the circle
             posDiff = posDiff - (Constants.TWO_PI * Math.signum(posDiff));
         }
-
+        else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+            rotatePID.setReference(0.0, ControlType.kDutyCycle);
+            return;
+        }
         // //This is for inverting the motor if target angle is 90-270 degrees away,
         // invert
         // //To fix going the wrong way around the circle, distance is larger than 270
@@ -299,7 +303,7 @@ public class SwerveModule {
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
 
-        System.out.println("Target Encoder Distance, targetPos, outputEncValue" + targetEncDistance + " " + targetPos + " " + outputEncValue);
+        // System.out.println("Target Encoder Distance, targetPos, outputEncValue" + targetEncDistance + " " + targetPos + " " + outputEncValue);
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition);
     }

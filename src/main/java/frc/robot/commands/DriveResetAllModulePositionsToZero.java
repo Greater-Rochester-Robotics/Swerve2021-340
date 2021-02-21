@@ -25,4 +25,7 @@ public class DriveResetAllModulePositionsToZero extends InstantCommand {
     RobotContainer.swerveDrive.resetAllModules();
   }
 
+  public boolean runsWhenDisabled(){
+    return true;
+  }
 }
