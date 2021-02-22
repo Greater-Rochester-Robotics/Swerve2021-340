@@ -95,7 +95,8 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   /**
    * This method is run once per scheduler run. It works by 
-   * adding the change of each module to update the currentPosition
+   * adding the change in position of each module to update
+   * the currentPosition
    */
   public void periodic() {
     //create an array to store the distance travelled by the robot since the last time this was called
@@ -108,7 +109,7 @@ public class SwerveDrive extends SubsystemBase {
       //add the distance travelled in the y by this module to the others(with respect to the robot)
       deltaPosition[1]+= deltaPerMod[1];
     }
-    //the prior array is based around the robot's x and y and not the feild's
+    //the prior array is based around the robot's x and y and not the field's
 
     //The following pulls the current rotational orientation of the robot(Rotation2d)
     // Rotation2d currentRot = this.getGyroRotation2d();
@@ -121,7 +122,8 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Drives the robot based on speeds from the robot's orientation.
-   * all speed should be in range of -1.0 to 1.0 with 0.0 being not moving in that direction
+   * all speed should be in range of -1.0 to 1.0 with 0.0 being not moving
+   * in that direction.
    * @param forwardSpeed the movement forward and backward
    * @param strafeSpeed the movement side to side
    * @param rotSpeed the speed of rotation
@@ -170,8 +172,11 @@ public class SwerveDrive extends SubsystemBase {
         targetMotorSpeeds[i] = targetMotorSpeeds[i]/maxSpeed;
       }
     //the following creates an effective deadzone
-    }else if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
+    }
+    //TODO:change the following to a simple if, invert the logic, and within place the next for loop
+    else if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
       //if the maxSpeed is below the minimum movement speed, don't let the modules turn.
+       
       return;
     }
 
@@ -180,7 +185,7 @@ public class SwerveDrive extends SubsystemBase {
       swerveModules[i].setPosInRad(targetModuleAngles[i]); 
     }
 
-    double[] curAngles = new double[4]; // pull the current angles of the modules
+    double[] curAngles = new double[4]; // pull the current angles of the modules(do this now, to allow moduel to invert)
     for (int i=0; i<4; i++){
       curAngles[i] = swerveModules[i].getPosInRad();
     }
@@ -190,7 +195,7 @@ public class SwerveDrive extends SubsystemBase {
       targetMotorSpeeds[i] = targetMotorSpeeds[i]*Math.cos(targetModuleAngles[i]-curAngles[i]);
     }
 
-    //assign output to each module(use a for loop with targetMotorSpeeds[])
+    //assign output to each module(uses a for loop with targetMotorSpeeds[])
     for (int i=0; i<4; i++){
       swerveModules[i].setDriveMotor(targetMotorSpeeds[i]);
     }
@@ -200,9 +205,17 @@ public class SwerveDrive extends SubsystemBase {
   /**
    * Drive the robot so that all directions are independent of the robots orientation (rotation)
    * all speed should be in range of -1.0 to 1.0 with 0.0 being not moving in that direction
-   * @param awaySpeed from field centric, aka a fix direction, away from or toward the driver, a speed
-   * @param lateralSpeed from field centric, aka a fix direction regardless of robot rotation, a speed 
+   * 
+   * @param awaySpeed from field centric, aka a fix direction,
+   *                  away from or toward the driver, a speed
+   *                  valued between -1.0 and 1.0, where 1.0
+   *                  is to away from the driver 
+   * @param lateralSpeed from field centric, aka a fix direction
+   *                     regardless of robot rotation, a speed
+   *                     valued between -1.0 and 1.0, where 1.0
+   *                     is to the left 
    * @param rotSpeed rotational speed of the robot
+   *                 -1.0 to 1.0 where 0.0 is not rotating
    */
   public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed){
     //pull the current oreintation of the robot(based on gyro)
@@ -398,7 +411,9 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   /**
-   * A function that allows the user to reset the gyro
+   * A function that allows the user to reset the gyro, this 
+   * makes the current orientation of the robot 0 degrees on 
+   * the gyro.
    */
   public void resetGyro(){
     //Resets the gyro(zero it)
@@ -415,7 +430,7 @@ public class SwerveDrive extends SubsystemBase {
   public Rotation2d getGyroRotation2d(){
     //return a newly constructed Rotation2d object, it takes the angle in radians as a constructor arguement
     return new Rotation2d(getGyroInRad());
-    //TODO:(with robot) check that counterclockwise rotation is positive
+    //note that counterclockwise rotation is positive
   }
 
   /**
@@ -425,9 +440,8 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in radians
    */
   public double getGyroInRad(){
-    return Math.toRadians(getGyroInDeg());
-    // Pull and return gyro in radians
-    //TODO:(with robot) check that counterclockwise rotation is positive
+    return Math.toRadians(getGyroInDeg());// Pull the gyro in degrees, convert and return in radians
+    //note that counterclockwise rotation is positive
   }
 
   /**
@@ -437,8 +451,8 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in degrees
    */
   public double getGyroInDeg(){
-    return imu.getGyroAngleX();//Pull gyro in radians and convert to degrees
-    //TODO:(with robot) check that counterclockwise rotation is positive
+    return imu.getGyroAngleX();//Pull gyro in degrees
+    //note counterclockwise rotation is positive
   }
 
   /**
@@ -457,6 +471,10 @@ public class SwerveDrive extends SubsystemBase {
     return moduleAngles;
   }
 
+  /**
+   * 
+   * @return
+   */
   public double[] getAllModuleDistance(){
     double[] moduleDistances = new double[4];
     for(int i=0; i<4; i++){
@@ -466,25 +484,30 @@ public class SwerveDrive extends SubsystemBase {
   }
 
 
-
-
   /**
    * a method to print all module positions for testing purposes
    */
   public void printAllModuleAngles(){
-    //Use a for loop to and print() all modules' angles(degrees) on one line, make sure to newline "\n" at the end  
+    //Use a for loop to and print() all modules' angles(degrees) on one line  
     System.out.print("Angle = ");
   
     for(int i=0; i<4; i++){
       System.out.print(swerveModules[i].getAbsPosInDeg()+"\t");
     }
+    //make sure to newline "\n" at the end
     System.out.print("\n");
   }
   
-
-  public void resetAllModules(){
+  /**
+   * Method for taking the current position of all modules,
+   * and making that position the absolute zero of each 
+   * modules position respectively.
+   */
+  public void zeroAllModulePosSensors(){
+    //a for loop so cycle through all modules
     for (int i=0; i<4; i++){
-      swerveModules[i].resetPosition();
+      //call the zero position method
+      swerveModules[i].zeroAbsPositionSensor();
     }
   }
 

@@ -11,12 +11,10 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
-import com.revrobotics.CANAnalog;
+
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
@@ -27,36 +25,29 @@ import frc.robot.Constants;
 
 /**
  * This is the class containing both motor controllers, the CANCodder and all
- * functions needed to run one swerve module. It has a periodic method that must
- * be called periodically for it to work.
+ * functions needed to run one swerve module. 
  */
 public class SwerveModule {
     private TalonFX driveMotor;
     private CANSparkMax rotationMotor;
+    // The rotateRelEncoder is a built in relative position sensor on the SparkMAX
+    // motor. It can't tell us our angle (like the rotateAbsSensor), but it does 
+    // not have the same discontinuity issue. So when we know how far we want to 
+    // move, we can use the rotateRelEncoder to track our progress as we move.
+    private CANEncoder rotateRelEncoder;
+    private CANPIDController rotatePID;
     // The rotateAbsSensor is an absolute position sensor ranging from -180 to 180,
     // We'll use it to tell where we are and where we want to be, but due to the
-    // dicontinuity
-    // from -180 to 180, it can't be used for motion. We use the rotateRelEncoder
-    // for that.
+    // discontinuity from -180 to 180, it can't be used for motion. We use the 
+    // rotateRelEncoder for that.
     private CANCoder rotateAbsSensor;
-    // The rotateRelEncoder is a built in relative position sensor on the sparkMax
-    // motor.
-    // It can't tell us our angle (like the rotateAbsSensor), but it does not have
-    // the same discontinuity issue.
-    // So when we know how far we want to move, we can use the rotateRelEncoder to
-    // track our progress as we move.
-    private CANEncoder rotateRelEncoder;
-    // private CANAnalog rotationSensor;//switch to the CANCoder requires not doing
-    // this
-    private CANPIDController rotatePID;
     private boolean isInverted = false;// this is for a future function
-    // these are for the periodic call thread
+    // these are for the periodic call for odometry update
     private double currentDegAngle = 0.0;
-    private volatile double prevAngle = 0.0;
-    private volatile double currentPosition = 0.0;
-    private volatile double prevPosition = 0.0;
+    private double prevAngle = 0.0;//storing the previous module angle for odometry
+    private double currentPosition = 0.0;
+    private double prevPosition = 0.0;//storing the previous drive distance for odometry
     private Rotation2d currentRotPos = new Rotation2d();
-    private volatile double[] positionArray = new double[] { 0.0, 0.0 };
 
     /**
      * Creates a new SwerveModule object
@@ -69,10 +60,13 @@ public class SwerveModule {
      */
     public SwerveModule(int driveMotorID, int rotationMotorID, int canCoderID) {
         driveMotor = new TalonFX(driveMotorID);
+        //TODO: reset the drive motor to factory default, configFactoryDefault()
+        //TODO: use configSelectedFeedbackSensor with IntegratedSensor 
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
-        // Use configSelectedFeedbackCoefficient(), to scale the driveMotor to real
-        // distance, DRIVE_ENC_TO_METERS_FACTOR
-         driveMotor.setInverted(false);// Set motor inverted(set to true)
+        // above uses configSelectedFeedbackCoefficient(), to scale the
+        // driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
+        driveMotor.setInverted(false);// Set motor inverted(set to true)
+        // TODO:Enable voltage compensation mode, set voltage to 12V (two methods, one is configVoltageCompSaturation())
         // TODO: setup the PID on the TalonFX for velocity control
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
@@ -80,28 +74,23 @@ public class SwerveModule {
 
         rotationMotor.setIdleMode(IdleMode.kBrake);// set rotationMotor brake mode, so motors stop on a dime
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
-        rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor maybe 40A?
-        rotationMotor.setInverted(true);
-
-        rotateAbsSensor = new CANCoder(canCoderID);
-        rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
-        // rotationSensor =
-        // rotationMotor.getAnalog(CANAnalog.AnalogMode.kAbsolute);//switch to the
-        // CANCoder requires not doing this
-        // rotationSensor.setPositionConversionFactor(Constants.VOLTAGE_TO_RAD_CONV_FACTOR);//switch
-        // to the CANCoder requires not doing this
+        rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor maybe 40A? Don't burn the NEO550
+        rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
 
         rotateRelEncoder = rotationMotor.getEncoder();
         rotatePID = rotationMotor.getPIDController();
         rotatePID.setFeedbackDevice(rotateRelEncoder);
 
-        // set the PID values for the Encoder controlled rotation
+        // set the PID values for the relative, encoder controlled rotation, on the SparkMAX
         rotatePID.setP(Constants.SWERVE_ROT_P_VALUE);
         rotatePID.setI(Constants.SWERVE_ROT_I_VALUE);
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
         rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
         
+        rotateAbsSensor = new CANCoder(canCoderID);//this sensor is angle of the module, as an absolute value
+        rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+
         // use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
         rotatePID.setOutputRange(Constants.SWERVE_ROT_PID_VOLTAGE_MINIMUM, Constants.SWERVE_ROT_PID_VOLTAGE_MAXIMUM);
     }
@@ -109,9 +98,10 @@ public class SwerveModule {
     /**
      * This method is used to pull and compute the currentAngle so the sensor is
      * called once, additionally position of the module is computed here.
+     * Currently, currentAngle is called independently by other function
      */
     public double[] periodic() {
-        // pull the current positon from the absolute rotation sesnors
+        // pull the current position from the absolute rotation sesnors
         this.currentDegAngle = rotateAbsSensor.getAbsolutePosition();
         this.currentRotPos = new Rotation2d(Math.toRadians(this.currentDegAngle));
         // this.currentAngle = Math.toRadians(rotateAbsSensor.getAbsolutePosition());
@@ -137,28 +127,8 @@ public class SwerveModule {
     }
 
     /**
-     * This method returns the array of distance traveled by the module in X and Y
-     * 
-     * @return distance in X(0) and Y(1), units based on
-     */
-    public double[] getModulePosition() {
-        return this.positionArray;
-    }
-
-    /**
-     * Resets the positional array to [0.0, 0.0]
-     */
-    public void resetPosition() {
-        
-        
-        setRotateAbsSensor(this.rotateAbsSensor.configGetMagnetOffset()-getAbsPosInDeg());
-        
-    }
-
-    
-
-    /**
      * Set the speed of the drive motor in percent duty cycle
+     * note: Inverted module safe
      * 
      * @param dutyCycle a number between -1.0 and 1.0, where 0.0 is not moving, as
      *                  percent duty cycle
@@ -170,12 +140,15 @@ public class SwerveModule {
     /**
      * Set the speed of the drive motor in meter per second, this relies on the
      * PIDController built into the TalonFX.
+     * note: Inverted module safe
      * 
      * @param speed a speed in meters per second
      */
     public void setDriveSpeed(double speed) {
         driveMotor.set(TalonFXControlMode.Velocity, speed * (isInverted ? -1 : 1));
     }
+
+    //TODO:create modifier method to switch between brake and coast on the driveMotor
 
     /**
      * @return the distance the drive wheel has traveled
@@ -195,8 +168,8 @@ public class SwerveModule {
     }
 
     /**
-     * A method to set the position of the drive encoder to zero essentially
-     * resetting it.
+     * A method to set the position of the drive encoder to zero,
+     * essentially resetting it.
      */
     public void resetDriveMotorEncoder() {
         driveMotor.setSelectedSensorPosition(0.0);// this code sets the Drive position to 0.0
@@ -204,8 +177,8 @@ public class SwerveModule {
 
     /**
      * The CANCoder has a mechanical zero point, this is hard to move, so this
-     * methood is used to set the offset of the CANCoder so we can dictate the zero
-     * position.
+     * method is used to set the offset of the CANCoder so we can dictate the zero
+     * position. 
      * 
      * @param value a number between -180 and 180, where 0 is straight ahead
      */
@@ -214,17 +187,30 @@ public class SwerveModule {
     }
 
     /**
+     * The CANCoder has a mechanical zero point, this is hard to move, so this
+     * method is used to change the offset of the CANCoder so we dictate the zero
+     * position as the current position of the module.
+     */
+    public void zeroAbsPositionSensor() {
+        //find the current offset, subtract the current position, and makes this number the new offset.
+        setRotateAbsSensor(this.rotateAbsSensor.configGetMagnetOffset()-getAbsPosInDeg());
+    }
+
+    /**
+     * The CANCoder reads the absolute rotational position
+     * of the module. This method returns that positon in 
+     * degrees.
+     * 
      * @return the position of the module in degrees, should limit from -180 to 180
      */
     public double getAbsPosInDeg() {
         return rotateAbsSensor.getAbsolutePosition();
-        // TODO:Above has to be checked, if the sensor is positive clockwise, fix(Need
-        // Robot)
     }
 
     /**
      * this is a function meant for testing by getting the count from the rotational
-     * encoder which is internal to the NEO550.
+     * encoder which is internal to the NEO550. This encoder is relative, and does 
+     * not easily translate to a specific rotational position of the swerve module.
      * 
      * @return the encoder count(no units, naturally just the count)
      */
@@ -245,22 +231,22 @@ public class SwerveModule {
         // double currentAngleRad = this.currentRotPos.getRadians();
         // //the following is a single line return, used with invertable drive
         // return isInverted?
-        // ((currentAngleRad <= 0.0)?currentAngleRad-180:-180+currentAngleRad):
-        // (currentAngleRad);
+        //     ((currentAngleRad <= 0.0)?currentAngleRad-180:-180+currentAngleRad):
+        //     (currentAngleRad);
         // //the following is an if statement set used with invertable drive
         // if(isInverted){
-        // if(currentAngle <= Math.PI){
-        // return currentAngle;
+        //     if(currentAngle <= Math.PI){
+        //         return currentAngle;
+        //     }else{
+        //         return Constants.TWO_PI-currentAngle;
+        //     }
         // }else{
-        // return Constants.TWO_PI-currentAngle;
-        // }
-        // }else{
-        // return rotationSensor.getPosition() - Math.PI;
+        //     return rotationSensor.getPosition() - Math.PI;
         // }
     }
 
     /**
-     * set the setpoint for the module rotation
+     * Set the setpoint for the module rotation
      * 
      * @param targetPos a value between -PI and PI, PI is counter-clockwise, 0.0 is
      *                  forward
@@ -275,6 +261,7 @@ public class SwerveModule {
             posDiff = posDiff - (Constants.TWO_PI * Math.signum(posDiff));
         }
         else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+            //if the distance to the goal is small enough, stop rotation and return
             rotatePID.setReference(0.0, ControlType.kDutyCycle);
             return;
         }
@@ -282,20 +269,24 @@ public class SwerveModule {
         // invert
         // //To fix going the wrong way around the circle, distance is larger than 270
         // if(absDiff >= Constants.THREE_PI_OVER_TWO){
-        // //the distance the other way around the circle
-        // posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
+        //     //the distance the other way around the circle
+        //     posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
         // //if between 90 and 270 invert the motor
         // }else if(absDiff < Constants.THREE_PI_OVER_TWO && absDiff >
-        // Constants.PI_OVER_TWO){
-        // //switch the motor inversion
-        // isInverted = !isInverted;
-        // //Since inverted, recompute everything
-        // posDiff = targetPos - getPosInRad();
-        // absDiff = Math.abs(posDiff);
-        // if(absDiff > Constants.THREE_PI_OVER_TWO){
-        // //the distance the other way around the circle
-        // posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
-        // }
+        //     Constants.PI_OVER_TWO){
+        //     //switch the motor inversion
+        //     isInverted = !isInverted;
+        //     //Since inverted, recompute everything
+        //     posDiff = targetPos - getPosInRad();
+        //     absDiff = Math.abs(posDiff);
+        //     if(absDiff > Constants.THREE_PI_OVER_TWO){
+        //         //the distance the other way around the circle
+        //         posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
+        //     }
+        // }else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+        //     //if the distance to the goal is small enough, stop rotation and return
+        //     rotatePID.setReference(0.0, ControlType.kDutyCycle);
+        //     return;
         // }
 
         // Convert the shortest distance to encoder value(use convertion factor)
@@ -307,9 +298,18 @@ public class SwerveModule {
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition);
     }
+
+    /**
+     * This is a testing method, used to drive the module's rotation.
+     * it takes pure motor duty cycle(percent output). Positive input 
+     * should result in counter-clockwise rotation. If not, the motor
+     * output must be inverted.
+     * @param speed a percent output from -1.0 to 1.0, where 0.0 is stopped
+     */
     public void driveRotateMotor(double speed) {
         this.rotationMotor.set(speed);
     }
+
     /**
      * This method is used to stop the module completely. The drive motor is
      * switched to percent voltage and and output of 0.0 percent volts. The rotation

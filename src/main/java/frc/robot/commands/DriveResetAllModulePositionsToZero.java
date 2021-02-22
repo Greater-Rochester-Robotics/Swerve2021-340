@@ -10,6 +10,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 
+/**
+ * This command sets the current position of the modules as the zero
+ * degrees. All the modules should be facing forward when running 
+ * this command. this command can be run while the robot is disabled.
+ */
 public class DriveResetAllModulePositionsToZero extends InstantCommand {
   /**
    * Creates a new DriveResetAllModulePositionsToZero.
@@ -22,7 +27,7 @@ public class DriveResetAllModulePositionsToZero extends InstantCommand {
   @Override
   public void initialize() {
     //Call the reset function to zero all of the modules 
-    RobotContainer.swerveDrive.resetAllModules();
+    RobotContainer.swerveDrive.zeroAllModulePosSensors();
   }
 
   public boolean runsWhenDisabled(){

@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveStraightTrapProfile extends CommandBase {
