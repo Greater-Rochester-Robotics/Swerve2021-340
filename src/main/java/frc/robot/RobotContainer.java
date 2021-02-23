@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
+import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
@@ -83,8 +84,7 @@ public class RobotContainer {
     driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
     driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
 
-    driverStart.whenPressed(new DriveStraightAtSpeed(0.5, Math.toRadians(45), SwerveDrive.kDriveMode.percentOutput));
-    driverStart.whenReleased(new DriveStopAllModules());
+    driverStart.whenPressed(new DriveFieldCentric());
     driverBack.whenPressed(new DriveRobotCentric());
   }
 

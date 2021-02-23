@@ -72,7 +72,7 @@ public class SwerveModule {
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();// reset the motor controller, wipe old stuff
 
-        rotationMotor.setIdleMode(IdleMode.kBrake);// set rotationMotor brake mode, so motors stop on a dime
+        rotationMotor.setIdleMode(IdleMode.kCoast);// set rotationMotor coast mode, so it doesnt overcorrect itself
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
         rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor maybe 40A? Don't burn the NEO550
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation

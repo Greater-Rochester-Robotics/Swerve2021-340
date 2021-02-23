@@ -141,7 +141,7 @@ public class SwerveDrive extends SubsystemBase {
       
       //compute the y-component of the vector by adding the targetVector to the cross product with rotspeed
       targetModuleVectors[i][1] = 
-        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );//TODO: check if this sign is right
+        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );
     }
 
     //generates angles for each module
@@ -173,10 +173,12 @@ public class SwerveDrive extends SubsystemBase {
       }
     //the following creates an effective deadzone
     }
-    //TODO:change the following to a simple if, invert the logic, and within place the next for loop
-    else if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
+    //change the following to a simple if, invert the logic, and within, place the next for loop
+    if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
       //if the maxSpeed is below the minimum movement speed, don't let the modules turn.
-       
+        for(int i=0 ; i<4 ; i++){
+          swerveModules[i].setDriveMotor(0.0);
+        }
       return;
     }
 
@@ -221,7 +223,7 @@ public class SwerveDrive extends SubsystemBase {
     //pull the current oreintation of the robot(based on gyro)
     Rotation2d gyro = this.getGyroRotation2d();
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
-    double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) + (gyro.getSin() * awaySpeed);
+    double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
     this.driveRobotCentric( robotForwardSpeed , robotStrafeSpeed , rotSpeed);
   }
 
@@ -253,7 +255,6 @@ public class SwerveDrive extends SubsystemBase {
    * @return an array of angles and scaled normalizations for speed management
    */
   
-  //TODO:Fix all the two dimensional arrays
 
   public double[][] generateArcAngles(double arcRadius, double arcAngleInRad){
     //create a vector out of the arcAngle and length, this is from the
@@ -262,10 +263,10 @@ public class SwerveDrive extends SubsystemBase {
       arcRadius*Math.cos(arcAngleInRad), arcRadius*Math.sin(arcAngleInRad)};
 
     //create an array to store our vectors from module to circle center
-    double[][] mathVector = new double[2][4];
+    double[][] mathVector = new double[4][2];
 
     //creates an output array for angles and normalizing factors for each module
-    double[][] outputArray = new double[2][4];
+    double[][] outputArray = new double[4][2];
 
     //will want to know the longest vector, the furtherest away a module is from center circle
     double maxLength = 0.0;
@@ -273,29 +274,29 @@ public class SwerveDrive extends SubsystemBase {
     //for every module, find the vector from the module to the arc's center
     for(int i=0; i<4; i++){
       //add the module position vector to the arc vector
-      mathVector[0][i] = arcVector[0]-Constants.MODULE_VECTORS[0][i];
-      mathVector[1][i] = arcVector[1]-Constants.MODULE_VECTORS[1][i];
+      mathVector[i][0] = arcVector[0]-Constants.MODULE_VECTORS[i][0];
+      mathVector[i][1] = arcVector[1]-Constants.MODULE_VECTORS[i][1];
 
       //find the length of the vector from this module to the arc center
-      outputArray[1][i] = Math.sqrt( (mathVector[0][i]*mathVector[0][i])
-        + (mathVector[0][i]*mathVector[0][i]) );
+      outputArray[i][1] = Math.sqrt( (mathVector[i][0]*mathVector[i][0])
+        + (mathVector[i][0]*mathVector[i][0]) );
       
       //find the longest vector, from module to circle center
-      if(outputArray[1][i] > maxLength){
-        maxLength = outputArray[1][i];
+      if(outputArray[i][1] > maxLength){
+        maxLength = outputArray[i][1];
       }
 
       //turn the vector from this module to the arc center to a unit vector
-      mathVector[0][i]/=outputArray[1][i];
-      mathVector[1][i]/=outputArray[1][i];
+      mathVector[i][0]/=outputArray[i][1];
+      mathVector[i][1]/=outputArray[i][1];
 
       //in order to drive an arc, we need angles that are rotated 90 degrees, hence x for y and -y for x
-      outputArray[0][i] = Math.atan2(mathVector[0][i],-1*mathVector[1][i]);
+      outputArray[i][0] = Math.atan2(mathVector[i][0],-1*mathVector[i][1]);
     }
 
     //normalize the max length of the Vectors, this will let us scale drive speed.
     for(int i=0; i<4; i++){
-      outputArray[1][i]/=maxLength;
+      outputArray[i][1]/=maxLength;
     }
 
     return outputArray;

@@ -27,10 +27,10 @@ public final class Constants {
     public static final double TWO_PI = 2*Math.PI;
 
     //Swerve dimension factors, distances from center of mass(units must be in meters!)
-    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = 5;//TODO:find this distance(Mech Team)
-    public static final double Y_POSITIVE_DISTANCE_FROM_CENTER = 5;
-    public static final double X_NEGATIVE_DISTANCE_FROM_CENTER = -5;//THIS NUMBER MUST BE NEGATIVE!!!!!
-    public static final double Y_NEGATIVE_DISTANCE_FROM_CENTER = -5;//THIS NUMBER MUST BE NEGATIVE!!!!!
+    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = .294;//TODO:find this distance(Mech Team)
+    public static final double Y_POSITIVE_DISTANCE_FROM_CENTER = .294;
+    public static final double X_NEGATIVE_DISTANCE_FROM_CENTER = -.294;//THIS NUMBER MUST BE NEGATIVE!!!!!
+    public static final double Y_NEGATIVE_DISTANCE_FROM_CENTER = -.294;//THIS NUMBER MUST BE NEGATIVE!!!!!
     //These are computed from above values
     public static final double DISTANCE_TO_MODULE_0 = Math.sqrt(
         (X_POSITIVE_DISTANCE_FROM_CENTER*X_POSITIVE_DISTANCE_FROM_CENTER) +
@@ -66,7 +66,7 @@ public final class Constants {
     public static final double SWERVE_MODULE_TOLERANCE = 0.017;
     
     //Swerve rotation PID constants
-    public static final double SWERVE_ROT_P_VALUE = 0.8;
+    public static final double SWERVE_ROT_P_VALUE = 0.035;//if sluggish, increase P value
     public static final double SWERVE_ROT_I_VALUE = 0.0;
     public static final double SWERVE_ROT_D_VALUE = 0.0;
     public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
