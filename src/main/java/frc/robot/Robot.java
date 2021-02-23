@@ -58,10 +58,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    RobotContainer.limelight.setLightState(1);
   }
 
   @Override
   public void disabledPeriodic() {
+    RobotContainer.limelight.setLightState(1);
   }
 
   /**
