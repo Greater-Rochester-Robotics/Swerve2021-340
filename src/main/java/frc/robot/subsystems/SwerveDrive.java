@@ -111,12 +111,12 @@ public class SwerveDrive extends SubsystemBase {
     }
     //the prior array is based around the robot's x and y and not the field's
 
-    //The following pulls the current rotational orientation of the robot(Rotation2d)
+    // //The following pulls the current rotational orientation of the robot(Rotation2d)
     // Rotation2d currentRot = this.getGyroRotation2d();
     // // The following updates the currentPostion object
     // currentPosition = new Pose2d(
     //   currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
-    //   currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) + (deltaPosition[0]*currentRot.getSin()),
+    //   currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
     //   currentRot);
   }
 
@@ -175,10 +175,11 @@ public class SwerveDrive extends SubsystemBase {
     }
     //change the following to a simple if, invert the logic, and within, place the next for loop
     if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
-      //if the maxSpeed is below the minimum movement speed, don't let the modules turn.
-        for(int i=0 ; i<4 ; i++){
-          swerveModules[i].setDriveMotor(0.0);
-        }
+      //if the maxSpeed is below the minimum movement speed, stop all the motors.
+      for(int i=0 ; i<4 ; i++){
+        swerveModules[i].setDriveMotor(0.0);
+      }
+      //if the maxSpeed is below the minimum movement speed, end this method, without turning modules
       return;
     }
 
@@ -233,6 +234,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
    * @param rotatePos a positon between -PI and PI where we want the module to be
    */
+  //TODO:Add fourth parameter, kDriveMode
   public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos){
     //test that moduleNumber is between 0-3, return if not(return;)
     if (moduleNumber > 3 && moduleNumber < 0){
@@ -245,6 +247,7 @@ public class SwerveDrive extends SubsystemBase {
     
     //write code to drive one module in a testing form
     swerveModules[moduleNumber].setPosInRad(rotatePos);
+    //TODO: check if mode is percentOutput do following, else use setDriveSpeed
     swerveModules[moduleNumber].setDriveMotor(moveSpeed);
   }
 
@@ -254,8 +257,6 @@ public class SwerveDrive extends SubsystemBase {
    * @param arcAngleInRad the angle from the front of the robot to the point we wish to move around
    * @return an array of angles and scaled normalizations for speed management
    */
-  
-
   public double[][] generateArcAngles(double arcRadius, double arcAngleInRad){
     //create a vector out of the arcAngle and length, this is from the
     // center of the robot to the center of the circle we are following
@@ -362,14 +363,14 @@ public class SwerveDrive extends SubsystemBase {
         System.out.println("Drive speed too slow for robot to move! " + speed);
         return;
       }
-    if (mode.equals(kDriveMode.percentOutput)){
-      if (angle < -Math.PI){
-        angle = -Math.PI;
+      if (mode.equals(kDriveMode.percentOutput)){
+        if (angle < -Math.PI){
+          angle = -Math.PI;
+        }
+        else if (angle > Math.PI){
+          angle = Math.PI;
+        }
       }
-      else if (angle > Math.PI){
-        angle = Math.PI;
-      }
-    }
     // TODO: Sanitize for mode velocity in the future
     //set all modules to angle
     for (int i=0; i<4; i++){
@@ -400,7 +401,7 @@ public class SwerveDrive extends SubsystemBase {
       }
     }
   }
-}
+  }
 
   /**
    * Stops all module motion, then lets all the modules spin freely.
@@ -484,6 +485,7 @@ public class SwerveDrive extends SubsystemBase {
     return moduleDistances;
   }
 
+  //TODO:create method to getAllModuleVelocity
 
   /**
    * a method to print all module positions for testing purposes
@@ -511,5 +513,7 @@ public class SwerveDrive extends SubsystemBase {
       swerveModules[i].zeroAbsPositionSensor();
     }
   }
+
+  //TODO:write method to configure all modules DriveMotor PIDF
 
 }
