@@ -17,13 +17,13 @@ public class ChoochedLoad extends CommandBase {
    */
   public ChoochedLoad() {
     // Use addRequirements() here to declare subsystem dependencies.
-   // addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
+   addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotContainer.snekLoader.setState(State.kFillTo4);
+    RobotContainer.snekLoader.setState(State.kFillTo4);
       RobotContainer.harvester.raiseHarvester();
   }
 
@@ -35,7 +35,7 @@ public class ChoochedLoad extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //RobotContainer.snekLoader.setState(State.kOff);
+    RobotContainer.snekLoader.setState(State.kOff);
   }
 
   // Returns true when the command should end.

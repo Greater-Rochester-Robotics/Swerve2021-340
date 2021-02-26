@@ -18,6 +18,8 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GetSmol;
+import frc.robot.commands.Shoot;
+import frc.robot.commands.Harvester.IntakeBalls;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
@@ -27,7 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
-//import frc.robot.subsystems.SnekLoader;
+import frc.robot.subsystems.SnekLoader;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -56,7 +58,7 @@ public class RobotContainer {
 
   public static SwerveDrive swerveDrive;
 
-  //public static SnekLoader snekLoader;
+  public static SnekLoader snekLoader;
   public static Harvester harvester;
   public static Shooter shooter;
   public static Limelight limelight;
@@ -72,9 +74,9 @@ public class RobotContainer {
   public RobotContainer() {
     
     
-    //shooter = new Shooter();
-    harvester = new Harvester();
-    //snekLoader = new SnekLoader();
+    shooter = new Shooter();
+    // harvester = new Harvester();
+    snekLoader = new SnekLoader();
     limelight = new Limelight();
     limelight.setStreamMode(0);
     limelight.setLightState(1);
@@ -90,25 +92,25 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    //driverA.whenPressed(new DriveOneModule(0));
-    driverB.whenPressed(new DriveOneModule(1));
-    driverX.whenPressed(new DriveOneModule(2));
-    driverY.whenPressed(new DriveOneModule(3));
+   driverA.whileHeld(new Shoot());
+  //   driverB.whenPressed(new DriveOneModule(1));
+  //   driverX.whenPressed(new DriveOneModule(2));
+  //   driverY.whenPressed(new DriveOneModule(3));
     
-   // driverA.whenReleased(new DriveStopAllModules());
-    driverB.whenReleased(new DriveStopAllModules());
-    driverX.whenReleased(new DriveStopAllModules());
-    driverY.whenReleased(new DriveStopAllModules());
+  //  // driverA.whenReleased(new DriveStopAllModules());
+  //   driverB.whenReleased(new DriveStopAllModules());
+  //   driverX.whenReleased(new DriveStopAllModules());
+  //   driverY.whenReleased(new DriveStopAllModules());
     
-    driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
-    driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
+  //   driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
+  //   driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
 
-    driverStart.whenPressed(new DriveStraightAtSpeed(0.5, Math.toRadians(45), SwerveDrive.kDriveMode.percentOutput));
-    driverStart.whenReleased(new DriveStopAllModules());
-    driverBack.whenPressed(new DriveRobotCentric());
+  //   driverStart.whenPressed(new DriveStraightAtSpeed(0.5, Math.toRadians(45), SwerveDrive.kDriveMode.percentOutput));
+  //   driverStart.whenReleased(new DriveStopAllModules());
+  //   driverBack.whenPressed(new DriveRobotCentric());
 
-    driverA.whenPressed(new Load());
-    driverA.whenReleased(new GetSmol());
+  //   driverA.whenPressed(new Load());
+  //   driverA.whenReleased(new GetSmol());
   }
 
 

@@ -24,7 +24,7 @@ private boolean ron;
   public Load(boolean raise) {
     // Use addRequirements() here to declare subsystem dependencies.
     ron = raise;
-    //addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
+    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
   }
 
   // Called when the command is initially scheduled.
@@ -60,7 +60,7 @@ private boolean ron;
   @Override
   public boolean isFinished() {
     
-   // return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.harvester.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
+  //  return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.harvester.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
    return true;
   }
 }

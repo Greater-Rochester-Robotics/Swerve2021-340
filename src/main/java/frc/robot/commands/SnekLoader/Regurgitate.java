@@ -17,14 +17,14 @@ public class Regurgitate extends CommandBase {
    */
   public Regurgitate() {
     // Use addRequirements() here to declare subsystem dependencies.
-    //addRequirements(RobotContainer.snekLoader, RobotContainer.shooter);
+    addRequirements(RobotContainer.snekLoader, RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   // RobotContainer.snekLoader.setState(State.kSpitBalls);
-    // RobotContainer.shooter.setShooterWheel(-100);
+   RobotContainer.snekLoader.setState(State.kSpitBalls);
+    RobotContainer.shooter.setShooterWheel(-100);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,7 +35,7 @@ public class Regurgitate extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //RobotContainer.snekLoader.setState(State.kOff);
+    RobotContainer.snekLoader.setState(State.kOff);
     RobotContainer.shooter.setShooterWheel(0.0);
   }
 

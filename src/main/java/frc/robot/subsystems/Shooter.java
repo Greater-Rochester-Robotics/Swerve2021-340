@@ -16,6 +16,9 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
@@ -34,8 +37,8 @@ import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
-  private CANSparkMax shooterWheel;
-  private CANEncoder shooterEncoder;
+  private TalonFX shooterWheel;
+  // private CANEncoder shooterEncoder;
   private double targetVelocity;
   private DigitalInput ballCounter;
   private Solenoid hoodMover, hardStop;
@@ -50,19 +53,19 @@ public class Shooter extends SubsystemBase {
    */
   public Shooter() {
 
-    shooterWheel = new CANSparkMax(Constants.SHOOTER_WHEEL, MotorType.kBrushless);
-    shooterWheel.setIdleMode(CANSparkMax.IdleMode.kCoast);
-    shooterWheel.getPIDController().setP(0.00075);
-    shooterWheel.getPIDController().setI(0.0);
-    shooterWheel.getPIDController().setD(2.0);
-    shooterWheel.getPIDController().setFF(0.00019);
+    shooterWheel = new TalonFX(Constants.SHOOTER_WHEEL);
+    shooterWheel.setNeutralMode(NeutralMode.Coast);
+    shooterWheel.config_kP(0,0.00075);//.setP(0.00075);
+    shooterWheel.config_kI(0,0.0);//.setI(0.0);
+    shooterWheel.config_kD(0,2.0);//.setD(2.0);
+    shooterWheel.config_kF(0,0.00019);//.setFF(0.00019);
     // practice bot PIDF values
     // shooterWheel.getPIDController().setP(0.001);
     // shooterWheel.getPIDController().setI(0.0);
     // shooterWheel.getPIDController().setD(1);
     // shooterWheel.getPIDController().setFF(0.000187);
     shooterWheel.setInverted(true);
-    shooterEncoder = shooterWheel.getEncoder();
+    //shooterEncoder = shooterWheel.getEncoder();
     ballCounter = new DigitalInput(Constants.BALL_COUNTER_SENSOR);
     ballWasPresent = false;
     hoodMover = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL);
@@ -88,7 +91,7 @@ public class Shooter extends SubsystemBase {
       smartCount = 0;
       SmartDashboard.putString("Balls Shot", "" + ballsShot);
       SmartDashboard.putBoolean("Shooter Sensor", getShooterSensor());
-      SmartDashboard.putString("Flywheel Speed", "" + Math.round(shooterEncoder.getVelocity()));
+      SmartDashboard.putString("Flywheel Speed", "" + Math.round(shooterWheel.getSelectedSensorVelocity()));
       SmartDashboard.putString("Total Balls Shot", "" + totalBallsShot);
       if (DriverStation.getInstance().isFMSAttached()) {
         SmartDashboard.setPersistent("Total Balls Shot");
@@ -111,12 +114,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stop() {
-    shooterWheel.setVoltage(0);
+    shooterWheel.set(ControlMode.PercentOutput,0);
   }
 
   // Returns RPM of shooterWheel
   public double getShooterVelocity() {
-    return shooterEncoder.getVelocity();
+    return shooterWheel.getSelectedSensorVelocity();
   }
 
   public void setShooterWheel(double speed) {
@@ -126,18 +129,18 @@ public class Shooter extends SubsystemBase {
     // speed = 1;
     // }
     if (speed < 1 && speed > -1) {
-      shooterWheel.setVoltage(0);
+      shooterWheel.set(ControlMode.PercentOutput,0);
     } else {
       // shooterWheel.getPIDController().setFF(speed * 1 + 0);
       targetVelocity = speed;
-      shooterWheel.getPIDController().setReference(speed, ControlType.kVelocity);
+      shooterWheel.set(ControlMode.Velocity, targetVelocity);//.setReference(speed, ControlType.kVelocity);
       // shooterWheel.set(speed);
     }
   }
 
   public boolean isShooterAtSpeed() {
-    return ((shooterEncoder.getVelocity() >= (targetVelocity * 1) - 25)
-        && (shooterEncoder.getVelocity() <= (targetVelocity * 1) + 25));
+    return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 25)
+        && (shooterWheel.getSelectedSensorVelocity() <= (targetVelocity * 1) + 25));
 
   }
 
