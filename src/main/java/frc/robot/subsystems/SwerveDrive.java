@@ -486,6 +486,11 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   //TODO:create method to getAllModuleVelocity
+  public double[] getAllModuleVelocity(){
+    double[] moduleVelocities = new double[4];
+    
+    return moduleVelocities;
+  }
 
   /**
    * a method to print all module positions for testing purposes
