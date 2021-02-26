@@ -17,7 +17,9 @@ import com.revrobotics.CANPIDController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 
@@ -60,14 +62,18 @@ public class SwerveModule {
      */
     public SwerveModule(int driveMotorID, int rotationMotorID, int canCoderID) {
         driveMotor = new TalonFX(driveMotorID);
-        //TODO: reset the drive motor to factory default, configFactoryDefault()
-        //TODO: use configSelectedFeedbackSensor with IntegratedSensor 
+        driveMotor.configFactoryDefault();
+        // use the integrated sensor with the primary closed loop and timeout is 0.
+        driveMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
         // above uses configSelectedFeedbackCoefficient(), to scale the
         // driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
         driveMotor.setInverted(false);// Set motor inverted(set to true)
-        // TODO:Enable voltage compensation mode, set voltage to 12V (two methods, one is configVoltageCompSaturation())
-        // TODO: setup the PID on the TalonFX for velocity control
+        driveMotor.enableVoltageCompensation(true);
+        driveMotor.configVoltageCompSaturation(Constants.MAXIMUM_VOLTAGE);
+        setDriveMotorPIDF(Constants.SWERVE_DRIVE_P_VALUE, Constants.SWERVE_DRIVE_I_VALUE,
+                          Constants.SWERVE_DRIVE_D_VALUE, Constants.SWERVE_DRIVE_F_VALUE);
+    
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();// reset the motor controller, wipe old stuff
@@ -148,7 +154,14 @@ public class SwerveModule {
         driveMotor.set(TalonFXControlMode.Velocity, speed * (isInverted ? -1 : 1));
     }
 
-    //TODO:create modifier method to switch between brake and coast on the driveMotor
+   /**
+     * Sets when it is in neutral, it will brake or coast
+     * 
+     * @param neutral whether to brake or coast   
+     */
+    public void setDriveMotorMode(NeutralMode neutral){
+        driveMotor.setNeutralMode(neutral);
+    }
 
     /**
      * @return the distance the drive wheel has traveled
@@ -175,7 +188,20 @@ public class SwerveModule {
         driveMotor.setSelectedSensorPosition(0.0);// this code sets the Drive position to 0.0
     }
 
-    //TODO:Create modifier method to change the PIDF constants on the DriveMotor object
+    /**
+     * sets the drive motor's PIDF
+     * 
+     * @param P value of the P constant
+     * @param I value of the I constant
+     * @param D value of the D constant
+     * @param F value of the F constant
+     */
+    public void setDriveMotorPIDF(double P, double I, double D, double F) {
+        driveMotor.config_kP(0, P);
+        driveMotor.config_kI(0, I);
+        driveMotor.config_kD(0, D);
+        driveMotor.config_kF(0, F);
+    }
 
     /**
      * The CANCoder has a mechanical zero point, this is hard to move, so this

@@ -64,7 +64,12 @@ public final class Constants {
     public static final double MAXIMUM_VELOCITY = 1.0;
     public static final double MAXIMUM_ACCELERATION = 1.0;
     public static final double SWERVE_MODULE_TOLERANCE = 0.017;
-    
+    public static final double MAXIMUM_VOLTAGE = 12.0; 
+    public static final double SWERVE_DRIVE_P_VALUE = 0.035;
+    public static final double SWERVE_DRIVE_I_VALUE = 0.0;
+    public static final double SWERVE_DRIVE_D_VALUE = 0.0;
+    public static final double SWERVE_DRIVE_F_VALUE = 0.0001;
+
     //Swerve rotation PID constants
     public static final double SWERVE_ROT_P_VALUE = 0.035;//if sluggish, increase P value
     public static final double SWERVE_ROT_I_VALUE = 0.0;
