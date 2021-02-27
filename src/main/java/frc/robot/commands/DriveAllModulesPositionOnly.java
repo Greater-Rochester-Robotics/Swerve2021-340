@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveAllModulesPositionOnly extends CommandBase {
   private double rotatePos = 0;
@@ -29,7 +30,7 @@ public class DriveAllModulesPositionOnly extends CommandBase {
       rotatePos = Math.atan2(Robot.robotContainer.getDriverAxis(Axis.LEFT_Y),Robot.robotContainer.getDriverAxis(Axis.LEFT_X));
     }
     for (int i=0 ; i<4 ; i++){
-      RobotContainer.swerveDrive.driveOneModule(i, 0, rotatePos);
+      RobotContainer.swerveDrive.driveOneModule(i, 0, rotatePos, kDriveMode.percentOutput);
     }
   }
 

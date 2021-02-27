@@ -6,10 +6,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * for use with https://docs.ctre-phoenix.com/en/latest/ch16_ClosedLoop.html
@@ -34,7 +32,7 @@ public class DriveTuneDriveMotorFeedForward extends CommandBase {
   public void execute() {
     //use driveOneModule for each motor, position setting m0 to 135, m1 to -135, m2 to -45, and m3 to 45, set speed to field speed
     for (int i=0; i<4; i++){
-      RobotContainer.swerveDrive.driveOneModule(i, speed, angle[i]);
+      RobotContainer.swerveDrive.driveOneModule(i, speed, angle[i], kDriveMode.percentOutput);
       SmartDashboard.putNumber("Module Velocity", RobotContainer.swerveDrive.getAllModuleVelocity()[i]);
     }
     //Print all module velocities

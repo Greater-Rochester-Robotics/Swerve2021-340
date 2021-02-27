@@ -233,9 +233,9 @@ public class SwerveDrive extends SubsystemBase {
    * @param moduleNumber which of the four modules(0-3) we are using
    * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
    * @param rotatePos a positon between -PI and PI where we want the module to be
+   * @param kDriveMode changes between velocity mode and dutyCycle mode
    */
-  //TODO:Add fourth parameter, kDriveMode
-  public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos){
+  public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos, kDriveMode mode){
     //test that moduleNumber is between 0-3, return if not(return;)
     if (moduleNumber > 3 && moduleNumber < 0){
       System.out.println("Module " + moduleNumber + " is out of bounds.");
@@ -247,8 +247,13 @@ public class SwerveDrive extends SubsystemBase {
     
     //write code to drive one module in a testing form
     swerveModules[moduleNumber].setPosInRad(rotatePos);
-    //TODO: check if mode is percentOutput do following, else use setDriveSpeed
-    swerveModules[moduleNumber].setDriveMotor(moveSpeed);
+    if (mode == kDriveMode.percentOutput){ 
+      swerveModules[moduleNumber].setDriveMotor(moveSpeed);
+    }
+    else {
+      swerveModules[moduleNumber].setDriveSpeed(moveSpeed);
+    }
+    
   }
 
   /**
@@ -325,7 +330,19 @@ public class SwerveDrive extends SubsystemBase {
         return;
       }
     }
-    // TODO: Sanitize for mode velocity in the future
+    else {
+      if (speed < -Constants.MAXIMUM_VELOCITY){  
+        speed = -Constants.MAXIMUM_VELOCITY;
+      }
+      else if (speed > Constants.MAXIMUM_VELOCITY){
+        speed = Constants.MAXIMUM_VELOCITY;
+      }
+      //return if speed below Constants.Minimum_speed in velocity
+      else if (Math.abs(speed) < Constants.MINIMUM_DRIVE_SPEED){
+        System.out.println("Drive speed too slow for robot to move! " + speed);
+        return;
+      }
+    }
     //set each module to the angle in arcArray(the first value)
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(arcArray[0][i]); 
@@ -339,10 +356,14 @@ public class SwerveDrive extends SubsystemBase {
     //set the speed of each motor to the speed multiplied by the second value of arcArray
     //Reduce power to motors until they align with the target angle(might remove later)
     for(int i=0 ; i<4 ; i++){
-      swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      if (mode == kDriveMode.percentOutput){ 
+        swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      }
+      else {
+        swerveModules[i].setDriveSpeed(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      }
     }
   }
-
   /**
    * This is a function to drive the robot straight in a set direction
    * @param speed the speed the robot should drive, -1.0 to 1.0 in percentOutput, 
@@ -363,15 +384,27 @@ public class SwerveDrive extends SubsystemBase {
         System.out.println("Drive speed too slow for robot to move! " + speed);
         return;
       }
-      if (mode.equals(kDriveMode.percentOutput)){
-        if (angle < -Math.PI){
-          angle = -Math.PI;
-        }
-        else if (angle > Math.PI){
-          angle = Math.PI;
-        }
+    }
+    else {
+      if (speed < -Constants.MAXIMUM_VELOCITY){  
+        speed = -Constants.MAXIMUM_VELOCITY;
       }
-    // TODO: Sanitize for mode velocity in the future
+      else if (speed > Constants.MAXIMUM_VELOCITY){
+        speed = Constants.MAXIMUM_VELOCITY;
+      }
+      //return if speed below Constants.Minimum_speed in velocity
+      else if (Math.abs(speed) < Constants.MINIMUM_DRIVE_SPEED){
+        System.out.println("Drive speed too slow for robot to move! " + speed);
+        return;
+      }
+    }
+
+    if (angle < -Math.PI){
+      angle = -Math.PI;
+    }
+    else if (angle > Math.PI){
+      angle = Math.PI;
+    }
     //set all modules to angle
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(angle); 
@@ -400,7 +433,6 @@ public class SwerveDrive extends SubsystemBase {
         swerveModules[i].setDriveSpeed(targetMotorSpeeds[i]);
       }
     }
-  }
   }
 
   /**
@@ -485,10 +517,16 @@ public class SwerveDrive extends SubsystemBase {
     return moduleDistances;
   }
 
-  //TODO:create method to getAllModuleVelocity
+  /**
+   *  Gets all the drive velocities.
+   * 
+   * @return An array of velocities.
+   */
   public double[] getAllModuleVelocity(){
     double[] moduleVelocities = new double[4];
-    
+    for(int i=0; i<4; i++){
+      moduleVelocities[i]=swerveModules[i].getDriveVelocity();
+    }
     return moduleVelocities;
   }
 

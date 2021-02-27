@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveDrive.kSwerveModule;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * A command to test one module at a time, it takes that module as a constructor arguement
@@ -58,9 +58,8 @@ public class DriveOneModule extends CommandBase {
 
     // System.out.println("getting  kSwerveModule numbers!" + Robot.robotContainer.getDriverAxis(Axis.LEFT_Y) + " " + rotatePos);
     //Set the one module we are working with to an angle and a speed
-    RobotContainer.swerveDrive.driveOneModule(moduleNum, 
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y), 
-      rotatePos);
+    RobotContainer.swerveDrive.driveOneModule(
+      moduleNum, Robot.robotContainer.getDriverAxis(Axis.LEFT_Y), rotatePos, kDriveMode.percentOutput);
   }
 
   // Called once the command ends or is interrupted.
