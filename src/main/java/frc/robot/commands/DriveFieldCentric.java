@@ -18,7 +18,6 @@ public class DriveFieldCentric extends CommandBase {
    */
   public DriveFieldCentric() {
     // Use addRequirements() here to declare subsystem dependencies.
-    
     addRequirements(RobotContainer.swerveDrive);
   }
 
@@ -30,7 +29,7 @@ public class DriveFieldCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    //TODO: use the same multipliers as DriveRobotCentric on joystick inputs
     RobotContainer.swerveDrive.driveFieldCentric(
       Robot.robotContainer.getDriverAxis(Axis.LEFT_Y) ,
       Robot.robotContainer.getDriverAxis(Axis.LEFT_X) ,
