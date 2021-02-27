@@ -13,7 +13,6 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
  * for use with https://docs.ctre-phoenix.com/en/latest/ch16_ClosedLoop.html
  */
 public class DriveTuneDriveMotorFeedForward extends CommandBase {
-  //TODO:Create a field variable to store the speed
   private double speed = .75;
   private double[] angle = new double[]{Math.toRadians(135), Math.toRadians(135), Math.toRadians(-45), Math.toRadians(45)};
   /** Creates a new DriveTuneDriveMotorFeedForward. */

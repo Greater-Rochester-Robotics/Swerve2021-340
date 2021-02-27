@@ -557,6 +557,11 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
-  //TODO:write method to configure all modules DriveMotor PIDF
+  //write method to configure all modules DriveMotor PIDF
+  public void setDrivePIDF(double P, double I, double D, double F){
+    for (int i=0; i<4; i++){
+      swerveModules[i].setDriveMotorPIDF(P, I, D, F);
+    }
+  }
 
 }
