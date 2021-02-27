@@ -18,7 +18,6 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GetSmol;
-import frc.robot.commands.Shoot;
 import frc.robot.commands.Harvester.IntakeBalls;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -74,12 +73,12 @@ public class RobotContainer {
   public RobotContainer() {
     
     
-    shooter = new Shooter();
-    // harvester = new Harvester();
+    // shooter = new Shooter();
+    harvester = new Harvester();
     snekLoader = new SnekLoader();
-    limelight = new Limelight();
-    limelight.setStreamMode(0);
-    limelight.setLightState(1);
+    // limelight = new Limelight();
+    // limelight.setStreamMode(0);
+    // limelight.setLightState(1);
     swerveDrive = new SwerveDrive();
     // Configure the button bindings
     configureButtonBindings();
@@ -92,7 +91,7 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-   driverA.whileHeld(new Shoot());
+  //  driverA.whileHeld(new Shoot());
   //   driverB.whenPressed(new DriveOneModule(1));
   //   driverX.whenPressed(new DriveOneModule(2));
   //   driverY.whenPressed(new DriveOneModule(3));

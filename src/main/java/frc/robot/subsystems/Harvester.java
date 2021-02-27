@@ -14,15 +14,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
+import com.revrobotics.CANDigitalInput;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+
 
 public class Harvester extends SubsystemBase {
   private CANSparkMax axleWheels;
   private CANEncoder axleEncoder;
   private DoubleSolenoid harvesterPneu;
   private boolean harvesterJammed = false; 
+  
+  private static CANDigitalInput ballSensors;
 
   /**
    * Creates a new Intake.
@@ -33,10 +40,13 @@ public class Harvester extends SubsystemBase {
     axleWheels.setSmartCurrentLimit(45, 60);
     harvesterPneu = new DoubleSolenoid(Constants.HARVESTER_FWD_CHANNEL,Constants.HARVESTER_REV_CHANNEL);
     axleEncoder = axleWheels.getEncoder();
+
+    ballSensors = axleWheels.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+    ballSensors.enableLimitSwitch(false);
   }
 
   public void setAxleWheels(double volts) {
-    axleWheels.setVoltage(volts);
+    axleWheels.setVoltage(volts*-1); //inverted for new robot
   }
 
   public void lowerHarvester(){
@@ -69,6 +79,7 @@ public class Harvester extends SubsystemBase {
       harvesterJammed = false;
     }
   }
+  SmartDashboard.putBoolean("Ball 0", ballSensors.get());
 }
 public void setHarvesterJammed(boolean jam){
   harvesterJammed = jam;
