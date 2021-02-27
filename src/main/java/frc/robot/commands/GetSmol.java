@@ -17,19 +17,19 @@ public class GetSmol extends CommandBase {
    */
   public GetSmol() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester, RobotContainer.limelight);
+    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.harvester.setAxleWheels(0);
+    RobotContainer.snekLoader.setAxleWheels(0);
     RobotContainer.harvester.raiseHarvester();
     RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
-    RobotContainer.shooter.stop();
-    RobotContainer.shooter.lowerHood();
-    RobotContainer.shooter.raiseHardStop();
-    RobotContainer.limelight.setLightState(1);
+    // RobotContainer.shooter.stop();
+    // RobotContainer.shooter.lowerHood();
+    // RobotContainer.shooter.raiseHardStop();
+    // RobotContainer.limelight.setLightState(1);
    RobotContainer.snekLoader.setPause(false);
     //colour wheel down
   }

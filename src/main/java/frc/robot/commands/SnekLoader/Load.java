@@ -32,8 +32,8 @@ private boolean ron;
   public void initialize() {
      // RobotContainer.snekLoader.setState(State.kFillTo4);
       RobotContainer.harvester.lowerHarvester();
-      RobotContainer.harvester.setAxleWheels(6.0);
-      RobotContainer.harvester.setHarvesterJammed(false);
+      RobotContainer.snekLoader.setAxleWheels(6.0);
+      RobotContainer.snekLoader.setHarvesterJammed(false);
     tm.reset();
     tm.start();
   }
@@ -53,14 +53,14 @@ private boolean ron;
       RobotContainer.harvester.raiseHarvester();
     }
    // RobotContainer.snekLoader.setState(State.kOff);
-    RobotContainer.harvester.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setAxleWheels(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     
-  //  return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.harvester.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
-   return true;
+  //  return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.snekLoader.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
+   return false;
   }
 }

@@ -9,8 +9,8 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.LimelightCommands.LimelightOff;
-import frc.robot.commands.LimelightCommands.LimelightOn;
+// import frc.robot.commands.LimelightCommands.LimelightOff;
+// import frc.robot.commands.LimelightCommands.LimelightOn;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -23,7 +23,7 @@ public class FullTrenchAutoShotTest extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-      new LimelightOn(), new Shoot(Constants.INITIATION_SHOT_RPM).withTimeout(4.0), new LimelightOff()
+      // new LimelightOn(), new Shoot(Constants.INITIATION_SHOT_RPM).withTimeout(4.0), new LimelightOff()
     );
   }
 }

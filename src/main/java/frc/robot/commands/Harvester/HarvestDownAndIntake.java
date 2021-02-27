@@ -15,7 +15,7 @@ public class HarvestDownAndIntake extends CommandBase {
    * Creates a new HarvestDownAndIntake.
    */
   public HarvestDownAndIntake() {
-    addRequirements(RobotContainer.harvester);
+    addRequirements(RobotContainer.harvester,RobotContainer.snekLoader);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -28,13 +28,13 @@ public class HarvestDownAndIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.harvester.setAxleWheels(6.0);
+    RobotContainer.snekLoader.setAxleWheels(6.0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.harvester.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setAxleWheels(0.0);
   }
 
   // Returns true when the command should end.

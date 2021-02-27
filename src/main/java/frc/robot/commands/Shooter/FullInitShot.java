@@ -9,9 +9,9 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.commands.LimelightCommands.AutoAlign;
-import frc.robot.commands.LimelightCommands.LimelightOff;
-import frc.robot.commands.LimelightCommands.LimelightOn;
+// import frc.robot.commands.LimelightCommands.AutoAlign;
+// import frc.robot.commands.LimelightCommands.LimelightOff;
+// import frc.robot.commands.LimelightCommands.LimelightOn;
 import frc.robot.commands.Shooter.Shoot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
@@ -24,6 +24,6 @@ public class FullInitShot extends SequentialCommandGroup {
   public FullInitShot() {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new LimelightOn(),new PrepHoodShot(), new AutoAlign(), new Shoot(Constants.INITIATION_SHOT_RPM), new LimelightOff());
+    // super(new LimelightOn(),new PrepHoodShot(), new AutoAlign(), new Shoot(Constants.INITIATION_SHOT_RPM), new LimelightOff());
   }
 }

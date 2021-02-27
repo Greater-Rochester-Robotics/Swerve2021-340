@@ -16,13 +16,13 @@ public class StopIntake extends CommandBase {
    */
   public StopIntake() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements((RobotContainer.harvester));
+    addRequirements((RobotContainer.snekLoader));
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.harvester.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setAxleWheels(0.0);
   } 
 
   // Called every time the scheduler runs while the command is scheduled.

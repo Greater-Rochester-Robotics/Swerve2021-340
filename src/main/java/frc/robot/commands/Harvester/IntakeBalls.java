@@ -16,7 +16,7 @@ public class IntakeBalls extends CommandBase {
    */
   public IntakeBalls() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.harvester);
+    addRequirements(RobotContainer.harvester,RobotContainer.snekLoader);
   }
 
   // Called when the command is initially scheduled.
@@ -27,14 +27,14 @@ public class IntakeBalls extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.harvester.setAxleWheels(6.0);
+    RobotContainer.snekLoader.setAxleWheels(6.0);
   }
 
   // Called once the command ends or is interrupted.
   //If command is interuptted, stops the harvester
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.harvester.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setAxleWheels(0.0);
   }
 
   // Returns true when the command should end.

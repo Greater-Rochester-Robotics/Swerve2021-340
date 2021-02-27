@@ -16,13 +16,13 @@ public class PickHarvesterUp extends CommandBase {
    */
   public PickHarvesterUp() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.harvester);
+    addRequirements(RobotContainer.harvester,RobotContainer.snekLoader);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.harvester.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setAxleWheels(0.0);
     RobotContainer.harvester.raiseHarvester();
   }
 

@@ -108,8 +108,8 @@ public class RobotContainer {
   //   driverStart.whenReleased(new DriveStopAllModules());
   //   driverBack.whenPressed(new DriveRobotCentric());
 
-  //   driverA.whenPressed(new Load());
-  //   driverA.whenReleased(new GetSmol());
+    driverA.whenPressed(new Load());
+    driverA.whenReleased(new GetSmol());
   }
 
 
