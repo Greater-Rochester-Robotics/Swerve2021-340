@@ -30,9 +30,9 @@ public class DriveFieldCentric extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.swerveDrive.driveFieldCentric(
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.5,
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.5,
-      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*0.5
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.6,
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.6,
+      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-0.6
     );
   }
 

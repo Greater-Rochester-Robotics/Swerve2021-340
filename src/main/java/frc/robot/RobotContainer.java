@@ -18,6 +18,7 @@ import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ResetGyroToZero;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -81,8 +82,10 @@ public class RobotContainer {
     driverX.whenReleased(new DriveStopAllModules());
     driverY.whenReleased(new DriveStopAllModules());
     
-    driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
-    driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
+    //driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
+    //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
+    
+    driverLB.whenPressed(new ResetGyroToZero());
 
     driverStart.whenPressed(new DriveFieldCentric());
     driverBack.whenPressed(new DriveRobotCentric());
