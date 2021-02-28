@@ -111,12 +111,12 @@ public class SwerveDrive extends SubsystemBase {
     }
     //the prior array is based around the robot's x and y and not the field's
 
-    //The following pulls the current rotational orientation of the robot(Rotation2d)
+    // //The following pulls the current rotational orientation of the robot(Rotation2d)
     // Rotation2d currentRot = this.getGyroRotation2d();
     // // The following updates the currentPostion object
     // currentPosition = new Pose2d(
     //   currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
-    //   currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) + (deltaPosition[0]*currentRot.getSin()),
+    //   currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
     //   currentRot);
   }
 
@@ -141,7 +141,7 @@ public class SwerveDrive extends SubsystemBase {
       
       //compute the y-component of the vector by adding the targetVector to the cross product with rotspeed
       targetModuleVectors[i][1] = 
-        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );//TODO: check if this sign is right
+        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );
     }
 
     //generates angles for each module
@@ -173,10 +173,13 @@ public class SwerveDrive extends SubsystemBase {
       }
     //the following creates an effective deadzone
     }
-    //TODO:change the following to a simple if, invert the logic, and within place the next for loop
-    else if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
-      //if the maxSpeed is below the minimum movement speed, don't let the modules turn.
-       
+    //change the following to a simple if, invert the logic, and within, place the next for loop
+    if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
+      //if the maxSpeed is below the minimum movement speed, stop all the motors.
+      for(int i=0 ; i<4 ; i++){
+        swerveModules[i].setDriveMotor(0.0);
+      }
+      //if the maxSpeed is below the minimum movement speed, end this method, without turning modules
       return;
     }
 
@@ -221,7 +224,7 @@ public class SwerveDrive extends SubsystemBase {
     //pull the current oreintation of the robot(based on gyro)
     Rotation2d gyro = this.getGyroRotation2d();
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
-    double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) + (gyro.getSin() * awaySpeed);
+    double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
     this.driveRobotCentric( robotForwardSpeed , robotStrafeSpeed , rotSpeed);
   }
 
@@ -230,8 +233,9 @@ public class SwerveDrive extends SubsystemBase {
    * @param moduleNumber which of the four modules(0-3) we are using
    * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
    * @param rotatePos a positon between -PI and PI where we want the module to be
+   * @param kDriveMode changes between velocity mode and dutyCycle mode
    */
-  public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos){
+  public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos, kDriveMode mode){
     //test that moduleNumber is between 0-3, return if not(return;)
     if (moduleNumber > 3 && moduleNumber < 0){
       System.out.println("Module " + moduleNumber + " is out of bounds.");
@@ -243,7 +247,13 @@ public class SwerveDrive extends SubsystemBase {
     
     //write code to drive one module in a testing form
     swerveModules[moduleNumber].setPosInRad(rotatePos);
-    swerveModules[moduleNumber].setDriveMotor(moveSpeed);
+    if (mode == kDriveMode.percentOutput){ 
+      swerveModules[moduleNumber].setDriveMotor(moveSpeed);
+    }
+    else {
+      swerveModules[moduleNumber].setDriveSpeed(moveSpeed);
+    }
+    
   }
 
   /**
@@ -252,9 +262,6 @@ public class SwerveDrive extends SubsystemBase {
    * @param arcAngleInRad the angle from the front of the robot to the point we wish to move around
    * @return an array of angles and scaled normalizations for speed management
    */
-  
-  //TODO:Fix all the two dimensional arrays
-
   public double[][] generateArcAngles(double arcRadius, double arcAngleInRad){
     //create a vector out of the arcAngle and length, this is from the
     // center of the robot to the center of the circle we are following
@@ -262,10 +269,10 @@ public class SwerveDrive extends SubsystemBase {
       arcRadius*Math.cos(arcAngleInRad), arcRadius*Math.sin(arcAngleInRad)};
 
     //create an array to store our vectors from module to circle center
-    double[][] mathVector = new double[2][4];
+    double[][] mathVector = new double[4][2];
 
     //creates an output array for angles and normalizing factors for each module
-    double[][] outputArray = new double[2][4];
+    double[][] outputArray = new double[4][2];
 
     //will want to know the longest vector, the furtherest away a module is from center circle
     double maxLength = 0.0;
@@ -273,29 +280,29 @@ public class SwerveDrive extends SubsystemBase {
     //for every module, find the vector from the module to the arc's center
     for(int i=0; i<4; i++){
       //add the module position vector to the arc vector
-      mathVector[0][i] = arcVector[0]-Constants.MODULE_VECTORS[0][i];
-      mathVector[1][i] = arcVector[1]-Constants.MODULE_VECTORS[1][i];
+      mathVector[i][0] = arcVector[0]-Constants.MODULE_VECTORS[i][0];
+      mathVector[i][1] = arcVector[1]-Constants.MODULE_VECTORS[i][1];
 
       //find the length of the vector from this module to the arc center
-      outputArray[1][i] = Math.sqrt( (mathVector[0][i]*mathVector[0][i])
-        + (mathVector[0][i]*mathVector[0][i]) );
+      outputArray[i][1] = Math.sqrt( (mathVector[i][0]*mathVector[i][0])
+        + (mathVector[i][0]*mathVector[i][0]) );
       
       //find the longest vector, from module to circle center
-      if(outputArray[1][i] > maxLength){
-        maxLength = outputArray[1][i];
+      if(outputArray[i][1] > maxLength){
+        maxLength = outputArray[i][1];
       }
 
       //turn the vector from this module to the arc center to a unit vector
-      mathVector[0][i]/=outputArray[1][i];
-      mathVector[1][i]/=outputArray[1][i];
+      mathVector[i][0]/=outputArray[i][1];
+      mathVector[i][1]/=outputArray[i][1];
 
       //in order to drive an arc, we need angles that are rotated 90 degrees, hence x for y and -y for x
-      outputArray[0][i] = Math.atan2(mathVector[0][i],-1*mathVector[1][i]);
+      outputArray[i][0] = Math.atan2(mathVector[i][0],-1*mathVector[i][1]);
     }
 
     //normalize the max length of the Vectors, this will let us scale drive speed.
     for(int i=0; i<4; i++){
-      outputArray[1][i]/=maxLength;
+      outputArray[i][1]/=maxLength;
     }
 
     return outputArray;
@@ -323,7 +330,19 @@ public class SwerveDrive extends SubsystemBase {
         return;
       }
     }
-    // TODO: Sanitize for mode velocity in the future
+    else {
+      if (speed < -Constants.MAXIMUM_VELOCITY){  
+        speed = -Constants.MAXIMUM_VELOCITY;
+      }
+      else if (speed > Constants.MAXIMUM_VELOCITY){
+        speed = Constants.MAXIMUM_VELOCITY;
+      }
+      //return if speed below Constants.Minimum_speed in velocity
+      else if (Math.abs(speed) < Constants.MINIMUM_DRIVE_SPEED){
+        System.out.println("Drive speed too slow for robot to move! " + speed);
+        return;
+      }
+    }
     //set each module to the angle in arcArray(the first value)
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(arcArray[0][i]); 
@@ -337,10 +356,14 @@ public class SwerveDrive extends SubsystemBase {
     //set the speed of each motor to the speed multiplied by the second value of arcArray
     //Reduce power to motors until they align with the target angle(might remove later)
     for(int i=0 ; i<4 ; i++){
-      swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      if (mode == kDriveMode.percentOutput){ 
+        swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      }
+      else {
+        swerveModules[i].setDriveSpeed(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+      }
     }
   }
-
   /**
    * This is a function to drive the robot straight in a set direction
    * @param speed the speed the robot should drive, -1.0 to 1.0 in percentOutput, 
@@ -361,15 +384,27 @@ public class SwerveDrive extends SubsystemBase {
         System.out.println("Drive speed too slow for robot to move! " + speed);
         return;
       }
-    if (mode.equals(kDriveMode.percentOutput)){
-      if (angle < -Math.PI){
-        angle = -Math.PI;
+    }
+    else {
+      if (speed < -Constants.MAXIMUM_VELOCITY){  
+        speed = -Constants.MAXIMUM_VELOCITY;
       }
-      else if (angle > Math.PI){
-        angle = Math.PI;
+      else if (speed > Constants.MAXIMUM_VELOCITY){
+        speed = Constants.MAXIMUM_VELOCITY;
+      }
+      //return if speed below Constants.Minimum_speed in velocity
+      else if (Math.abs(speed) < Constants.MINIMUM_DRIVE_SPEED){
+        System.out.println("Drive speed too slow for robot to move! " + speed);
+        return;
       }
     }
-    // TODO: Sanitize for mode velocity in the future
+
+    if (angle < -Math.PI){
+      angle = -Math.PI;
+    }
+    else if (angle > Math.PI){
+      angle = Math.PI;
+    }
     //set all modules to angle
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(angle); 
@@ -399,7 +434,6 @@ public class SwerveDrive extends SubsystemBase {
       }
     }
   }
-}
 
   /**
    * Stops all module motion, then lets all the modules spin freely.
@@ -483,6 +517,18 @@ public class SwerveDrive extends SubsystemBase {
     return moduleDistances;
   }
 
+  /**
+   *  Gets all the drive velocities.
+   * 
+   * @return An array of velocities.
+   */
+  public double[] getAllModuleVelocity(){
+    double[] moduleVelocities = new double[4];
+    for(int i=0; i<4; i++){
+      moduleVelocities[i]=swerveModules[i].getDriveVelocity();
+    }
+    return moduleVelocities;
+  }
 
   /**
    * a method to print all module positions for testing purposes
@@ -508,6 +554,13 @@ public class SwerveDrive extends SubsystemBase {
     for (int i=0; i<4; i++){
       //call the zero position method
       swerveModules[i].zeroAbsPositionSensor();
+    }
+  }
+
+  //write method to configure all modules DriveMotor PIDF
+  public void setDrivePIDF(double P, double I, double D, double F){
+    for (int i=0; i<4; i++){
+      swerveModules[i].setDriveMotorPIDF(P, I, D, F);
     }
   }
 
