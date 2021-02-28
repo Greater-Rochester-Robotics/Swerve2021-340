@@ -84,7 +84,6 @@ public class SnekLoader extends SubsystemBase {
       handleMotors[i].setIdleMode(IdleMode.kBrake);// set brake mode, so motors stop on a dime
       handleMotors[i].enableVoltageCompensation(12.0);// enable volatge compensation mode 12V
       handleMotors[i].setInverted(false);//Reverses the direction of the wheels
-      handleMotors[i].enableVoltageCompensation(12.0);
       // handleMotors[i].setSmartCurrentLimit(40, 40);
       handleSensors[i] = handleMotors[i].getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
       handleSensors[i].enableLimitSwitch(false);// now disable limit switches, we'll turn these on later, one at a tim
@@ -224,7 +223,7 @@ public class SnekLoader extends SubsystemBase {
           speeds = new double[] {0.0,0.0,0.0,0.0,0.0};
       }
     if(isPaused){
-      speeds = new double[] {  0.0, 0.0, 0.0, 0.0 };
+      speeds = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
     }
     setAllHandleMotors(speeds);
 

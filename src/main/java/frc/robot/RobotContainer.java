@@ -19,8 +19,11 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GetSmol;
+import frc.robot.commands.Shooter.FullSendsWall;
+import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.SnekLoader.Regurgitate;
+import frc.robot.commands.SnekLoader.StopSnek;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -113,6 +116,8 @@ public class RobotContainer {
     driverA.whenPressed(new Load());
     driverA.whenReleased(new GetSmol());
     driverB.whileHeld(new Regurgitate());
+    driverX.whenPressed(new FullSendsWall());
+    driverX.whenReleased(new StopSnek());
   }
 
 

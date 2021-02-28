@@ -17,12 +17,12 @@ public class StopSnek extends CommandBase {
    */
   public StopSnek() {
     // Use addRequirements() here to declare subsystem dependencies.
-   // addRequirements(RobotContainer.snekLoader);
+   addRequirements(RobotContainer.snekLoader);
   }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //RobotContainer.snekLoader.setState(State.kOff);
+    RobotContainer.snekLoader.setState(State.kOff);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

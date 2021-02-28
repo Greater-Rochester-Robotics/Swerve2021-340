@@ -28,7 +28,7 @@ public class FullSendsWall extends CommandBase {
   public void initialize() {
     ballsToShoot = RobotContainer.snekLoader.getBallsLoaded();
     fullSend = false;
-    RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM+200);
+    RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM);
     RobotContainer.shooter.resetBallsShot();
   }
 
