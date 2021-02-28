@@ -23,7 +23,6 @@ public class GetSmol extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.snekLoader.setAxleWheels(0);
     RobotContainer.harvester.raiseHarvester();
     RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
     // RobotContainer.shooter.stop();

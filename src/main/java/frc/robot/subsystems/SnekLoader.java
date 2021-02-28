@@ -31,11 +31,10 @@ import frc.robot.RobotContainer;
  * switches plugged into the SparkMax
  */
 public class SnekLoader extends SubsystemBase {
-  private CANSparkMax axleWheels;
-  private CANEncoder axleEncoder;
+  // private CANSparkMax axleWheels;
+  // private CANEncoder axleEncoder;
   private boolean harvesterJammed = false; 
   
-  private static CANDigitalInput ballSensors;
 
   private static CANSparkMax[] handleMotors;
   private static CANDigitalInput[] handleSensors = new CANDigitalInput[5];
@@ -61,19 +60,18 @@ public class SnekLoader extends SubsystemBase {
   static final double MOTOR_IN_SPEED4 = 0.35;
 
   public SnekLoader() {
-    axleWheels = new CANSparkMax(Constants.BALL_HANDLER_MOTOR_0, MotorType.kBrushless);
+    // axleWheels = new CANSparkMax(Constants.BALL_HANDLER_MOTOR_0, MotorType.kBrushless);
     // axleWheels.setSmartCurrentLimit(45, 60);
-    axleEncoder = axleWheels.getEncoder();
+    // axleEncoder = axleWheels.getEncoder();
 
-    ballSensors = axleWheels.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    ballSensors.enableLimitSwitch(false);
+    // ballSensors = axleWheels.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
 
     isPaused = false;
     ballsLoaded = 0;
     // hadBall = false;
     handleMotors = new CANSparkMax[] {
         
-        axleWheels,
+        new CANSparkMax(Constants.BALL_HANDLER_MOTOR_0, MotorType.kBrushless),//axleWheels,
         new CANSparkMax(Constants.BALL_HANDLER_MOTOR_1, MotorType.kBrushless),
         new CANSparkMax(Constants.BALL_HANDLER_MOTOR_2, MotorType.kBrushless),
         new CANSparkMax(Constants.BALL_HANDLER_MOTOR_3, MotorType.kBrushless),
@@ -91,13 +89,14 @@ public class SnekLoader extends SubsystemBase {
       handleSensors[i] = handleMotors[i].getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
       handleSensors[i].enableLimitSwitch(false);// now disable limit switches, we'll turn these on later, one at a tim
       handleEncoders[i] = handleMotors[i].getEncoder();
+      handleMotors[i].setInverted(true);
     }
-    handleMotors[3].setInverted(true);
+    handleMotors[4].setInverted(false);
   }
 
-  public void setAxleWheels(double volts) {
-    axleWheels.setVoltage(volts*-1); //inverted for new robot
-  }
+  // public void setAxleWheels(double volts) {
+  //   axleWheels.setVoltage(volts*-1); //inverted for new robot
+  // }
 
   public boolean isHarvesterJammed() {
     boolean isJammed = false;
@@ -112,7 +111,7 @@ public class SnekLoader extends SubsystemBase {
   }
   public boolean stopIntakeQ(){
       return harvesterJammed;
-    }
+  }
 
   /**
    * @return the ballsLoaded
@@ -132,18 +131,7 @@ public class SnekLoader extends SubsystemBase {
   @Override
   public void periodic() {
 
-    harvesterJammed = false;
-    if(this.getCurrentCommand() != null){
-      SmartDashboard.putString("harvester speed", "" + axleEncoder.getVelocity());
-    if (isHarvesterJammed() ) {//&& (this.getCurrentCommand().getName().equals("Load"))
-      SmartDashboard.putBoolean("isHarvesterJammed", true);
-      harvesterJammed = true;
-    } else {
-      SmartDashboard.putBoolean("isHarvesterJammed", false);
-      harvesterJammed = false;
-    }
-  }
-  SmartDashboard.putBoolean("Ball 0", ballSensors.get());
+    
   
     // if (!hadBall && handleSensors[0].get()) {
     // ballsLoaded++;
@@ -248,13 +236,23 @@ public class SnekLoader extends SubsystemBase {
     } else {
       SmartDashboard.putBoolean("isJammed", false);
     }
-    
-    
-    SmartDashboard.putBoolean("Ball 1", handleSensors[0].get());
-    SmartDashboard.putBoolean("Ball 2", handleSensors[1].get());
-    SmartDashboard.putBoolean("Ball 3", handleSensors[2].get());
-      SmartDashboard.putBoolean("Ball 4", handleSensors[3].get());
-      SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
+    harvesterJammed = false;
+    if(this.getCurrentCommand() != null){
+      SmartDashboard.putString("harvester speed", "" + handleEncoders[0].getVelocity());
+    if (isHarvesterJammed() ) {//&& (this.getCurrentCommand().getName().equals("Load"))
+      SmartDashboard.putBoolean("isHarvesterJammed", true);
+      harvesterJammed = true;
+    } else {
+      SmartDashboard.putBoolean("isHarvesterJammed", false);
+      harvesterJammed = false;
+    }
+  }
+    SmartDashboard.putBoolean("Ball 0", handleSensors[0].get());
+    SmartDashboard.putBoolean("Ball 1", handleSensors[1].get());
+    SmartDashboard.putBoolean("Ball 2", handleSensors[2].get());
+    SmartDashboard.putBoolean("Ball 3", handleSensors[3].get());
+    SmartDashboard.putBoolean("Ball 4", handleSensors[4].get());
+    SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
     }
     smartCount++;
     // if(DriverStation.getInstance().isTest()){

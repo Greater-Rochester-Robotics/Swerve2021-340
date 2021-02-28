@@ -30,9 +30,8 @@ private boolean ron;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-     // RobotContainer.snekLoader.setState(State.kFillTo4);
+     RobotContainer.snekLoader.setState(State.kFillTo4);
       RobotContainer.harvester.lowerHarvester();
-      RobotContainer.snekLoader.setAxleWheels(6.0);
       RobotContainer.snekLoader.setHarvesterJammed(false);
     tm.reset();
     tm.start();
@@ -43,7 +42,6 @@ private boolean ron;
   @Override
   public void execute() {
 
-
   }
 
   // Called once the command ends or is interrupted.
@@ -52,8 +50,7 @@ private boolean ron;
     if(ron){
       RobotContainer.harvester.raiseHarvester();
     }
-   // RobotContainer.snekLoader.setState(State.kOff);
-    RobotContainer.snekLoader.setAxleWheels(0.0);
+   RobotContainer.snekLoader.setState(State.kOff);
   }
 
   // Returns true when the command should end.

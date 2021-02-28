@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
@@ -18,8 +19,8 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GetSmol;
-import frc.robot.commands.Harvester.IntakeBalls;
 import frc.robot.commands.SnekLoader.Load;
+import frc.robot.commands.SnekLoader.Regurgitate;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,13 +74,14 @@ public class RobotContainer {
   public RobotContainer() {
     
     
-    // shooter = new Shooter();
+    shooter = new Shooter();
     harvester = new Harvester();
     snekLoader = new SnekLoader();
     // limelight = new Limelight();
     // limelight.setStreamMode(0);
     // limelight.setLightState(1);
     swerveDrive = new SwerveDrive();
+    SmartDashboard.putData("Harvester", snekLoader);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -110,6 +112,7 @@ public class RobotContainer {
 
     driverA.whenPressed(new Load());
     driverA.whenReleased(new GetSmol());
+    driverB.whileHeld(new Regurgitate());
   }
 
 

@@ -9,6 +9,7 @@ package frc.robot.commands.Harvester;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.SnekLoader.State;
 
 public class StopIntake extends CommandBase {
   /**
@@ -22,7 +23,7 @@ public class StopIntake extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.snekLoader.setAxleWheels(0.0);
+    RobotContainer.snekLoader.setState(State.kOff);
   } 
 
   // Called every time the scheduler runs while the command is scheduled.
