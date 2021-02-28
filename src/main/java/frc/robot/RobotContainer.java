@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveOneModule;
@@ -24,6 +25,16 @@ import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.GetSmol;
+import frc.robot.commands.Shooter.FullSendsWall;
+import frc.robot.commands.Shooter.StopShoot;
+import frc.robot.commands.SnekLoader.Load;
+import frc.robot.commands.SnekLoader.Regurgitate;
+import frc.robot.commands.SnekLoader.StopSnek;
+import frc.robot.subsystems.Harvester;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.SnekLoader;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -48,9 +59,17 @@ public class RobotContainer {
   final Button driverStart = new JoystickButton(driver, 8);
   final Button driverLS = new JoystickButton(driver, 9);
   final Button driverRS = new JoystickButton(driver, 10);
+  final Button driverLTButton = new JoyTriggerButton(driver, .3, Axis.LEFT_TRIGGER);
+  final Button driverRTButton = new JoyTriggerButton(driver, .3, Axis.RIGHT_TRIGGER);
   
 
   public static SwerveDrive swerveDrive;
+
+  public static SnekLoader snekLoader;
+  public static Harvester harvester;
+  public static Shooter shooter;
+  public static Limelight limelight;
+  
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
@@ -60,7 +79,16 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    
+    shooter = new Shooter();
+    harvester = new Harvester();
+    snekLoader = new SnekLoader();
+    // limelight = new Limelight();
+    // limelight.setStreamMode(0);
+    // limelight.setLightState(1);
     swerveDrive = new SwerveDrive();
+    SmartDashboard.putData("Harvester", snekLoader);
+    
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -72,20 +100,32 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driverA.whenPressed(new DriveOneModule(0));
-    driverB.whenPressed(new DriveOneModule(1));
-    driverX.whenPressed(new DriveOneModule(2));
-    driverY.whenPressed(new DriveOneModule(3));
     
-    driverA.whenReleased(new DriveStopAllModules());
-    driverB.whenReleased(new DriveStopAllModules());
-    driverX.whenReleased(new DriveStopAllModules());
-    driverY.whenReleased(new DriveStopAllModules());
+    // driverA.whenPressed(new DriveOneModule(0));
+    // driverB.whenPressed(new DriveOneModule(1));
+    // driverX.whenPressed(new DriveOneModule(2));
+    // driverY.whenPressed(new DriveOneModule(3));
+    
+    // driverA.whenReleased(new DriveStopAllModules());
+    // driverB.whenReleased(new DriveStopAllModules());
+    // driverX.whenReleased(new DriveStopAllModules());
+    // driverY.whenReleased(new DriveStopAllModules());
     
     //driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
     //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
-    
+    driverA.whenPressed(new Load());
+    driverA.whenReleased(new GetSmol());
+    driverB.whileHeld(new Regurgitate());
+    driverX.whenPressed(new FullSendsWall());
+    driverX.whenReleased(new StopSnek());
+
+
     driverLB.whenPressed(new ResetGyroToZero());
+
+    driverRTButton.whenPressed(new Load());
+    driverRTButton.whenReleased(new GetSmol());
+
+    driverLTButton.whileHeld(new Regurgitate());
 
     driverStart.whenPressed(new DriveFieldCentric());
     driverBack.whenPressed(new DriveRobotCentric());
