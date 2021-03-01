@@ -11,6 +11,12 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
+ * A testing command meant to spin the motor at a specific 
+ * velocity, allowing data from drive motors without need 
+ * for a full field. PID and F values can be changed through 
+ * the SmartDashboard without need to redeploy code. These 
+ * values will need to be placed into constants so that they 
+ * are saved for future code deploys.
  * for use with https://docs.ctre-phoenix.com/en/latest/ch16_ClosedLoop.html
  */
 public class DriveTuneDriveMotorPID extends CommandBase {
@@ -25,40 +31,41 @@ public class DriveTuneDriveMotorPID extends CommandBase {
   public DriveTuneDriveMotorPID(double speed) {
     this.speed = speed;
     addRequirements(RobotContainer.swerveDrive);
+    //Push PID Constants(From Constants.java) to SmartDashboard
+    SmartDashboard.putNumber("driveP", kP);
+    SmartDashboard.putNumber("driveI", kP);//TODO:Fix input (kP?)
+    SmartDashboard.putNumber("driveD", kP);//TODO:Fix input (kP?)
+    SmartDashboard.putNumber("driveF", kP);//TODO:Fix input (kP?)
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //TODO:Push PID Constants(From Constants.java) to SmartDashboard
-    SmartDashboard.putNumber("driveP", kP);
-    SmartDashboard.putNumber("driveI", kP);
-    SmartDashboard.putNumber("driveD", kP);
-    SmartDashboard.putNumber("driveF", kP);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     //you can look at for refference https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Position%20Closed%20Loop%20Control/src/main/java/frc/robot/Robot.java lines 79-94
-    //TODO:Check if any SmartDashboard PID constants are different from field constants
-    double p = SmartDashboard.getNumber("driveP", 0);
-    double i_I = SmartDashboard.getNumber("driveI", 0);
-    double d = SmartDashboard.getNumber("driveD", 0);
-    double ff = SmartDashboard.getNumber("driveF", 0);
-
-    // if PID coefficients on SmartDashboard have changed, write new values to controller
-    if((p != kP)||(i_I != kI)||(d != kD)||(ff != kF)) {
+    //Pull PIDF values from the SmartDashboard and store in variables
+    double sdP = SmartDashboard.getNumber("driveP", 0);
+    double sdI = SmartDashboard.getNumber("driveI", 0);
+    double sdD = SmartDashboard.getNumber("driveD", 0);
+    double sdFF = SmartDashboard.getNumber("driveF", 0);
     
+    //Check if any SmartDashboard PID constants are different from field constants
+    if((sdP != kP)||(sdI != kI)||(sdD != kD)||(sdFF != kF)) {
+      //TODO:if PIDf coefficients on SmartDashboard have changed, write new values to controller
+      //TODO:assign new PIDF coefficients to field PIDF constants
     }
     
-    //TODO:Update PID constants to motorcontrollers if prior true 
-    //TODO:use driveOneModule for each motor, position setting m0 to 135, m1 to -135, m2 to -45, and m3 to 45, set speed to all to joystick output times MAX_VELOCITY in Constants,mode = velocity
+    //use driveOneModule for each motor, position setting m0 to 135, m1 to -135, m2 to -45, and m3 to 45, set speed to constructor param
     for (int i=0; i<4; i++){
       RobotContainer.swerveDrive.driveOneModule(i, speed, angle[i], kDriveMode.velocity);
+      //Print all module velocities
       SmartDashboard.putNumber("Module Velocity", RobotContainer.swerveDrive.getAllModuleVelocity()[i]);
     }
-    //TODO:Print all module velocities
+    
   }
 
   // Called once the command ends or is interrupted.

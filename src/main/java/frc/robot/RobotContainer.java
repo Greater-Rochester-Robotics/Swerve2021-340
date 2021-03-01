@@ -18,9 +18,7 @@ import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ResetGyroToZero;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -43,8 +41,7 @@ import frc.robot.subsystems.SnekLoader;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  // The robot's joysticks are defined here...
   
   final Joystick driver = new Joystick(0);
   final Joystick coDriver = new Joystick(1);
@@ -62,7 +59,7 @@ public class RobotContainer {
   final Button driverLTButton = new JoyTriggerButton(driver, .3, Axis.LEFT_TRIGGER);
   final Button driverRTButton = new JoyTriggerButton(driver, .3, Axis.RIGHT_TRIGGER);
   
-
+  //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
 
   public static SnekLoader snekLoader;
@@ -71,7 +68,7 @@ public class RobotContainer {
   public static Limelight limelight;
   
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  
 
 
 
@@ -120,7 +117,7 @@ public class RobotContainer {
     driverX.whenReleased(new StopSnek());
 
 
-    driverLB.whenPressed(new ResetGyroToZero());
+    driverLB.whenPressed(new DriveResetGyroToZero());
 
     driverRTButton.whenPressed(new Load());
     driverRTButton.whenReleased(new GetSmol());
@@ -130,19 +127,6 @@ public class RobotContainer {
     driverStart.whenPressed(new DriveFieldCentric());
     driverBack.whenPressed(new DriveRobotCentric());
   }
-
-
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
-    return m_autoCommand;
-  }
-
   
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
@@ -159,9 +143,11 @@ public class RobotContainer {
   }
 
   /**
-   * 
+   * A method to return the value of a joystick axis, which
+   * runs from -1.0 to 1.0, with a .1 dead zone(a 0 value 
+   * returned if the joystick value is between -.1 and .1)
    * @param axis
-   * @return
+   * @return value of the joystick, from -1.0 to 1.0 where 0.0 is centered
    */
   public double getDriverAxis(Axis axis) {
     return (driver.getRawAxis(axis.getAxisNumber()) < -.1 || driver.getRawAxis(axis.getAxisNumber()) > .1)
@@ -169,6 +155,21 @@ public class RobotContainer {
         : 0;
   }
 
+  /**
+   * Returns the int position of the DPad/POVhat based
+   * on the following table:
+   *    input    |return
+   * not pressed |  -1
+   *     up      |   0
+   *   up right  |  45
+   *    right    |  90
+   *  down right | 135
+   *    down     | 180
+   *  down left  | 225
+   *    left     | 270
+   *   up left   | 315
+   * @return
+   */
   public int getDriverDPad() {
     return (driver.getPOV());
   }

@@ -10,13 +10,13 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.RobotContainer;
 
-public class ResetGyroToZero extends InstantCommand {
+public class DriveResetGyroToZero extends InstantCommand {
   /**
    * Creates a new ResetGyroToZero.
    * 
    * Resets the Gyro to zero
    */ 
-  public ResetGyroToZero() {
+  public DriveResetGyroToZero() {
     addRequirements(RobotContainer.swerveDrive);
   }
 
@@ -25,5 +25,7 @@ public class ResetGyroToZero extends InstantCommand {
   public void initialize() {
     RobotContainer.swerveDrive.resetGyro();
   }
+
+  //TODO:make this able to run when disabled(overwrite the runsWhenDisabled command)
 
 }

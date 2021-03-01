@@ -12,6 +12,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kSwerveModule;
 
+/**
+ * This command stops all the motors for drive, then 
+ * feeds the rotational position of each module to 
+ * the smartdashboard along with the gyroscope's angle 
+ * and the drive motor encoder's values. This should 
+ * be run, allowing manual rotation of the modules, 
+ * then a user can call DriveResetAllModulePositionsToZero.
+ */
 public class DriveAdjustModuleZeroPoint extends CommandBase {
   /**
    * Creates a new DriveAdjustModuleZeroPoint.
@@ -36,7 +44,8 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     //read the position of all modules and print them
     double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
     double[] moduleDistances = RobotContainer.swerveDrive.getAllModuleDistance();
-    //TODO: test smartdashboard outputs
+    
+    //test smartdashboard outputs
     SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
@@ -61,4 +70,6 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
   public boolean isFinished() {
     return false;
   }
+
+  //TODO:make this able to run when disabled(overwrite the runsWhenDisabled command)
 }

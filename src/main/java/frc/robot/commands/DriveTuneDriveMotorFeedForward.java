@@ -10,6 +10,11 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
+ * A testing command meant to spin the robot at a specific 
+ * duty cycle, allowing data from drive motors without need 
+ * for a full field. The resulting speed can be used to 
+ * compute the feedforward for the Falcon 500(TalonFX) motor
+ * controllers. The robot should spin in place.
  * for use with https://docs.ctre-phoenix.com/en/latest/ch16_ClosedLoop.html
  */
 public class DriveTuneDriveMotorFeedForward extends CommandBase {
@@ -32,9 +37,9 @@ public class DriveTuneDriveMotorFeedForward extends CommandBase {
     //use driveOneModule for each motor, position setting m0 to 135, m1 to -135, m2 to -45, and m3 to 45, set speed to field speed
     for (int i=0; i<4; i++){
       RobotContainer.swerveDrive.driveOneModule(i, speed, angle[i], kDriveMode.percentOutput);
+      //Print all module velocities
       SmartDashboard.putNumber("Module Velocity", RobotContainer.swerveDrive.getAllModuleVelocity()[i]);
     }
-    //Print all module velocities
   }
 
   // Called once the command ends or is interrupted.

@@ -12,6 +12,15 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
 
+/**
+ * This command is designed so that a driver can drive 
+ * the swerve drive based around the robot's orientation.
+ * Forward on the stick will cause the robot to drive 
+ * forward. left and right on the stick will cause the 
+ * robot to move to its left or right. This command does
+ * not end of its own accord so it must be interupted to 
+ * end.
+ */
 public class DriveRobotCentric extends CommandBase {
   /**
    * Creates a new DriveRobotCentric.
@@ -30,9 +39,9 @@ public class DriveRobotCentric extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.swerveDrive.driveRobotCentric(
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.5 ,
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.5 ,
-      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-0.5 );
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.5 ,//TODO:create and use a constant, in constants, to scale the joytick input for linear motion rather than .6
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.5 ,//TODO:create and use a constant, in constants, to scale the joytick input for linear motion rather than .6
+      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-0.5 );//TODO:create and use a constant, in constants, to scale the joytick input for rotational motion rather than .6
   }
 
   // Called once the command ends or is interrupted.
