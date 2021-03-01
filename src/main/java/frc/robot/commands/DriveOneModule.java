@@ -17,7 +17,9 @@ import frc.robot.subsystems.SwerveDrive.kSwerveModule;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
- * A command to test one module at a time, it takes that module as a constructor arguement
+ * A command to test one module at a time, it takes that module 
+ * as a constructor arguement. This command is designed to test 
+ * a single module, while all other module are stopped. 
  */
 public class DriveOneModule extends CommandBase {
   private int moduleNum;
@@ -35,7 +37,7 @@ public class DriveOneModule extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    //we are driving one module, stop all other modules so they don't keep running
     RobotContainer.swerveDrive.stopAllModules();
   }
 
@@ -65,7 +67,7 @@ public class DriveOneModule extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    //before any other command is run, stop all modules, for safety 
     RobotContainer.swerveDrive.stopAllModules();
   }
 
