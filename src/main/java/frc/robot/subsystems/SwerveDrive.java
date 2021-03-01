@@ -7,16 +7,16 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 import com.analog.adis16448.frc.ADIS16448_IMU;
-import com.analog.adis16448.frc.ADIS16448_IMU.IMUAxis;
+
 /**
  * This is the subsystem that governs the four swerve module objects.
  *  In this class, the positive x-axis is toward the front of the robot,
@@ -32,7 +32,8 @@ public class SwerveDrive extends SubsystemBase {
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
   private Pose2d currentPosition = new Pose2d(new Translation2d(),new Rotation2d());
   public ADIS16448_IMU imu;
-  
+  //TODO:create a public wpilib PIDcontroller for rotation.
+
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
    * frontLeft  | 0
@@ -90,6 +91,7 @@ public class SwerveDrive extends SubsystemBase {
     // Constructs IMU object
     imu = new ADIS16448_IMU();
 
+    //TODO:construct the wpilib PIDcontroller for rotation.
   }
 
   @Override
@@ -364,6 +366,7 @@ public class SwerveDrive extends SubsystemBase {
       }
     }
   }
+
   /**
    * This is a function to drive the robot straight in a set direction
    * @param speed the speed the robot should drive, -1.0 to 1.0 in percentOutput, 
@@ -405,6 +408,7 @@ public class SwerveDrive extends SubsystemBase {
     else if (angle > Math.PI){
       angle = Math.PI;
     }
+
     //set all modules to angle
     for (int i=0; i<4; i++){
       swerveModules[i].setPosInRad(angle); 
@@ -557,11 +561,23 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
-  //write method to configure all modules DriveMotor PIDF
+  /**  
+   *method to configure all modules DriveMotor PIDF
+   */
   public void setDrivePIDF(double P, double I, double D, double F){
     for (int i=0; i<4; i++){
       swerveModules[i].setDriveMotorPIDF(P, I, D, F);
     }
   }
 
+  /**
+   * 
+   * @param target an angle in radians
+   * @return a value to give the rotational input, -1.0 to 1.0
+   */
+  public double getRobotRotationPIDOut(double target){
+    //TODO:check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
+    //TODO:use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
+    return 0.0;//0.0 is just a place holder for now, replace with output
+  }
 }
