@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -32,7 +33,7 @@ public class SwerveDrive extends SubsystemBase {
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
   private Pose2d currentPosition = new Pose2d(new Translation2d(),new Rotation2d());
   public ADIS16448_IMU imu;
-  //TODO:create a public wpilib PIDcontroller for rotation.
+  public PIDController robotSpinController;
 
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
@@ -91,7 +92,8 @@ public class SwerveDrive extends SubsystemBase {
     // Constructs IMU object
     imu = new ADIS16448_IMU();
 
-    //TODO:construct the wpilib PIDcontroller for rotation.
+    //construct the wpilib PIDcontroller for rotation.
+    robotSpinController = new PIDController(Constants.ROBOT_SPIN_P, Constants.ROBOT_SPIN_I, Constants.ROBOT_SPIN_D);
   }
 
   @Override
@@ -576,8 +578,19 @@ public class SwerveDrive extends SubsystemBase {
    * @return a value to give the rotational input, -1.0 to 1.0
    */
   public double getRobotRotationPIDOut(double target){
-    //TODO:check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
-    //TODO:use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
-    return 0.0;//0.0 is just a place holder for now, replace with output
+    double currentGyroPos = getGyroInRad();
+    //check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
+    double posDiff =  currentGyroPos - target;
+    if ( posDiff > Math.PI) {
+      // the distance the other way around the circle
+      target = currentGyroPos + (Constants.TWO_PI - (posDiff));
+    }
+    else if (posDiff < -Math.PI){
+      //if the distance to the goal is small enough, stop rotation and return
+      target = currentGyroPos - (Constants.TWO_PI + (posDiff));
+    }
+
+    //use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
+    return robotSpinController.calculate(currentGyroPos, target);
   }
 }

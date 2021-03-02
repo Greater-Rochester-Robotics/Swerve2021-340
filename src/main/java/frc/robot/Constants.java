@@ -120,4 +120,13 @@ public final class Constants {
 
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;
+
+    /*Spin controllers */
+    public static final double ROBOT_SPIN_P = 1;
+    public static final double ROBOT_SPIN_I = 0;
+    public static final double ROBOT_SPIN_D = 0;
+
+    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.6;
+    public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
+    
 }

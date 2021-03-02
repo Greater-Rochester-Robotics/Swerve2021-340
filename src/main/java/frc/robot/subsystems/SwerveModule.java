@@ -253,23 +253,16 @@ public class SwerveModule {
      * @return the position of the module in radians, should limit from -PI to PI
      */
     public double getPosInRad() {
-        // return this.currentRotPos.getRadians();//if we use the periodic call
-        // thread/method use this instead
-        // return Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
-        double currentAngleRad = this.currentRotPos.getRadians();
-        // //the following is a single line return, used with invertable drive
-        // return isInverted?
-        //     ((currentAngleRad <= 0.0)?currentAngleRad-180:-180+currentAngleRad):
-        //     (currentAngleRad);
-        // //the following is an if statement set used with invertable drive
+         double absPosInRad = Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
+        //the following is an if statement set used with invertible drive
         if(isInverted){
-            if(currentAngle <= Math.PI){
-                return currentAngle;
+            if(absPosInRad <= 0.0){
+                return absPosInRad + Math.PI;
             }else{
-                return Constants.TWO_PI-currentAngle;
+                return absPosInRad - Math.PI;
             }
         }else{
-            return rotationSensor.getPosition() - Math.PI;
+            return absPosInRad;
         }
     }
 
@@ -295,7 +288,7 @@ public class SwerveModule {
         // }
         // //This is for inverting the motor if target angle is 90-270 degrees away,
         // invert
-        // //To fix going the wrong way around the circle, distance is larger than 270
+        //To fix going the wrong way around the circle, distance is larger than 270
         if(absDiff >= Constants.THREE_PI_OVER_TWO){
             //the distance the other way around the circle
             posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
