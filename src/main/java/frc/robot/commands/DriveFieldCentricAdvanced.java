@@ -5,6 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.RobotContainer;
+import frc.robot.RobotContainer.Axis;
 
 /**
  * This command is designed so that a driver can drive 
@@ -21,22 +25,42 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * robot is not instructed to rotate by the rotational 
  * input. 
  */
+
 public class DriveFieldCentricAdvanced extends CommandBase {
+  private double currentAngle = 0;
+
   /** Creates a new DriveFieldCentricAdvanced. */
   public DriveFieldCentricAdvanced() {
-    //TODO: Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    currentAngle = Robot.robotContainer.swerveDrive.getGyroInRad();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO:test if the absolute rotational input is greater than .1
-    //TODO:if the test is true, just copy the DriveFieldCentric execute method
-    //TODO:if the test is false, still use driveFieldCentric(), but for last parameter use PIDController accessor function
+    //test if the absolute rotational input is greater than .1
+    //if the test is true, just copy the DriveFieldCentric execute method
+    //if the test is false, still use driveFieldCentric(), but for last parameter use PIDController accessor function
+    if (Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)) > .1){
+      RobotContainer.swerveDrive.driveFieldCentric(
+        Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-Constants.DRIVER_ROTATIONAL_SCALE 
+      );
+      currentAngle = RobotContainer.swerveDrive.getGyroInRad();
+    }
+    else {
+      RobotContainer.swerveDrive.driveFieldCentric(
+        Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        Robot.robotContainer.swerveDrive.getRobotRotationPIDOut(currentAngle)
+      );
+    }
   }
 
   // Called once the command ends or is interrupted.

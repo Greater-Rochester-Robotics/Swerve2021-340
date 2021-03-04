@@ -95,4 +95,38 @@ public final class Constants {
     public static final int REAR_RIGHT_ROTATE_SENSOR = 48;//module 2
     public static final int FRONT_RIGHT_MOVE_MOTOR = 49;//module 3
     public static final int FRONT_RIGHT_ROTATE_SENSOR = 51;//module 3 
+
+    /* Spark MAXes */
+	public static final int SHOOTER_WHEEL = 35; //launching wheel for the prototype
+	public static final int BALL_HANDLER_MOTOR_0 = 30;
+	public static final int BALL_HANDLER_MOTOR_1 = 31;
+	public static final int BALL_HANDLER_MOTOR_2 = 32;
+	public static final int BALL_HANDLER_MOTOR_3 = 33;
+	public static final int BALL_HANDLER_MOTOR_4 = 34;
+    
+    
+    /* Solenoids/LED PCM */
+	public static final int HARVESTER_FWD_CHANNEL = 7;
+	public static final int HARVESTER_REV_CHANNEL = 1;
+	public static final int SHOOTER_HOOD_SOLENOID_CHANNEL = 2;
+	public static final int CLIMBER_BRAKE_CHANNEL = 6;//TODO: FIX number
+    public static final int SECONDARY_PCM_ID = 11;//does not exist
+    
+    /* Shooter Speeds */
+	public static final int INITIATION_SHOT_RPM = 3500; //Put real value here for safe keeping, rpm: 3425
+	public static final int WALL_SHOT_RPM = 18000; // Old value 2550
+	public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
+	public static final int RPM_ADD_FACTOR = 0;
+
+    /* Sensors */
+    public static final int BALL_COUNTER_SENSOR = 4;
+
+    /*Spin controllers */
+    public static final double ROBOT_SPIN_P = 1;
+    public static final double ROBOT_SPIN_I = 0;
+    public static final double ROBOT_SPIN_D = 0;
+
+    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.6;
+    public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
+    
 }

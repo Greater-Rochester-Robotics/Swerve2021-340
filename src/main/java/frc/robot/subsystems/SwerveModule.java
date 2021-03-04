@@ -253,24 +253,17 @@ public class SwerveModule {
      * @return the position of the module in radians, should limit from -PI to PI
      */
     public double getPosInRad() {
-        // return this.currentRotPos.getRadians();//if we use the periodic call
-        // thread/method use this instead
-        return Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
-        // double currentAngleRad = this.currentRotPos.getRadians();
-        // //the following is a single line return, used with invertable drive
-        // return isInverted?
-        //     ((currentAngleRad <= 0.0)?currentAngleRad-180:-180+currentAngleRad):
-        //     (currentAngleRad);
-        // //the following is an if statement set used with invertable drive
-        // if(isInverted){
-        //     if(currentAngle <= Math.PI){
-        //         return currentAngle;
-        //     }else{
-        //         return Constants.TWO_PI-currentAngle;
-        //     }
-        // }else{
-        //     return rotationSensor.getPosition() - Math.PI;
-        // }
+         double absPosInRad = Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
+        //the following is an if statement set used with invertible drive
+        if(isInverted){
+            if(absPosInRad <= 0.0){
+                return absPosInRad + Math.PI;
+            }else{
+                return absPosInRad - Math.PI;
+            }
+        }else{
+            return absPosInRad;
+        }
     }
 
     /**
@@ -284,38 +277,38 @@ public class SwerveModule {
         double absDiff = Math.abs(posDiff);
         // System.out.println("targetPos = " + targetPos);
         // if the distance is more than a half circle,we going the wrong way, fix
-        if (absDiff > Math.PI) {
-            // the distance the other way around the circle
-            posDiff = posDiff - (Constants.TWO_PI * Math.signum(posDiff));
-        }
-        else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
-            //if the distance to the goal is small enough, stop rotation and return
-            rotatePID.setReference(0.0, ControlType.kDutyCycle);
-            return;
-        }
-        // //This is for inverting the motor if target angle is 90-270 degrees away,
-        // invert
-        // //To fix going the wrong way around the circle, distance is larger than 270
-        // if(absDiff >= Constants.THREE_PI_OVER_TWO){
-        //     //the distance the other way around the circle
-        //     posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
-        // //if between 90 and 270 invert the motor
-        // }else if(absDiff < Constants.THREE_PI_OVER_TWO && absDiff >
-        //     Constants.PI_OVER_TWO){
-        //     //switch the motor inversion
-        //     isInverted = !isInverted;
-        //     //Since inverted, recompute everything
-        //     posDiff = targetPos - getPosInRad();
-        //     absDiff = Math.abs(posDiff);
-        //     if(absDiff > Constants.THREE_PI_OVER_TWO){
-        //         //the distance the other way around the circle
-        //         posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
-        //     }
-        // }else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+        // if (absDiff > Math.PI) {
+        //     // the distance the other way around the circle
+        //     posDiff = posDiff - (Constants.TWO_PI * Math.signum(posDiff));
+        // }
+        // else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
         //     //if the distance to the goal is small enough, stop rotation and return
         //     rotatePID.setReference(0.0, ControlType.kDutyCycle);
         //     return;
         // }
+        // //This is for inverting the motor if target angle is 90-270 degrees away,
+        // invert
+        //To fix going the wrong way around the circle, distance is larger than 270
+        if(absDiff >= Constants.THREE_PI_OVER_TWO){
+            //the distance the other way around the circle
+            posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
+        //if between 90 and 270 invert the motor
+        }else if(absDiff < Constants.THREE_PI_OVER_TWO && absDiff >
+            Constants.PI_OVER_TWO){
+            //switch the motor inversion
+            isInverted = !isInverted;
+            //Since inverted, recompute everything
+            posDiff = targetPos - getPosInRad();
+            absDiff = Math.abs(posDiff);
+            if(absDiff > Constants.THREE_PI_OVER_TWO){
+                //the distance the other way around the circle
+                posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
+            }
+        }else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+            //if the distance to the goal is small enough, stop rotation and return
+            rotatePID.setReference(0.0, ControlType.kDutyCycle);
+            return;
+        }
 
         // Convert the shortest distance to encoder value(use convertion factor)
         double targetEncDistance = posDiff * Constants.RAD_TO_ENC_CONV_FACTOR;

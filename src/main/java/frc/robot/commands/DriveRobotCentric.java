@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
@@ -39,9 +40,9 @@ public class DriveRobotCentric extends CommandBase {
   @Override
   public void execute() {
     RobotContainer.swerveDrive.driveRobotCentric(
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-0.5 ,//TODO:create and use a constant, in constants, to scale the joytick input for linear motion rather than .6
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-0.5 ,//TODO:create and use a constant, in constants, to scale the joytick input for linear motion rather than .6
-      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-0.5 );//TODO:create and use a constant, in constants, to scale the joytick input for rotational motion rather than .6
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL ,
+      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL ,
+      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-Constants.DRIVER_ROTATIONAL_SCALE );
   }
 
   // Called once the command ends or is interrupted.
