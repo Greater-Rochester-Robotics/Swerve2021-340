@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -114,6 +114,8 @@ public class SwerveDrive extends SubsystemBase {
       deltaPosition[1]+= deltaPerMod[1];
     }
     //the prior array is based around the robot's x and y and not the field's
+
+    SmartDashboard.putNumber("Gyro", getGyroInDeg());
 
     // //The following pulls the current rotational orientation of the robot(Rotation2d)
     // Rotation2d currentRot = this.getGyroRotation2d();
@@ -580,15 +582,15 @@ public class SwerveDrive extends SubsystemBase {
   public double getRobotRotationPIDOut(double target){
     double currentGyroPos = getGyroInRad();
     //check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
-    double posDiff =  currentGyroPos - target;
-    if ( posDiff > Math.PI) {
-      // the distance the other way around the circle
-      target = currentGyroPos + (Constants.TWO_PI - (posDiff));
-    }
-    else if (posDiff < -Math.PI){
-      //if the distance to the goal is small enough, stop rotation and return
-      target = currentGyroPos - (Constants.TWO_PI + (posDiff));
-    }
+    // double posDiff =  currentGyroPos - target;
+    // if ( posDiff > Math.PI) {
+    //   // the distance the other way around the circle
+    //   target = currentGyroPos + (Constants.TWO_PI - (posDiff));
+    // }
+    // else if (posDiff < -Math.PI){
+    //   //if the distance to the goal is small enough, stop rotation and return
+    //   target = currentGyroPos - (Constants.TWO_PI + (posDiff));
+    // }
 
     //use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
     return robotSpinController.calculate(currentGyroPos, target);

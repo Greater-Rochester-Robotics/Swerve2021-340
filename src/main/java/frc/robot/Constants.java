@@ -60,7 +60,7 @@ public final class Constants {
     
     //Swerve Drive Constants
     public static final double MINIMUM_DRIVE_SPEED = 0.1;//the slowest the wheels can turn, in m/s
-    public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.1;//the slowest the wheels can turn, in duty cycle
+    public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;//the slowest the wheels can turn, in duty cycle
     public static final double MAXIMUM_VELOCITY = 1.0;
     public static final double MAXIMUM_ACCELERATION = 1.0;
     public static final double SWERVE_MODULE_TOLERANCE = 0.017;
@@ -122,7 +122,7 @@ public final class Constants {
     public static final int BALL_COUNTER_SENSOR = 4;
 
     /*Spin controllers */
-    public static final double ROBOT_SPIN_P = 1;
+    public static final double ROBOT_SPIN_P = .55;
     public static final double ROBOT_SPIN_I = 0;
     public static final double ROBOT_SPIN_D = 0;
 

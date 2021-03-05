@@ -11,12 +11,13 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
-import frc.robot.commands.DriveFieldCentric;
+import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
+import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.subsystems.SwerveDrive;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -68,22 +69,26 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driverA.whenPressed(new DriveOneModule(0));
-    driverB.whenPressed(new DriveOneModule(1));
-    driverX.whenPressed(new DriveOneModule(2));
-    driverY.whenPressed(new DriveOneModule(3));
+    driverA.whenPressed(new DriveTurnToAngle(0));
+    driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
+    driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
     
-    driverA.whenReleased(new DriveStopAllModules());
-    driverB.whenReleased(new DriveStopAllModules());
-    driverX.whenReleased(new DriveStopAllModules());
-    driverY.whenReleased(new DriveStopAllModules());
+    // driverA.whenPressed(new DriveOneModule(0));
+    // driverB.whenPressed(new DriveOneModule(1));
+    // driverX.whenPressed(new DriveOneModule(2));
+    // driverY.whenPressed(new DriveOneModule(3));
+    
+    // driverA.whenReleased(new DriveStopAllModules());
+    // driverB.whenReleased(new DriveStopAllModules());
+    // driverX.whenReleased(new DriveStopAllModules());
+    // driverY.whenReleased(new DriveStopAllModules());
     
     //driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
     //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 
-    driverStart.whenPressed(new DriveFieldCentric());
+    driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
   }
   
