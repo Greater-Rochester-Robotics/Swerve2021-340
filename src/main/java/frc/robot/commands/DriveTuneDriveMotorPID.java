@@ -4,9 +4,12 @@
 
 package frc.robot.commands;
 
+import javax.swing.plaf.basic.BasicBorders.RolloverButtonBorder;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
@@ -33,9 +36,9 @@ public class DriveTuneDriveMotorPID extends CommandBase {
     addRequirements(RobotContainer.swerveDrive);
     //Push PID Constants(From Constants.java) to SmartDashboard
     SmartDashboard.putNumber("driveP", kP);
-    SmartDashboard.putNumber("driveI", kP);//TODO:Fix input (kP?)
-    SmartDashboard.putNumber("driveD", kP);//TODO:Fix input (kP?)
-    SmartDashboard.putNumber("driveF", kP);//TODO:Fix input (kP?)
+    SmartDashboard.putNumber("driveI", kI);
+    SmartDashboard.putNumber("driveD", kD);
+    SmartDashboard.putNumber("driveF", kF);
   }
 
   // Called when the command is initially scheduled.
@@ -46,7 +49,7 @@ public class DriveTuneDriveMotorPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //you can look at for refference https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Position%20Closed%20Loop%20Control/src/main/java/frc/robot/Robot.java lines 79-94
+    //you can look at for reference https://github.com/REVrobotics/SPARK-MAX-Examples/blob/master/Java/Position%20Closed%20Loop%20Control/src/main/java/frc/robot/Robot.java lines 79-94
     //Pull PIDF values from the SmartDashboard and store in variables
     double sdP = SmartDashboard.getNumber("driveP", 0);
     double sdI = SmartDashboard.getNumber("driveI", 0);
@@ -55,8 +58,15 @@ public class DriveTuneDriveMotorPID extends CommandBase {
     
     //Check if any SmartDashboard PID constants are different from field constants
     if((sdP != kP)||(sdI != kI)||(sdD != kD)||(sdFF != kF)) {
-      //TODO:if PIDf coefficients on SmartDashboard have changed, write new values to controller
-      //TODO:assign new PIDF coefficients to field PIDF constants
+      //if PIDf coefficients on SmartDashboard have changed, write new values to controller
+      //assign new PIDF coefficients to field PIDF constants
+      RobotContainer.swerveDrive.setDrivePIDF(sdP, sdI, sdD, sdFF);
+      kP = sdP;
+      kI = sdI;
+      kD =sdD;
+      kF = sdFF;
+
+
     }
     
     //use driveOneModule for each motor, position setting m0 to 135, m1 to -135, m2 to -45, and m3 to 45, set speed to constructor param
@@ -71,7 +81,7 @@ public class DriveTuneDriveMotorPID extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO:run the stop motors method
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.
