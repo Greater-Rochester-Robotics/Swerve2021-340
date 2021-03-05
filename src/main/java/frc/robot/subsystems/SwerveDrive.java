@@ -118,12 +118,12 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Gyro", getGyroInDeg());
 
     // //The following pulls the current rotational orientation of the robot(Rotation2d)
-    // Rotation2d currentRot = this.getGyroRotation2d();
-    // // The following updates the currentPostion object
-    // currentPosition = new Pose2d(
-    //   currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
-    //   currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
-    //   currentRot);
+    Rotation2d currentRot = this.getGyroRotation2d();
+    // The following updates the currentPostion object
+    currentPosition = new Pose2d(
+      currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
+      currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
+      currentRot);
   }
 
   /**
