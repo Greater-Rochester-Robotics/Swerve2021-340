@@ -26,6 +26,8 @@ public class DriveResetGyroToZero extends InstantCommand {
     RobotContainer.swerveDrive.resetGyro();
   }
 
-  //TODO:make this able to run when disabled(overwrite the runsWhenDisabled command)
+  public boolean runsWhenDisabled(){
+    return true;
+  }
 
 }

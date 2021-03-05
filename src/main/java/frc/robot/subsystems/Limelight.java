@@ -90,9 +90,9 @@ public class Limelight extends SubsystemBase {
   public double getDistance(){
     //TODO: find actual values for these, and implement/test them
     //all distance values are in inches
-    double cameraHeight =  25.5;    //not final value
-    double targetHeight = 98; //final value = 98
-    double cameraAngle = 18;    //changeable 
+    double cameraHeight =  24.56;    //not final value
+    double targetHeight = 98.5; //final value = 98
+    double cameraAngle = 18;    //changeable, need to recallibrate
     double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-12.5; // Returns distance to target, 12.5 is distance camera is from front? of robot
     // System.out.println("Math = " + Math.tan( Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget()) ) +"   distance = " + Distance);
     // System.out.println(Distance);
