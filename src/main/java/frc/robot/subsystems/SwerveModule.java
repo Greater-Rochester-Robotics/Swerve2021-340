@@ -66,6 +66,7 @@ public class SwerveModule {
         // use the integrated sensor with the primary closed loop and timeout is 0.
         driveMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
+        driveMotor.setNeutralMode(NeutralMode.Brake);
         // above uses configSelectedFeedbackCoefficient(), to scale the
         // driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
         driveMotor.setInverted(false);// Set motor inverted(set to false)
