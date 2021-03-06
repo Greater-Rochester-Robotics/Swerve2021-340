@@ -52,7 +52,6 @@ public class DriveOneModule extends CommandBase {
     }
 
     double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
-    //TODO: test smartdashboard outputs
     SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);

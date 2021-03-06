@@ -15,6 +15,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -79,13 +80,13 @@ public class SwerveModule {
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
         
 
+
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();// reset the motor controller, wipe old stuff
 
         rotationMotor.setIdleMode(IdleMode.kCoast);// set rotationMotor coast mode, so it doesnt overcorrect itself
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
-        //TODO:Drop this 40A to at least 20, maybe 15 or 10
-        rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
+        rotationMotor.setSmartCurrentLimit(15);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
         
         rotateRelEncoder = rotationMotor.getEncoder();
@@ -112,7 +113,8 @@ public class SwerveModule {
      * Currently, currentAngle is called independently by other function
      */
     public double[] periodic() {
-        //TODO:call rotational motor health test method rotationHealthCheck()
+        
+        rotationHealthCheckup();
 
         // pull the current position from the absolute rotation sesnors
         this.currentDegAngle = rotateAbsSensor.getAbsolutePosition();
@@ -273,12 +275,16 @@ public class SwerveModule {
     public double getRelEncCount() {
         return rotateRelEncoder.getPosition();
     }
-
+    
     /**
      * 
      */
-    public void rotationHealthCheck(){
-        //TODO:run checks on motor based on speed, current use and Temperature
+    public void rotationHealthCheckup(){
+        //run checks on motor based on speed, current use and Temperature
+        SmartDashboard.putNumber("Rotation Motor Temp" + rotationMotor.getDeviceId(), rotationMotor.getMotorTemperature());
+        SmartDashboard.putNumber("Rotation Motor Current" + rotationMotor.getDeviceId(), rotationMotor.getOutputCurrent());
+        SmartDashboard.putNumber("Rotation Motor Speeed" + rotationMotor.getDeviceId(), rotateRelEncoder.getVelocity());
+        SmartDashboard.putBoolean("Rotation Motor Temp TOO HOT!" + rotationMotor.getDeviceId(), rotationMotor.getMotorTemperature() < 80);
     }
 
     /**

@@ -115,6 +115,8 @@ public class SwerveDrive extends SubsystemBase {
       deltaPosition[0]+= deltaPerMod[0];
       //add the distance travelled in the y by this module to the others(with respect to the robot)
       deltaPosition[1]+= deltaPerMod[1];
+
+      
     }
     //the prior array is based around the robot's x and y and not the field's
 

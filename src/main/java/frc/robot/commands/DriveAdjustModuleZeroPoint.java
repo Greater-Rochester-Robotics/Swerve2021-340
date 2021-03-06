@@ -71,5 +71,7 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     return false;
   }
 
-  //TODO:make this able to run when disabled(overwrite the runsWhenDisabled command)
+  public boolean runsWhenDisabled(){
+    return true;
+  }
 }
