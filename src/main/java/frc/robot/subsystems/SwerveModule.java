@@ -77,16 +77,17 @@ public class SwerveModule {
                           Constants.SWERVE_DRIVE_D_VALUE, Constants.SWERVE_DRIVE_F_VALUE);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
-
+        
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
         rotationMotor.restoreFactoryDefaults();// reset the motor controller, wipe old stuff
 
         rotationMotor.setIdleMode(IdleMode.kCoast);// set rotationMotor coast mode, so it doesnt overcorrect itself
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
-        rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor maybe 40A? Don't burn the NEO550
+        //TODO:Drop this 40A to at least 20, maybe 15 or 10
+        rotationMotor.setSmartCurrentLimit(40);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
-
+        
         rotateRelEncoder = rotationMotor.getEncoder();
         rotatePID = rotationMotor.getPIDController();
         rotatePID.setFeedbackDevice(rotateRelEncoder);
@@ -111,6 +112,8 @@ public class SwerveModule {
      * Currently, currentAngle is called independently by other function
      */
     public double[] periodic() {
+        //TODO:call rotational motor health test method rotationHealthCheck()
+
         // pull the current position from the absolute rotation sesnors
         this.currentDegAngle = rotateAbsSensor.getAbsolutePosition();
         this.currentRotPos = new Rotation2d(Math.toRadians(this.currentDegAngle));
@@ -118,21 +121,22 @@ public class SwerveModule {
 
         // average the angle between this cycle and the previous
         double averAngle = (this.currentRotPos.getRadians() + this.prevAngle) / 2;
-        // double averAngle = (this.currentAngle + this.prevAngle)/2;
 
         // pull the distance travelled by the driveMotor
         this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition();
         // find the distance travelled since the previous cycle
         double deltaPos = this.currentPosition - this.prevPosition;
 
-        // add the distance travelled, in each the X and Y, to the total distance for
-        // this module
+        // add the distance travelled, in each the X and Y, 
+        //to the total distance for this module
         double[] deltaPositionArray = new double[] { deltaPos * this.currentRotPos.getCos(),
                 deltaPos * this.currentRotPos.getSin() };
 
         // store the current distance and angle for the next cycle
         this.prevAngle = this.currentRotPos.getRadians();
         this.prevPosition = this.currentPosition;
+
+        //output the distaance travelled
         return deltaPositionArray;
     }
 
@@ -240,6 +244,26 @@ public class SwerveModule {
     }
 
     /**
+     * If this is too resource intensive, switch to a periodic call, and replace
+     * with a poll of said variable
+     * 
+     * @return the position of the module in radians, should limit from -PI to PI
+     */
+    public double getPosInRad() {
+        double absPosInRad = Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
+       //the following is an if statement set used with invertible drive
+       if(isInverted){
+           if(absPosInRad <= 0.0){
+               return absPosInRad + Math.PI;
+           }else{
+               return absPosInRad - Math.PI;
+           }
+       }else{
+           return absPosInRad;
+       }
+   }
+
+    /**
      * this is a function meant for testing by getting the count from the rotational
      * encoder which is internal to the NEO550. This encoder is relative, and does 
      * not easily translate to a specific rotational position of the swerve module.
@@ -251,23 +275,10 @@ public class SwerveModule {
     }
 
     /**
-     * If this is too resource intensive, switch to a periodic call, and replace
-     * with a poll of said variable
      * 
-     * @return the position of the module in radians, should limit from -PI to PI
      */
-    public double getPosInRad() {
-         double absPosInRad = Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
-        //the following is an if statement set used with invertible drive
-        if(isInverted){
-            if(absPosInRad <= 0.0){
-                return absPosInRad + Math.PI;
-            }else{
-                return absPosInRad - Math.PI;
-            }
-        }else{
-            return absPosInRad;
-        }
+    public void rotationHealthCheck(){
+        //TODO:run checks on motor based on speed, current use and Temperature
     }
 
     /**
@@ -279,7 +290,8 @@ public class SwerveModule {
     public void setPosInRad(double targetPos) {
         double posDiff = targetPos - getPosInRad();
         double absDiff = Math.abs(posDiff);
-        // System.out.println("targetPos = " + targetPos);
+        
+        //The following is for non-inverting 
         // if the distance is more than a half circle,we going the wrong way, fix
         // if (absDiff > Math.PI) {
         //     // the distance the other way around the circle
@@ -290,9 +302,8 @@ public class SwerveModule {
         //     rotatePID.setReference(0.0, ControlType.kDutyCycle);
         //     return;
         // }
-        // //This is for inverting the motor if target angle is 90-270 degrees away,
-        // invert
-        //To fix going the wrong way around the circle, distance is larger than 270
+
+        //if the distance is larger than 270, this is the wrong way round the circle
         if(absDiff >= Constants.THREE_PI_OVER_TWO){
             //the distance the other way around the circle
             posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
@@ -319,7 +330,6 @@ public class SwerveModule {
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
 
-        // System.out.println("Target Encoder Distance, targetPos, outputEncValue" + targetEncDistance + " " + targetPos + " " + outputEncValue);
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition);
     }

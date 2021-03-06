@@ -103,6 +103,9 @@ public class SwerveDrive extends SubsystemBase {
    * the currentPosition
    */
   public void periodic() {
+    
+    SmartDashboard.putNumber("Gyro", getGyroInDeg());
+
     //create an array to store the distance travelled by the robot since the last time this was called
     double[] deltaPosition = new double[]{0.0,0.0};
     for (int i=0; i<4; i++){
@@ -115,8 +118,6 @@ public class SwerveDrive extends SubsystemBase {
     }
     //the prior array is based around the robot's x and y and not the field's
 
-    SmartDashboard.putNumber("Gyro", getGyroInDeg());
-
     // //The following pulls the current rotational orientation of the robot(Rotation2d)
     Rotation2d currentRot = this.getGyroRotation2d();
     // The following updates the currentPostion object
@@ -128,11 +129,13 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Drives the robot based on speeds from the robot's orientation.
-   * all speed should be in range of -1.0 to 1.0 with 0.0 being not moving
-   * in that direction.
+   * all speed should be in range of -1.0 to 1.0 with 0.0 being not 
+   * moving for percentVoltage mode and between the Max Velocity 
+   * and -Max Velocity with 0 not moving in Velocity mode
    * @param forwardSpeed the movement forward and backward
    * @param strafeSpeed the movement side to side
    * @param rotSpeed the speed of rotation
+   * @param mode the mode of either percentOutput or velocity
    */
   public void driveRobotCentric(double forwardSpeed, double strafeSpeed, double rotSpeed, kDriveMode mode){
     boolean isVelocityMode = kDriveMode.velocity == mode;
@@ -160,7 +163,7 @@ public class SwerveDrive extends SubsystemBase {
       targetModuleAngles[i] = Math.atan2( targetModuleVectors[i][1] , targetModuleVectors[i][0] );
     }
     
-    //create an empty array tto put output speeds in
+    //create an empty array to put output speeds in
     double[] targetMotorSpeeds = new double[4];
     //create a variable so we can find the maxSpeed
     double maxSpeed = 0.0;
@@ -199,7 +202,8 @@ public class SwerveDrive extends SubsystemBase {
       swerveModules[i].setPosInRad(targetModuleAngles[i]); 
     }
 
-    double[] curAngles = new double[4]; // pull the current angles of the modules(do this now, to allow moduel to invert)
+    // pull the current angles of the modules(do this now, to allow module to invert)
+    double[] curAngles = new double[4]; 
     for (int i=0; i<4; i++){
       curAngles[i] = swerveModules[i].getPosInRad();
     }
@@ -237,6 +241,7 @@ public class SwerveDrive extends SubsystemBase {
    *                     is to the left 
    * @param rotSpeed rotational speed of the robot
    *                 -1.0 to 1.0 where 0.0 is not rotating
+   * @param mode the mode of either percentOutput or velocity
    */
   public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed, kDriveMode mode){
     //pull the current oreintation of the robot(based on gyro)
