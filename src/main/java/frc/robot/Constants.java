@@ -16,18 +16,15 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    //Swerve conversion factors
-    // public static final double VOLTAGE_TO_RAD_CONV_FACTOR = 2*Math.PI/3.3; //Not needed since using CANCoder
-    // public static final double RAD_TO_DEG_CONV_FACTOR = 180/Math.PI;//removed in favor of Math.toDegrees()
-    // public static final double DEG_TO_RAD_CONV_FACTOR = Math.PI/180;//removed in favor of Math.toRadians()
-    public static final double RAD_TO_ENC_CONV_FACTOR = 10.17985; //0.00248835;//TODO:find the radian to enc factor (Mech Team) :Double check this!
-    public static final double DRIVE_ENC_TO_METERS_FACTOR = 1.0;//TODO:find this ratio from mechanicla specs
+    /* Swerve conversion factors */
+    public static final double RAD_TO_ENC_CONV_FACTOR = 10.17985; //the radian to enc factor
+    public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.00002226;//TODO:find this ratio from mechanical specs
     public static final double PI_OVER_TWO = Math.PI/2;
     public static final double THREE_PI_OVER_TWO = 3*PI_OVER_TWO;
     public static final double TWO_PI = 2*Math.PI;
 
-    //Swerve dimension factors, distances from center of mass(units must be in meters!)
-    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = .294;//TODO:find this distance(Mech Team)
+    /*Swerve dimension factors, distances from center of mass(units must be in meters!)*/
+    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = .294;//this is to robot center
     public static final double Y_POSITIVE_DISTANCE_FROM_CENTER = .294;
     public static final double X_NEGATIVE_DISTANCE_FROM_CENTER = -.294;//THIS NUMBER MUST BE NEGATIVE!!!!!
     public static final double Y_NEGATIVE_DISTANCE_FROM_CENTER = -.294;//THIS NUMBER MUST BE NEGATIVE!!!!!
@@ -58,19 +55,19 @@ public final class Constants {
             {X_POSITIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_3 , Y_NEGATIVE_DISTANCE_FROM_CENTER/DISTANCE_TO_MODULE_3}
         };
     
-    //Swerve Drive Constants
+    /* Swerve Drive Constants */
     public static final double MINIMUM_DRIVE_SPEED = 0.1;//the slowest the wheels can turn, in m/s
-    public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.1;//the slowest the wheels can turn, in duty cycle
-    public static final double MAXIMUM_VELOCITY = 1.0;
+    public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;//the slowest the wheels can turn, in duty cycle
+    public static final double MAXIMUM_VELOCITY = 4.5;
     public static final double MAXIMUM_ACCELERATION = 1.0;
-    public static final double SWERVE_MODULE_TOLERANCE = 0.017;
+    public static final double MAX_ROBOT_ROT_VELOCITY = MAXIMUM_VELOCITY/DISTANCE_TO_MODULE_0;
     public static final double MAXIMUM_VOLTAGE = 12.0; 
-    public static final double SWERVE_DRIVE_P_VALUE = 0.035;
+    public static final double SWERVE_DRIVE_P_VALUE = 1000; //0.035;
     public static final double SWERVE_DRIVE_I_VALUE = 0.0;
-    public static final double SWERVE_DRIVE_D_VALUE = 0.0;
-    public static final double SWERVE_DRIVE_F_VALUE = 0.0001;
+    public static final double SWERVE_DRIVE_D_VALUE = 25;
+    public static final double SWERVE_DRIVE_F_VALUE = 1023/(MAXIMUM_VELOCITY/DRIVE_ENC_TO_METERS_FACTOR);
 
-    //Swerve rotation PID constants
+    /* Swerve Module Rotation constants */
     public static final double SWERVE_ROT_P_VALUE = 0.035;//if sluggish, increase P value
     public static final double SWERVE_ROT_I_VALUE = 0.0;
     public static final double SWERVE_ROT_D_VALUE = 0.0;
@@ -78,6 +75,16 @@ public final class Constants {
     public static final double SWERVE_ROT_FF_VALUE = 0.0001;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
+    public static final double SWERVE_MODULE_TOLERANCE = 0.017;//this is in radians
+    
+    /* Robot Motion PID controller constants */
+    public static final double ROBOT_SPIN_P = .55;
+    public static final double ROBOT_SPIN_I = 0;
+    public static final double ROBOT_SPIN_D = 0;
+
+    /* Driver scaling constants to slow robot */
+    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.6;
+    public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
 
     //SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 41;//module 0
@@ -121,12 +128,5 @@ public final class Constants {
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;
 
-    /*Spin controllers */
-    public static final double ROBOT_SPIN_P = 1;
-    public static final double ROBOT_SPIN_I = 0;
-    public static final double ROBOT_SPIN_D = 0;
-
-    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.6;
-    public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
     
 }

@@ -9,6 +9,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * This command is designed so that a driver can drive 
@@ -43,22 +44,33 @@ public class DriveFieldCentricAdvanced extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
+    double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
+    if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
+      Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X))>.1){
+      awaySpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y)*.5;
+      lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*.5;
+    }
+    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_TRIGGER) - Robot.robotContainer.getDriverAxis(Axis.LEFT_TRIGGER);
+
     //test if the absolute rotational input is greater than .1
     //if the test is true, just copy the DriveFieldCentric execute method
     //if the test is false, still use driveFieldCentric(), but for last parameter use PIDController accessor function
-    if (Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)) > .1){
+    if (Math.abs(rotSpeed) > .1){
       RobotContainer.swerveDrive.driveFieldCentric(
-        Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-        Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-        Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-Constants.DRIVER_ROTATIONAL_SCALE 
+        awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE ,
+        kDriveMode.percentOutput
       );
       currentAngle = RobotContainer.swerveDrive.getGyroInRad();
     }
     else {
       RobotContainer.swerveDrive.driveFieldCentric(
-        Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-        Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-        Robot.robotContainer.swerveDrive.getRobotRotationPIDOut(currentAngle)
+        awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+        Robot.robotContainer.swerveDrive.getRobotRotationPIDOut(currentAngle),
+        kDriveMode.percentOutput
       );
     }
   }

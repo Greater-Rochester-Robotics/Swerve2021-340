@@ -12,6 +12,7 @@ import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * This command is designed so that a driver can drive 
@@ -40,10 +41,15 @@ public class DriveFieldCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
+    double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
+    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X);
+
     RobotContainer.swerveDrive.driveFieldCentric(
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_Y)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-      Robot.robotContainer.getDriverAxis(Axis.LEFT_X)*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-      Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*-Constants.DRIVER_ROTATIONAL_SCALE 
+      awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+      lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+      rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE, 
+      kDriveMode.percentOutput
     );
   }
 

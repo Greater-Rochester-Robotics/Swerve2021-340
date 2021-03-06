@@ -16,18 +16,19 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * This command is designed so that a driver can drive 
- * the swerve drive based around the robot's orientation.
- * Forward on the stick will cause the robot to drive 
- * forward. left and right on the stick will cause the 
- * robot to move to its left or right. This command does
- * not end of its own accord so it must be interupted to 
- * end.
+ * the swerve drive based around a fixed orientation.
+ * Forward on the stick should cause the robot to away 
+ * from the driver. If this is true, then left and right 
+ * on the stick will cause the robot to move to the 
+ * driver's left and right, respectively. This command 
+ * does not end of its own accord so it must be interupted 
+ * to end.
  */
-public class DriveRobotCentric extends CommandBase {
+public class DriveFieldCentricVelocity extends CommandBase {
   /**
-   * Creates a new DriveRobotCentric.
+   * Creates a new DriveFieldCentric.
    */
-  public DriveRobotCentric() {
+  public DriveFieldCentricVelocity() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
   }
@@ -40,15 +41,16 @@ public class DriveRobotCentric extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double  forwardSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
-    double strafeSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
+    double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
+    double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
     double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X);
 
-    RobotContainer.swerveDrive.driveRobotCentric(
-      forwardSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL ,
-      strafeSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL ,
-      rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE,
-      kDriveMode.percentOutput );
+    RobotContainer.swerveDrive.driveFieldCentric(
+      awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL*Constants.MAXIMUM_VELOCITY,
+      lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL*Constants.MAXIMUM_VELOCITY,
+      rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE*Constants.MAX_ROBOT_ROT_VELOCITY, 
+      kDriveMode.velocity
+    );
   }
 
   // Called once the command ends or is interrupted.
