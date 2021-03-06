@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveFieldCentricAdvanced;
+import frc.robot.commands.DriveFieldCentricVelocity;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
@@ -69,22 +70,22 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    driverA.whenPressed(new DriveTurnToAngle(0));
-    driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
-    driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
+    // driverA.whenPressed(new DriveTurnToAngle(0));
+    // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
+    // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
     
-    // driverA.whenPressed(new DriveOneModule(0));
-    // driverB.whenPressed(new DriveOneModule(1));
-    // driverX.whenPressed(new DriveOneModule(2));
-    // driverY.whenPressed(new DriveOneModule(3));
+    driverA.whenPressed(new DriveOneModule(0));
+    driverB.whenPressed(new DriveOneModule(1));
+    driverX.whenPressed(new DriveOneModule(2));
+    driverY.whenPressed(new DriveOneModule(3));
     
-    // driverA.whenReleased(new DriveStopAllModules());
-    // driverB.whenReleased(new DriveStopAllModules());
-    // driverX.whenReleased(new DriveStopAllModules());
-    // driverY.whenReleased(new DriveStopAllModules());
+    driverA.whenReleased(new DriveStopAllModules());
+    driverB.whenReleased(new DriveStopAllModules());
+    driverX.whenReleased(new DriveStopAllModules());
+    driverY.whenReleased(new DriveStopAllModules());
     
     //driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
-    //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
+    // driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 

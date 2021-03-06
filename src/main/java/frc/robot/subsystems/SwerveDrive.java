@@ -134,20 +134,24 @@ public class SwerveDrive extends SubsystemBase {
    * @param strafeSpeed the movement side to side
    * @param rotSpeed the speed of rotation
    */
-  public void driveRobotCentric(double forwardSpeed, double strafeSpeed, double rotSpeed){
+  public void driveRobotCentric(double forwardSpeed, double strafeSpeed, double rotSpeed, kDriveMode mode){
+    boolean isVelocityMode = kDriveMode.velocity == mode;
     double[] targetMoveVector = { forwardSpeed , strafeSpeed };//the direction we want the robot to move
 
     //create a 2d array for the goal output of each module(in vector component form)
     double[][] targetModuleVectors = new double[4][2];
+
     //create a vector for each module, one at a time
     for(int i=0 ; i<4 ; i++){
       //compute the x-component of the vector by adding the targetVector to the cross product with rotspeed
       targetModuleVectors[i][0] =
-        targetMoveVector[0] - (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][1] );
+        targetMoveVector[0] - 
+        (rotSpeed*(isVelocityMode?Constants.MODULE_VECTORS[i][1]:Constants.MODULE_UNIT_VECTORS[i][1]));
       
       //compute the y-component of the vector by adding the targetVector to the cross product with rotspeed
       targetModuleVectors[i][1] = 
-        targetMoveVector[1] + (rotSpeed*Constants.MODULE_UNIT_VECTORS[i][0] );
+        targetMoveVector[1] + 
+        (rotSpeed*(isVelocityMode?Constants.MODULE_VECTORS[i][0]:Constants.MODULE_UNIT_VECTORS[i][0]));
     }
 
     //generates angles for each module
@@ -173,14 +177,15 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     //normalize all speeds, by dividing by the largest, if largest is greater than 1
-    if(maxSpeed > 1){
+    if(maxSpeed > (isVelocityMode?Constants.MAXIMUM_VELOCITY:1) ){
       for(int i=0 ; i<4 ; i++){
         targetMotorSpeeds[i] = targetMotorSpeeds[i]/maxSpeed;
       }
     //the following creates an effective deadzone
     }
+
     //change the following to a simple if, invert the logic, and within, place the next for loop
-    if(maxSpeed < Constants.MINIMUM_DRIVE_DUTY_CYCLE){
+    if(maxSpeed < (isVelocityMode?Constants.MINIMUM_DRIVE_SPEED:Constants.MINIMUM_DRIVE_DUTY_CYCLE)){
       //if the maxSpeed is below the minimum movement speed, stop all the motors.
       for(int i=0 ; i<4 ; i++){
         swerveModules[i].setDriveMotor(0.0);
@@ -204,9 +209,16 @@ public class SwerveDrive extends SubsystemBase {
       targetMotorSpeeds[i] = targetMotorSpeeds[i]*Math.cos(targetModuleAngles[i]-curAngles[i]);
     }
 
+
     //assign output to each module(uses a for loop with targetMotorSpeeds[])
-    for (int i=0; i<4; i++){
-      swerveModules[i].setDriveMotor(targetMotorSpeeds[i]);
+    if(isVelocityMode){
+      for (int i=0; i<4; i++){
+        swerveModules[i].setDriveSpeed(targetMotorSpeeds[i]);
+      }
+    }else{
+      for (int i=0; i<4; i++){
+        swerveModules[i].setDriveMotor(targetMotorSpeeds[i]);
+      }
     }
 
   }
@@ -226,12 +238,12 @@ public class SwerveDrive extends SubsystemBase {
    * @param rotSpeed rotational speed of the robot
    *                 -1.0 to 1.0 where 0.0 is not rotating
    */
-  public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed){
+  public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed, kDriveMode mode){
     //pull the current oreintation of the robot(based on gyro)
     Rotation2d gyro = this.getGyroRotation2d();
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
     double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
-    this.driveRobotCentric( robotForwardSpeed , robotStrafeSpeed , rotSpeed);
+    this.driveRobotCentric( robotForwardSpeed , robotStrafeSpeed , rotSpeed, mode);
   }
 
   /**

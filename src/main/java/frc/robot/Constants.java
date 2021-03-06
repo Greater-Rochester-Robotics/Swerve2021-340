@@ -18,7 +18,7 @@ package frc.robot;
 public final class Constants {
     //Swerve conversion factors
     public static final double RAD_TO_ENC_CONV_FACTOR = 10.17985; //the radian to enc factor
-    public static final double DRIVE_ENC_TO_METERS_FACTOR = 1.0;//TODO:find this ratio from mechanicla specs
+    public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.00002226;//TODO:find this ratio from mechanicla specs
     public static final double PI_OVER_TWO = Math.PI/2;
     public static final double THREE_PI_OVER_TWO = 3*PI_OVER_TWO;
     public static final double TWO_PI = 2*Math.PI;
@@ -58,14 +58,15 @@ public final class Constants {
     //Swerve Drive Constants
     public static final double MINIMUM_DRIVE_SPEED = 0.1;//the slowest the wheels can turn, in m/s
     public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;//the slowest the wheels can turn, in duty cycle
-    public static final double MAXIMUM_VELOCITY = 1.0;
+    public static final double MAXIMUM_VELOCITY = 4.5;
     public static final double MAXIMUM_ACCELERATION = 1.0;
+    public static final double MAX_ROBOT_ROT_VELOCITY = MAXIMUM_VELOCITY/DISTANCE_TO_MODULE_0;
     public static final double SWERVE_MODULE_TOLERANCE = 0.017;
     public static final double MAXIMUM_VOLTAGE = 12.0; 
-    public static final double SWERVE_DRIVE_P_VALUE = 0.035;
+    public static final double SWERVE_DRIVE_P_VALUE = 1000; //0.035;
     public static final double SWERVE_DRIVE_I_VALUE = 0.0;
-    public static final double SWERVE_DRIVE_D_VALUE = 0.0;
-    public static final double SWERVE_DRIVE_F_VALUE = 0.0001;
+    public static final double SWERVE_DRIVE_D_VALUE = 25;
+    public static final double SWERVE_DRIVE_F_VALUE = 1023/(MAXIMUM_VELOCITY/DRIVE_ENC_TO_METERS_FACTOR);
 
     //Swerve rotation PID constants
     public static final double SWERVE_ROT_P_VALUE = 0.035;//if sluggish, increase P value
