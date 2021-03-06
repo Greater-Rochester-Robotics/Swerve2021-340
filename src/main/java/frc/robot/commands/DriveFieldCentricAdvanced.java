@@ -46,7 +46,12 @@ public class DriveFieldCentricAdvanced extends CommandBase {
   public void execute() {
     double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
     double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
-    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X);
+    if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
+      Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X))>.1){
+      awaySpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y)*.5;
+      lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*.5;
+    }
+    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_TRIGGER) - Robot.robotContainer.getDriverAxis(Axis.LEFT_TRIGGER);
 
     //test if the absolute rotational input is greater than .1
     //if the test is true, just copy the DriveFieldCentric execute method
