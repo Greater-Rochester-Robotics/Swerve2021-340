@@ -110,6 +110,8 @@ public class SwerveModule {
      * This method is used to pull and compute the currentAngle so the sensor is
      * called once, additionally position of the module is computed here.
      * Currently, currentAngle is called independently by other function
+     * 
+     * Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
      */
     public double[] periodic() {
         //TODO:call rotational motor health test method rotationHealthCheck()
@@ -127,17 +129,19 @@ public class SwerveModule {
         // find the distance travelled since the previous cycle
         double deltaPos = this.currentPosition - this.prevPosition;
 
-        // add the distance travelled, in each the X and Y, 
-        //to the total distance for this module
-        double[] deltaPositionArray = new double[] { deltaPos * this.currentRotPos.getCos(),
-                deltaPos * this.currentRotPos.getSin() };
+        // Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
+        double[] resultArray = new double[] { 
+            deltaPos * this.currentRotPos.getCos(),
+            deltaPos * this.currentRotPos.getSin(),
+            getDriveVelocity() *  this.currentRotPos.getCos(),
+            getDriveVelocity() * this.currentRotPos.getSin()
+        };
 
         // store the current distance and angle for the next cycle
         this.prevAngle = this.currentRotPos.getRadians();
         this.prevPosition = this.currentPosition;
 
-        //output the distaance travelled
-        return deltaPositionArray;
+        return resultArray;
     }
 
     /**

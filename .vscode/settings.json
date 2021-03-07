@@ -15,7 +15,10 @@
     "**/*~": true
   },
   "cSpell.words": [
+    "feedforward",
+    "motor",
     "roborio",
+    "simple",
     "snek"
   ]
 }

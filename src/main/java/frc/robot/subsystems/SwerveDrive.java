@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.Constants;
 
@@ -32,8 +33,17 @@ public class SwerveDrive extends SubsystemBase {
   private static SwerveModule swerveModules[];
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
   private Pose2d currentPosition = new Pose2d(new Translation2d(),new Rotation2d());
+  private Pose2d currentVelocity = new Pose2d(new Translation2d(), new Rotation2d());
   public ADIS16448_IMU imu;
   public PIDController robotSpinController;
+
+  public PIDController lateralSpeedPIDController;
+  public SimpleMotorFeedforward lateralSpeedFeedforward;
+
+  public PIDController awaySpeedPIDController;
+  public SimpleMotorFeedforward awaySpeedFeedforward;
+
+  
 
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
@@ -94,6 +104,12 @@ public class SwerveDrive extends SubsystemBase {
 
     //construct the wpilib PIDcontroller for rotation.
     robotSpinController = new PIDController(Constants.ROBOT_SPIN_P, Constants.ROBOT_SPIN_I, Constants.ROBOT_SPIN_D);
+
+    lateralSpeedPIDController = new PIDController(Constants.LATERAL_SPEED_P, Constants.LATERAL_SPEED_I, Constants.LATERAL_SPEED_D);
+    lateralSpeedFeedforward = new SimpleMotorFeedforward(Constants.LATERAL_FEEDFORWARD_STATIC, Constants.LATERAL_FEEDFORWARD_VELOCITY);
+
+    awaySpeedPIDController = new PIDController(Constants.AWAY_SPEED_P, Constants.AWAY_SPEED_I, Constants.AWAY_SPEED_D);
+    awaySpeedFeedforward = new SimpleMotorFeedforward(Constants.AWAY_FEEDFORWARD_STATIC, Constants.AWAY_FEEDFORWARD_VELOCITY);
   }
 
   @Override
@@ -108,6 +124,8 @@ public class SwerveDrive extends SubsystemBase {
 
     //create an array to store the distance travelled by the robot since the last time this was called
     double[] deltaPosition = new double[]{0.0,0.0};
+    double[] currentVelocities = new double[] {0.0,0.0};
+    //velo array
     for (int i=0; i<4; i++){
       //pull the distance travelled by a module(robot centric)
       double[] deltaPerMod = swerveModules[i].periodic();
@@ -115,16 +133,33 @@ public class SwerveDrive extends SubsystemBase {
       deltaPosition[0]+= deltaPerMod[0];
       //add the distance travelled in the y by this module to the others(with respect to the robot)
       deltaPosition[1]+= deltaPerMod[1];
+      // add velocities of all modules
+      currentVelocities[0]+= deltaPerMod[2];
+      currentVelocities[1] += deltaPerMod[3];
     }
+
     //the prior array is based around the robot's x and y and not the field's
+
+    // Divide by 4 because all swerve modules were added together
+    deltaPosition[0] /= 4;
+    deltaPosition[1] /= 4;
+
+    currentVelocities[0] /=4;
+    currentVelocities[1] /= 4;
 
     // //The following pulls the current rotational orientation of the robot(Rotation2d)
     Rotation2d currentRot = this.getGyroRotation2d();
-    // The following updates the currentPostion object
+    // The following updates the currentPosition & currentVelocities object to be relative to the field
     currentPosition = new Pose2d(
       currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
       currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
       currentRot);
+
+    currentVelocity = new Pose2d(
+      currentVelocities[0]*currentRot.getCos() + currentVelocities[1]*currentRot.getSin(),
+      currentVelocities[1]*currentRot.getCos() - currentVelocities[0]*currentRot.getSin(),
+      currentRot
+    );
   }
 
   /**
@@ -244,7 +279,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param mode the mode of either percentOutput or velocity
    */
   public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed, kDriveMode mode){
-    //pull the current oreintation of the robot(based on gyro)
+    //pull the current orientation of the robot(based on gyro)
     Rotation2d gyro = this.getGyroRotation2d();
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
     double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
@@ -598,18 +633,17 @@ public class SwerveDrive extends SubsystemBase {
    */
   public double getRobotRotationPIDOut(double target){
     double currentGyroPos = getGyroInRad();
-    //check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
-    // double posDiff =  currentGyroPos - target;
-    // if ( posDiff > Math.PI) {
-    //   // the distance the other way around the circle
-    //   target = currentGyroPos + (Constants.TWO_PI - (posDiff));
-    // }
-    // else if (posDiff < -Math.PI){
-    //   //if the distance to the goal is small enough, stop rotation and return
-    //   target = currentGyroPos - (Constants.TWO_PI + (posDiff));
-    // }
-
-    //use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
     return robotSpinController.calculate(currentGyroPos, target);
+  }
+
+
+  //TODO: finish with the currentVelocity Pose2d object
+  public double getLateralSpeedPIDFFOut (double target){
+    return 0;
+
+  }
+
+  public double getAwaySpeedPIDFFOut (double target){
+    return 0;
   }
 }
