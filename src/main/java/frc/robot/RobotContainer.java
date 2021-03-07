@@ -27,7 +27,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.GetSmol;
+import frc.robot.commands.Harvester.PickHarvesterUp;
+import frc.robot.commands.Harvester.SetHarvesterDown;
 import frc.robot.commands.Shooter.FullSendsWall;
+import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.SnekLoader.Regurgitate;
@@ -83,9 +86,9 @@ public class RobotContainer {
     shooter = new Shooter();
     harvester = new Harvester();
     snekLoader = new SnekLoader();
-    // limelight = new Limelight();
-    // limelight.setStreamMode(0);
-    // limelight.setLightState(1);
+    limelight = new Limelight();
+    limelight.setStreamMode(0);
+    limelight.setLightState(1);
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
     
@@ -115,6 +118,8 @@ public class RobotContainer {
     //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
     driverA.whenPressed(new Load());
     driverA.whenReleased(new GetSmol());
+    // driverA.whenPressed(new SetHarvesterDown());
+    // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
     driverX.whenPressed(new FullSendsWall());
     driverX.whenReleased(new StopSnek());

@@ -26,7 +26,7 @@ public class Limelight extends SubsystemBase {
    * Creates a new Limelight.
    */
   public Limelight() {
-    led = new PCM_LED(0, 7);
+    led = new PCM_LED(0, 5);
     setLightState(1);
     //y = -0.104167 for crosshair positioning
   }
@@ -81,7 +81,7 @@ public class Limelight extends SubsystemBase {
    rpm *= Constants.RPM_MUL_FACTOR;
    rpm += Constants.RPM_ADD_FACTOR; 
    if (rpm > 0 ){
-    rpm = Math.min(rpm, 5000.0); 
+    rpm = Math.min(rpm, 20000); 
    }
     // double rpm = 0.0;
     return (int) rpm;

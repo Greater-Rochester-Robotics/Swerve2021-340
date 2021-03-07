@@ -55,10 +55,12 @@ public class Shooter extends SubsystemBase {
 
     shooterWheel = new TalonFX(Constants.SHOOTER_WHEEL);
     shooterWheel.setNeutralMode(NeutralMode.Coast);
-    shooterWheel.config_kP(0,0.4871);//.setP(0.00075);
+    shooterWheel.config_kP(0,1.25);//.setP(0.55);
     shooterWheel.config_kI(0,0.0);//.setI(0.0);
-    shooterWheel.config_kD(0,4.871);//.setD(2.0);
-    shooterWheel.config_kF(0,0.0495);//.setFF(0.00019);
+    shooterWheel.config_kD(0,1.0);//.setD(2.0);
+    shooterWheel.config_kF(0,0.055);//.setFF(0.05);
+    shooterWheel.enableVoltageCompensation(true);
+    shooterWheel.configClosedloopRamp(5.0);
     // practice bot PIDF values
     // shooterWheel.getPIDController().setP(0.001);
     // shooterWheel.getPIDController().setI(0.0);

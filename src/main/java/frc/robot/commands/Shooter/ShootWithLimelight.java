@@ -8,6 +8,7 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SnekLoader.State;
 import frc.robot.subsystems.Limelight;
@@ -31,7 +32,7 @@ public class ShootWithLimelight extends CommandBase {
   public void initialize() {
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
-    speedRpm = Limelight.calcHoodRPM();
+    speedRpm = Constants.WALL_SHOT_RPM; //Limelight.calcHoodRPM();
     RobotContainer.shooter.resetBallsShot();
     stateIndex = 4;
     RobotContainer.shooter.setShooterWheel(speedRpm);
