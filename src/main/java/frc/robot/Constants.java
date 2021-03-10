@@ -121,7 +121,7 @@ public final class Constants {
     
     /* Shooter Speeds */
 	public static final int INITIATION_SHOT_RPM = 3500; //Put real value here for safe keeping, rpm: 3425
-	public static final int WALL_SHOT_RPM = 14500; // Old value 2550 MAX SPEED 21777
+	public static final int WALL_SHOT_RPM = 12100; // Old value 2550 MAX SPEED 21777
 	public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
 	public static final int RPM_ADD_FACTOR = 0; 
 

@@ -55,12 +55,12 @@ public class Shooter extends SubsystemBase {
 
     shooterWheel = new TalonFX(Constants.SHOOTER_WHEEL);
     shooterWheel.setNeutralMode(NeutralMode.Coast);
-    shooterWheel.config_kP(0,1.25);//.setP(0.55);
+    shooterWheel.config_kP(0,.05);//.setP(0.55);
     shooterWheel.config_kI(0,0.0);//.setI(0.0);
-    shooterWheel.config_kD(0,1.0);//.setD(2.0);
+    shooterWheel.config_kD(0,1.5);//.setD(2.0);
     shooterWheel.config_kF(0,0.055);//.setFF(0.05);
     shooterWheel.enableVoltageCompensation(true);
-    shooterWheel.configClosedloopRamp(5.0);
+    shooterWheel.configClosedloopRamp(2.0);
     // practice bot PIDF values
     // shooterWheel.getPIDController().setP(0.001);
     // shooterWheel.getPIDController().setI(0.0);
@@ -141,8 +141,9 @@ public class Shooter extends SubsystemBase {
   }
 
   public boolean isShooterAtSpeed() {
-    return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 25)
-        && (shooterWheel.getSelectedSensorVelocity() <= (targetVelocity * 1) + 25));
+    SmartDashboard.putString("ShooterWheelSpeed", targetVelocity + "");
+    return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 100)
+        && (shooterWheel.getSelectedSensorVelocity() <= (targetVelocity * 1) + 100));
 
   }
 

@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -18,6 +20,7 @@ public class FullSendsWall extends CommandBase {
    */
   private boolean fullSend;
   private int ballsToShoot;
+  private Timer timer;
   public FullSendsWall() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter, RobotContainer.snekLoader);
@@ -28,6 +31,9 @@ public class FullSendsWall extends CommandBase {
   public void initialize() {
     ballsToShoot = RobotContainer.snekLoader.getBallsLoaded();
     fullSend = false;
+    timer = new Timer();
+    timer.reset();
+    
     RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM);
     RobotContainer.shooter.resetBallsShot();
   }
@@ -37,9 +43,18 @@ public class FullSendsWall extends CommandBase {
   public void execute() {
     if(fullSend){
       RobotContainer.snekLoader.setPause(false);
-      RobotContainer.snekLoader.setState(State.kShootBall0);
+      if(timer.hasElapsed(3.0)){
+        String shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+        SmartDashboard.putString("Ball Shot At",shootSpeed);
+        RobotContainer.snekLoader.setState(State.kShootBall0);
+        timer.stop();
+        timer.reset();
+      }
     } else{
       fullSend = (RobotContainer.shooter.isShooterAtSpeed());
+      if(fullSend){
+        timer.start();
+      }
       RobotContainer.snekLoader.setPause(true);
     }
   }
