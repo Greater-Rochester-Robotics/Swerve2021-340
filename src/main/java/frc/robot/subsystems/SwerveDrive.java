@@ -647,6 +647,16 @@ public class SwerveDrive extends SubsystemBase {
    */
   public double getRobotRotationPIDOut(double target){
     double currentGyroPos = getGyroInRad();
+    //Why is this back? well if we end up switching to a NavX, we'll need it
+    // double posDiff =  currentGyroPos - target;
+    // if ( posDiff > Math.PI) {
+    //   // the distance the other way around the circle
+    //   target = currentGyroPos + (Constants.TWO_PI - (posDiff));
+    // }
+    // else if (posDiff < -Math.PI){
+    //   //if the distance to the goal is small enough, stop rotation and return
+    //   target = currentGyroPos - (Constants.TWO_PI + (posDiff));
+    // }
     return robotSpinController.calculate(currentGyroPos, target);
   }
 
