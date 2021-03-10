@@ -43,6 +43,11 @@ public class SwerveDrive extends SubsystemBase {
   public PIDController awaySpeedPIDController;
   public SimpleMotorFeedforward awaySpeedFeedforward;
 
+  public PIDController lateralPosPidController;
+  public PIDController awayPosPidController;
+
+  
+
   
 
   /**
@@ -110,6 +115,11 @@ public class SwerveDrive extends SubsystemBase {
 
     awaySpeedPIDController = new PIDController(Constants.AWAY_SPEED_P, Constants.AWAY_SPEED_I, Constants.AWAY_SPEED_D);
     awaySpeedFeedforward = new SimpleMotorFeedforward(Constants.AWAY_FEEDFORWARD_STATIC, Constants.AWAY_FEEDFORWARD_VELOCITY);
+
+    lateralPosPidController = new PIDController(Constants.LATERAL_POS_P, Constants.LATERAL_POS_I, Constants.LATERAL_SPEED_D);
+    awayPosPidController = new PIDController(Constants.AWAY_POS_P, Constants.AWAY_POS_I, Constants.AWAY_POS_D);
+
+    
   }
 
   @Override
