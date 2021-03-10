@@ -130,7 +130,7 @@ public final class Constants {
 	public static final int HARVESTER_FWD_CHANNEL = 7;
 	public static final int HARVESTER_REV_CHANNEL = 1;
 	public static final int SHOOTER_HOOD_SOLENOID_CHANNEL = 2;
-	public static final int CLIMBER_BRAKE_CHANNEL = 6;//TODO: FIX number
+	public static final int CLIMBER_BRAKE_CHANNEL = 6;//No brake
     public static final int SECONDARY_PCM_ID = 11;//does not exist
     
     /* Shooter Speeds */

@@ -23,7 +23,7 @@ import com.analog.adis16448.frc.ADIS16448_IMU;
  * This is the subsystem that governs the four swerve module objects.
  *  In this class, the positive x-axis is toward the front of the robot,
  *  and the positive y-axis is toward the left side. All angles are
- *  measured from the positive x-axis and positive angles are couter
+ *  measured from the positive x-axis and positive angles are counter
  *  clockwise from that axis. The modules are numbered, starting at 
  *  module0 for the left front module continuing counter clockwise.
  *  This makes the rear left module1, the rear right module2, and the
@@ -290,7 +290,7 @@ public class SwerveDrive extends SubsystemBase {
    * This function is meant to drive one module at a time for testing purposes.
    * @param moduleNumber which of the four modules(0-3) we are using
    * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
-   * @param rotatePos a positon between -PI and PI where we want the module to be
+   * @param rotatePos a position between -PI and PI where we want the module to be
    * @param kDriveMode changes between velocity mode and dutyCycle mode
    */
   public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos, kDriveMode mode){
@@ -332,7 +332,7 @@ public class SwerveDrive extends SubsystemBase {
     //creates an output array for angles and normalizing factors for each module
     double[][] outputArray = new double[4][2];
 
-    //will want to know the longest vector, the furtherest away a module is from center circle
+    //will want to know the longest vector, the furthest away a module is from center circle
     double maxLength = 0.0;
 
     //for every module, find the vector from the module to the arc's center
@@ -557,6 +557,10 @@ public class SwerveDrive extends SubsystemBase {
     return this.currentPosition;
   }
 
+  public Pose2d getCurrentVelocity(){
+    return this.currentVelocity;
+  }
+
   public double[] getAllAbsModuleAngles(){
     double[] moduleAngles = new double[4];
     for(int i=0; i<4; i++){
@@ -636,14 +640,11 @@ public class SwerveDrive extends SubsystemBase {
     return robotSpinController.calculate(currentGyroPos, target);
   }
 
-
-  //TODO: finish with the currentVelocity Pose2d object
-  public double getLateralSpeedPIDFFOut (double target){
-    return 0;
-
+  public double getLateralSpeedPIDFFOut (double targetVel, double targetAccel){
+    return lateralSpeedPIDController.calculate(currentVelocity.getY() , targetVel) + lateralSpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
   }
 
-  public double getAwaySpeedPIDFFOut (double target){
-    return 0;
+  public double getAwaySpeedPIDFFOut (double targetVel, double targetAccel){
+    return awaySpeedPIDController.calculate(currentVelocity.getX(), targetVel) + awaySpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
   }
 }
