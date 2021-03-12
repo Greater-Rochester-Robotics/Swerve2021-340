@@ -667,4 +667,12 @@ public class SwerveDrive extends SubsystemBase {
   public double getAwaySpeedPIDFFOut (double targetVel, double targetAccel){
     return awaySpeedPIDController.calculate(currentVelocity.getX(), targetVel) + awaySpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
   }
+
+  public double getAwayPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getX(), targetPos);
+  }
+  
+  public double getLateralPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getY(), targetPos);
+  }
 }

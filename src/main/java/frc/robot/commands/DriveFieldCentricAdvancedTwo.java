@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -32,7 +33,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 public class DriveFieldCentricAdvancedTwo extends CommandBase {
   private final double THRESHOLD = .1;
   private double currentAwayPos = 0;
-  //TODO:create field variable for currentLateralPos
+  private double currentLateralPos = 0;
   private double currentAngle = 0;
 
   /** Creates a new DriveFieldCentricAdvancedTwo. */
@@ -44,7 +45,9 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
   @Override
   public void initialize() {
     Pose2d currentPosition = RobotContainer.swerveDrive.getCurrentPose();
-    //TODO:pull values for currentAwayPos, currentLateralPos and currentAngle from currentPosition,(this is demonstrated below)
+    double currentAwayPos = RobotContainer.swerveDrive.getCurrentPose().getY();
+    double currentLateralPos = RobotContainer.swerveDrive.getCurrentPose().getX();
+    double currentAngle = RobotContainer.swerveDrive.getCurrentPose().getRotation().getRadians();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,10 +81,23 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
       currentAwayPos = currentPosition.getX();
     }else{
       //if no stick inputs, use the most recent position as a setpoint in a PID loop
-      //TODO:set awayOutput to the awayPosPIDController, use currentAwayPos as param
+      //set awayOutput to the awayPosPIDController, use currentAwayPos as param
+      
     }
-    
-    //TODO:Replicate the above for lateralOutput/lateralSpeed etc
+
+    if(Math.abs(lateralSpeedSlow) > THRESHOLD){
+      //if slow stick greater than threshold, use that
+      lateralOutput = lateralSpeedSlow*-Constants.DRIVER_SPEED_SCALE_LATERAL*.5;
+      //update current position
+      currentLateralPos = currentPosition.getY();
+    }else if(Math.abs(lateralSpeed) > THRESHOLD){
+      //if fast stick greater than threshold, use that
+      lateralOutput = lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL;
+      //update current position
+      currentLateralPos = currentPosition.getY();
+    }else{
+      
+    }
 
     if (Math.abs(rotSpeed) > THRESHOLD){
       rotOutput = rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE;
