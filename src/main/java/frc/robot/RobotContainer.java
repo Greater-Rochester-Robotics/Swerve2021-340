@@ -132,7 +132,7 @@ public class RobotContainer {
 
     driverLTButton.whileHeld(new Regurgitate());
 
-    driverStart.whenPressed(new DriveFieldCentric());
+    driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
   }
   
