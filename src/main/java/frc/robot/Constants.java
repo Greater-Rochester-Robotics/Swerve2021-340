@@ -82,6 +82,29 @@ public final class Constants {
     public static final double ROBOT_SPIN_I = 0;
     public static final double ROBOT_SPIN_D = 0;
 
+    /* Robot lateral and away pos PID controller constants */
+    public static final double LATERAL_POS_P = 1;
+    public static final double LATERAL_POS_I = 0;
+    public static final double LATERAL_POS_D = 0;
+
+    public static final double AWAY_POS_P = 1;
+    public static final double AWAY_POS_I = 0;
+    public static final double AWAY_POS_D = 0;
+
+    /* Robot lateral speed PID controller & feed forward constants */
+    public static final double LATERAL_SPEED_P = .55;
+    public static final double LATERAL_SPEED_I = 0;
+    public static final double LATERAL_SPEED_D = 0;
+    public static final double LATERAL_FEEDFORWARD_STATIC = 0.0001;
+    public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.0001;
+
+    /* Robot away speed PID controller & feed forward constants */
+    public static final double AWAY_SPEED_P = .55;
+    public static final double AWAY_SPEED_I = 0;
+    public static final double AWAY_SPEED_D = 0;
+    public static final double AWAY_FEEDFORWARD_STATIC = 0.0001;
+    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.0001;
+
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = 0.6;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
@@ -116,7 +139,7 @@ public final class Constants {
 	public static final int HARVESTER_FWD_CHANNEL = 7;
 	public static final int HARVESTER_REV_CHANNEL = 1;
 	public static final int SHOOTER_HOOD_SOLENOID_CHANNEL = 2;
-	public static final int CLIMBER_BRAKE_CHANNEL = 6;//TODO: FIX number
+	public static final int CLIMBER_BRAKE_CHANNEL = 6;//No brake
     public static final int SECONDARY_PCM_ID = 11;//does not exist
 
     /* Shooter Speeds */

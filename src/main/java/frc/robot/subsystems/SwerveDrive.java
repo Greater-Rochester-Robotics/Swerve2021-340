@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.Constants;
 
@@ -22,7 +23,7 @@ import com.analog.adis16448.frc.ADIS16448_IMU;
  * This is the subsystem that governs the four swerve module objects.
  *  In this class, the positive x-axis is toward the front of the robot,
  *  and the positive y-axis is toward the left side. All angles are
- *  measured from the positive x-axis and positive angles are couter
+ *  measured from the positive x-axis and positive angles are counter
  *  clockwise from that axis. The modules are numbered, starting at 
  *  module0 for the left front module continuing counter clockwise.
  *  This makes the rear left module1, the rear right module2, and the
@@ -32,8 +33,22 @@ public class SwerveDrive extends SubsystemBase {
   private static SwerveModule swerveModules[];
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
   private Pose2d currentPosition = new Pose2d(new Translation2d(),new Rotation2d());
+  private Pose2d currentVelocity = new Pose2d(new Translation2d(), new Rotation2d());
   public ADIS16448_IMU imu;
   public PIDController robotSpinController;
+
+  public PIDController lateralSpeedPIDController;
+  public SimpleMotorFeedforward lateralSpeedFeedforward;
+
+  public PIDController awaySpeedPIDController;
+  public SimpleMotorFeedforward awaySpeedFeedforward;
+
+  public PIDController lateralPosPidController;
+  public PIDController awayPosPidController;
+
+  
+
+  
 
   /**
    * This enumeration clarifies the numbering of the swerve module for new users.
@@ -94,6 +109,17 @@ public class SwerveDrive extends SubsystemBase {
 
     //construct the wpilib PIDcontroller for rotation.
     robotSpinController = new PIDController(Constants.ROBOT_SPIN_P, Constants.ROBOT_SPIN_I, Constants.ROBOT_SPIN_D);
+
+    lateralSpeedPIDController = new PIDController(Constants.LATERAL_SPEED_P, Constants.LATERAL_SPEED_I, Constants.LATERAL_SPEED_D);
+    lateralSpeedFeedforward = new SimpleMotorFeedforward(Constants.LATERAL_FEEDFORWARD_STATIC, Constants.LATERAL_FEEDFORWARD_VELOCITY);
+
+    awaySpeedPIDController = new PIDController(Constants.AWAY_SPEED_P, Constants.AWAY_SPEED_I, Constants.AWAY_SPEED_D);
+    awaySpeedFeedforward = new SimpleMotorFeedforward(Constants.AWAY_FEEDFORWARD_STATIC, Constants.AWAY_FEEDFORWARD_VELOCITY);
+
+    lateralPosPidController = new PIDController(Constants.LATERAL_POS_P, Constants.LATERAL_POS_I, Constants.LATERAL_SPEED_D);
+    awayPosPidController = new PIDController(Constants.AWAY_POS_P, Constants.AWAY_POS_I, Constants.AWAY_POS_D);
+
+    
   }
 
   @Override
@@ -108,6 +134,8 @@ public class SwerveDrive extends SubsystemBase {
 
     //create an array to store the distance travelled by the robot since the last time this was called
     double[] deltaPosition = new double[]{0.0,0.0};
+    double[] currentVelocities = new double[] {0.0,0.0};
+    //velo array
     for (int i=0; i<4; i++){
       //pull the distance travelled by a module(robot centric)
       double[] deltaPerMod = swerveModules[i].periodic();
@@ -115,16 +143,33 @@ public class SwerveDrive extends SubsystemBase {
       deltaPosition[0]+= deltaPerMod[0];
       //add the distance travelled in the y by this module to the others(with respect to the robot)
       deltaPosition[1]+= deltaPerMod[1];
+      // add velocities of all modules
+      currentVelocities[0]+= deltaPerMod[2];
+      currentVelocities[1] += deltaPerMod[3];
     }
+
     //the prior array is based around the robot's x and y and not the field's
+
+    // Divide by 4 because all swerve modules were added together
+    deltaPosition[0] /= 4;
+    deltaPosition[1] /= 4;
+
+    currentVelocities[0] /=4;
+    currentVelocities[1] /= 4;
 
     // //The following pulls the current rotational orientation of the robot(Rotation2d)
     Rotation2d currentRot = this.getGyroRotation2d();
-    // The following updates the currentPostion object
+    // The following updates the currentPosition & currentVelocities object to be relative to the field
     currentPosition = new Pose2d(
       currentPosition.getX() + (deltaPosition[0]*currentRot.getCos()) + (deltaPosition[1]*currentRot.getSin()),
       currentPosition.getY() + (deltaPosition[1]*currentRot.getCos()) - (deltaPosition[0]*currentRot.getSin()),
       currentRot);
+
+    currentVelocity = new Pose2d(
+      currentVelocities[0]*currentRot.getCos() + currentVelocities[1]*currentRot.getSin(),
+      currentVelocities[1]*currentRot.getCos() - currentVelocities[0]*currentRot.getSin(),
+      currentRot
+    );
   }
 
   /**
@@ -244,7 +289,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param mode the mode of either percentOutput or velocity
    */
   public void driveFieldCentric(double awaySpeed, double lateralSpeed, double rotSpeed, kDriveMode mode){
-    //pull the current oreintation of the robot(based on gyro)
+    //pull the current orientation of the robot(based on gyro)
     Rotation2d gyro = this.getGyroRotation2d();
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
     double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
@@ -255,7 +300,7 @@ public class SwerveDrive extends SubsystemBase {
    * This function is meant to drive one module at a time for testing purposes.
    * @param moduleNumber which of the four modules(0-3) we are using
    * @param moveSpeed move speed -1.0 to 1.0, where 0.0 is stopped
-   * @param rotatePos a positon between -PI and PI where we want the module to be
+   * @param rotatePos a position between -PI and PI where we want the module to be
    * @param kDriveMode changes between velocity mode and dutyCycle mode
    */
   public void driveOneModule(int moduleNumber,double moveSpeed, double rotatePos, kDriveMode mode){
@@ -297,7 +342,7 @@ public class SwerveDrive extends SubsystemBase {
     //creates an output array for angles and normalizing factors for each module
     double[][] outputArray = new double[4][2];
 
-    //will want to know the longest vector, the furtherest away a module is from center circle
+    //will want to know the longest vector, the furthest away a module is from center circle
     double maxLength = 0.0;
 
     //for every module, find the vector from the module to the arc's center
@@ -522,6 +567,10 @@ public class SwerveDrive extends SubsystemBase {
     return this.currentPosition;
   }
 
+  public Pose2d getCurrentVelocity(){
+    return this.currentVelocity;
+  }
+
   public double[] getAllAbsModuleAngles(){
     double[] moduleAngles = new double[4];
     for(int i=0; i<4; i++){
@@ -591,6 +640,13 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+/**
+ * sets x, y to 0; angle remains the same
+ */
+  public void resetCurrentPos(){
+    currentPosition = new Pose2d(0, 0, getGyroRotation2d());
+  }
+
   /**
    * 
    * @param target an angle in radians
@@ -598,7 +654,7 @@ public class SwerveDrive extends SubsystemBase {
    */
   public double getRobotRotationPIDOut(double target){
     double currentGyroPos = getGyroInRad();
-    //check the shortest distance between target and current angle, if other way, make setpoint reflect that, aka larger than pi
+    //Why is this back? well if we end up switching to a NavX, we'll need it
     // double posDiff =  currentGyroPos - target;
     // if ( posDiff > Math.PI) {
     //   // the distance the other way around the circle
@@ -608,8 +664,22 @@ public class SwerveDrive extends SubsystemBase {
     //   //if the distance to the goal is small enough, stop rotation and return
     //   target = currentGyroPos - (Constants.TWO_PI + (posDiff));
     // }
-
-    //use adjusted target as target, and getGyroInRad() as measurement for rotationalPIDController
     return robotSpinController.calculate(currentGyroPos, target);
+  }
+
+  public double getLateralSpeedPIDFFOut (double targetVel, double targetAccel){
+    return lateralSpeedPIDController.calculate(currentVelocity.getY() , targetVel) + lateralSpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
+  }
+
+  public double getAwaySpeedPIDFFOut (double targetVel, double targetAccel){
+    return awaySpeedPIDController.calculate(currentVelocity.getX(), targetVel) + awaySpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
+  }
+
+  public double getAwayPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getX(), targetPos);
+  }
+  
+  public double getLateralPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getY(), targetPos);
   }
 }

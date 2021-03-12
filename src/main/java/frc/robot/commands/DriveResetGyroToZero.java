@@ -29,5 +29,4 @@ public class DriveResetGyroToZero extends InstantCommand {
   public boolean runsWhenDisabled(){
     return true;
   }
-
 }

@@ -23,6 +23,7 @@ import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Limelight;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -67,11 +68,10 @@ public class RobotContainer {
   
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
-
+  public static Limelight limelight;
   public static SnekLoader snekLoader;
   public static Harvester harvester;
   public static Shooter shooter;
-  public static Limelight limelight;
   
 
   
