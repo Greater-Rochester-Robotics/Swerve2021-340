@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -44,10 +43,9 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Pose2d currentPosition = RobotContainer.swerveDrive.getCurrentPose();
-    double currentAwayPos = RobotContainer.swerveDrive.getCurrentPose().getY();
-    double currentLateralPos = RobotContainer.swerveDrive.getCurrentPose().getX();
-    double currentAngle = RobotContainer.swerveDrive.getCurrentPose().getRotation().getRadians();
+    this.currentAwayPos = RobotContainer.swerveDrive.getCurrentPose().getY();
+    this.currentLateralPos = RobotContainer.swerveDrive.getCurrentPose().getX();
+    this.currentAngle = RobotContainer.swerveDrive.getCurrentPose().getRotation().getRadians();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -81,8 +79,8 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
       currentAwayPos = currentPosition.getX();
     }else{
       //if no stick inputs, use the most recent position as a setpoint in a PID loop
-      //set awayOutput to the awayPosPIDController, use currentAwayPos as param
-      
+      //This uses the away position to adjust the speed that the robot needs to move at when the joystick isn't moving.
+      awayOutput = RobotContainer.swerveDrive.getAwayPositionPIDOut(currentAwayPos);
     }
 
     if(Math.abs(lateralSpeedSlow) > THRESHOLD){
@@ -96,7 +94,8 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
       //update current position
       currentLateralPos = currentPosition.getY();
     }else{
-      
+      //This uses the lateral position to adjust the speed that the robot needs to move at when the joystick isn't moving.
+      lateralOutput = RobotContainer.swerveDrive.getLateralPositionPIDOut(currentLateralPos);
     }
 
     if (Math.abs(rotSpeed) > THRESHOLD){
