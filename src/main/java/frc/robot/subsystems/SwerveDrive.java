@@ -648,6 +648,13 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+/**
+ * sets x, y to 0; angle remains the same
+ */
+  public void resetCurrentPos(){
+    currentPosition = new Pose2d(0, 0, getGyroRotation2d());
+  }
+
   /**
    * 
    * @param target an angle in radians
@@ -674,5 +681,13 @@ public class SwerveDrive extends SubsystemBase {
 
   public double getAwaySpeedPIDFFOut (double targetVel, double targetAccel){
     return awaySpeedPIDController.calculate(currentVelocity.getX(), targetVel) + awaySpeedFeedforward.calculate(currentVelocity.getY(), targetAccel);
+  }
+
+  public double getAwayPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getX(), targetPos);
+  }
+  
+  public double getLateralPositionPIDOut (double targetPos){
+    return awayPosPidController.calculate(currentPosition.getY(), targetPos);
   }
 }

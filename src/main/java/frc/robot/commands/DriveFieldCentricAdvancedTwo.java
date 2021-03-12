@@ -32,7 +32,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 public class DriveFieldCentricAdvancedTwo extends CommandBase {
   private final double THRESHOLD = .1;
   private double currentAwayPos = 0;
-  //TODO:create field variable for currentLateralPos
+  private double currentLateralPos = 0;
   private double currentAngle = 0;
 
   /** Creates a new DriveFieldCentricAdvancedTwo. */
@@ -43,8 +43,9 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    Pose2d currentPosition = RobotContainer.swerveDrive.getCurrentPose();
-    //TODO:pull values for currentAwayPos, currentLateralPos and currentAngle from currentPosition,(this is demonstrated below)
+    this.currentAwayPos = RobotContainer.swerveDrive.getCurrentPose().getY();
+    this.currentLateralPos = RobotContainer.swerveDrive.getCurrentPose().getX();
+    this.currentAngle = RobotContainer.swerveDrive.getCurrentPose().getRotation().getRadians();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -78,10 +79,24 @@ public class DriveFieldCentricAdvancedTwo extends CommandBase {
       currentAwayPos = currentPosition.getX();
     }else{
       //if no stick inputs, use the most recent position as a setpoint in a PID loop
-      //TODO:set awayOutput to the awayPosPIDController, use currentAwayPos as param
+      //This uses the away position to adjust the speed that the robot needs to move at when the joystick isn't moving.
+      awayOutput = RobotContainer.swerveDrive.getAwayPositionPIDOut(currentAwayPos);
     }
-    
-    //TODO:Replicate the above for lateralOutput/lateralSpeed etc
+
+    if(Math.abs(lateralSpeedSlow) > THRESHOLD){
+      //if slow stick greater than threshold, use that
+      lateralOutput = lateralSpeedSlow*-Constants.DRIVER_SPEED_SCALE_LATERAL*.5;
+      //update current position
+      currentLateralPos = currentPosition.getY();
+    }else if(Math.abs(lateralSpeed) > THRESHOLD){
+      //if fast stick greater than threshold, use that
+      lateralOutput = lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL;
+      //update current position
+      currentLateralPos = currentPosition.getY();
+    }else{
+      //This uses the lateral position to adjust the speed that the robot needs to move at when the joystick isn't moving.
+      lateralOutput = RobotContainer.swerveDrive.getLateralPositionPIDOut(currentLateralPos);
+    }
 
     if (Math.abs(rotSpeed) > THRESHOLD){
       rotOutput = rotSpeed*-Constants.DRIVER_ROTATIONAL_SCALE;
