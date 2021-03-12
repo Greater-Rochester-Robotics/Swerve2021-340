@@ -121,7 +121,7 @@ public class RobotContainer {
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    driverX.whenPressed(new FullSendsWall());
+    driverX.whenPressed(new ShootWithLimelight());
     driverX.whenReleased(new StopSnek());
 
 

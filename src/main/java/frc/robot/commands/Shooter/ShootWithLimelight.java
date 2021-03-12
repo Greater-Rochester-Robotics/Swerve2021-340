@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Shooter;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -17,6 +19,7 @@ public class ShootWithLimelight extends CommandBase {
   private int stateIndex;
   private int ballsToShoot;
   private int speedRpm;
+  private Timer timer;
 
   public ShootWithLimelight() {
     this.ballsToShoot = -1;
@@ -36,6 +39,7 @@ public class ShootWithLimelight extends CommandBase {
     RobotContainer.shooter.resetBallsShot();
     stateIndex = 4;
     RobotContainer.shooter.setShooterWheel(speedRpm);
+    timer = new Timer();
     // System.out.println("Shoot init");
   }
 
@@ -45,30 +49,47 @@ public class ShootWithLimelight extends CommandBase {
     // Check speed if PID loop isn't working for the flywheel to spin up between
     // shots
     // SmartDashboard.putString("TEST", "Happy");
-    if (!RobotContainer.shooter.isShooterAtSpeed()) {
-      // SmartDashboard.putString("Speed?", "No");
-      RobotContainer.snekLoader.setPause(true);
-      // RobotContainer.snekLoader.setState(State.kFillTo4);
-      // stateIndex=4;
+    String shootSpeed = "";
+    if(!timer.hasElapsed(0.1)){
+      timer.start();
+    }
+    if (!timer.hasElapsed(2)){
       return;
+    }
+    else{
+      if(!RobotContainer.shooter.isShooterAtSpeed()) {
+        // SmartDashboard.putString("Speed?", "No");
+        RobotContainer.snekLoader.setPause(true);
+        // RobotContainer.snekLoader.setState(State.kFillTo4);
+        // stateIndex=4;
+        return;
+        }
     }
     RobotContainer.snekLoader.setPause(false);
     // SmartDashboard.putString("Speed?", "Yes");
     if ((stateIndex == 4)) {
       RobotContainer.snekLoader.setState(State.kShootBall4);
+      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = 3;
     } else if (stateIndex == 3 && (!RobotContainer.snekLoader.getHandleSensor(4))) {
       RobotContainer.snekLoader.setState(State.kShootBall3);
+      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = 2;
     } else if (stateIndex == 2 && (!RobotContainer.snekLoader.getHandleSensor(3))) {
       RobotContainer.snekLoader.setState(State.kShootBall2);
+      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = 1;
     } else if (stateIndex == 1 && (!RobotContainer.snekLoader.getHandleSensor(2))) {
       RobotContainer.snekLoader.setState(State.kShootBall1);
+      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = 0;
     } else if (stateIndex == 0 && (!RobotContainer.snekLoader.getHandleSensor(1))) {
       RobotContainer.snekLoader.setState(State.kShootBall0);
+      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = -1;
+    }
+    if(shootSpeed != "") {
+      SmartDashboard.putString("Ball Shot At",shootSpeed);
     }
     // SmartDashboard.putString("index", ""+stateIndex);
   }

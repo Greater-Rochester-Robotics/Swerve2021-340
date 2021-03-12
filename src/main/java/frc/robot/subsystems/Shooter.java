@@ -18,6 +18,7 @@ import java.nio.file.Files;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.revrobotics.CANEncoder;
@@ -54,13 +55,19 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
 
     shooterWheel = new TalonFX(Constants.SHOOTER_WHEEL);
+    shooterWheel.configFactoryDefault();
     shooterWheel.setNeutralMode(NeutralMode.Coast);
-    shooterWheel.config_kP(0,.05);//.setP(0.55);
+    shooterWheel.config_kP(0,.5);//.setP(0.05);
     shooterWheel.config_kI(0,0.0);//.setI(0.0);
-    shooterWheel.config_kD(0,1.5);//.setD(2.0);
-    shooterWheel.config_kF(0,0.055);//.setFF(0.05);
+    shooterWheel.config_kD(0,1);//.setD(1.5);
+    shooterWheel.config_kF(0,0.05);//.setFF(0.05);
     shooterWheel.enableVoltageCompensation(true);
-    shooterWheel.configClosedloopRamp(2.0);
+    shooterWheel.configVoltageCompSaturation(12.5);
+    //shooterWheel.configClosedloopRamp(2.0);
+    SupplyCurrentLimitConfiguration currLimitCfg = new SupplyCurrentLimitConfiguration();
+    currLimitCfg.currentLimit = 60;
+    currLimitCfg.enable = true; 
+    shooterWheel.configSupplyCurrentLimit(currLimitCfg);
     // practice bot PIDF values
     // shooterWheel.getPIDController().setP(0.001);
     // shooterWheel.getPIDController().setI(0.0);
@@ -130,10 +137,15 @@ public class Shooter extends SubsystemBase {
     // } else if (speed > 1) {
     // speed = 1;
     // }
+    
     if (speed < 1 && speed > -1) {
       shooterWheel.set(ControlMode.PercentOutput,0);
     } else {
       // shooterWheel.getPIDController().setFF(speed * 1 + 0);
+      if(speed > 13000){
+        shooterWheel.selectProfileSlot(0, 0);
+      }
+      
       targetVelocity = speed;
       shooterWheel.set(ControlMode.Velocity, targetVelocity);//.setReference(speed, ControlType.kVelocity);
       // shooterWheel.set(speed);
@@ -142,8 +154,8 @@ public class Shooter extends SubsystemBase {
 
   public boolean isShooterAtSpeed() {
     SmartDashboard.putString("ShooterWheelSpeed", targetVelocity + "");
-    return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 100)
-        && (shooterWheel.getSelectedSensorVelocity() <= (targetVelocity * 1) + 100));
+    return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 500)
+        && (shooterWheel.getSelectedSensorVelocity() <= (targetVelocity * 1) + 500));
 
   }
 

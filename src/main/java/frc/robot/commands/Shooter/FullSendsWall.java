@@ -42,20 +42,19 @@ public class FullSendsWall extends CommandBase {
   @Override
   public void execute() {
     if(fullSend){
+      timer.start();
       RobotContainer.snekLoader.setPause(false);
-      if(timer.hasElapsed(3.0)){
-        String shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-        SmartDashboard.putString("Ball Shot At",shootSpeed);
-        RobotContainer.snekLoader.setState(State.kShootBall0);
+      String shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+      SmartDashboard.putString("Ball Shot At",shootSpeed);
+      RobotContainer.snekLoader.setState(State.kShootBall0);
+      
+    } else{
+      if(timer.hasElapsed(1.5)){
+        fullSend = (RobotContainer.shooter.isShooterAtSpeed());
+        RobotContainer.snekLoader.setPause(true);        
         timer.stop();
         timer.reset();
       }
-    } else{
-      fullSend = (RobotContainer.shooter.isShooterAtSpeed());
-      if(fullSend){
-        timer.start();
-      }
-      RobotContainer.snekLoader.setPause(true);
     }
   }
 
