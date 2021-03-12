@@ -69,7 +69,7 @@ public class DriveFieldCentricAdvanced extends CommandBase {
       RobotContainer.swerveDrive.driveFieldCentric(
         awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
         lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-        Robot.robotContainer.swerveDrive.getRobotRotationPIDOut(currentAngle),
+        RobotContainer.swerveDrive.getRobotRotationPIDOut(currentAngle),
         kDriveMode.percentOutput
       );
     }
