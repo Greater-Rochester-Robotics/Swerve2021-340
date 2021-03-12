@@ -555,7 +555,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in degrees
    */
   public double getGyroInDeg(){
-    return imu.getGyroAngleX();//Pull gyro in degrees
+    return imu.getGyroAngleZ()*-1;//Pull gyro in degrees
     //note counterclockwise rotation is positive
   }
 
@@ -577,6 +577,14 @@ public class SwerveDrive extends SubsystemBase {
       moduleAngles[i]=swerveModules[i].getAbsPosInDeg();
     }
     return moduleAngles;
+  }
+
+  public double[] getAllModuleRelEnc(){
+    double[] moduleRelEnc = new double[4];
+    for(int i=0; i<4; i++){
+      moduleRelEnc[i]=swerveModules[i].getRelEncCount();
+    }
+    return moduleRelEnc;
   }
 
   /**
