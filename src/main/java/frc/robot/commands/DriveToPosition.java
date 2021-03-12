@@ -9,7 +9,10 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 /**
  * This is a test command for driving the positional 
@@ -19,7 +22,7 @@ import frc.robot.RobotContainer;
 
 public class DriveToPosition extends CommandBase {
   private Pose2d target;
-  private Rotation2d currAngle;
+  
   /**
    * Constructs a new DriveToPosition. it takes a Pose2d 
    * object which is made of distance in x, distance in 
@@ -36,34 +39,43 @@ public class DriveToPosition extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.swerveDrive.resetCurrentPos();
-    currAngle = RobotContainer.swerveDrive.getCurrentPose().getRotation();
   }
   // Called every time the scheduler runs while the command is scheduled.
   
   @Override
   public void execute() {
-    //TODO:Call the driveFieldCentric method with following paramters
-    //TODO:call the position PIDController for away using param of the Pose2d x(getX()) value for awaySpeed
-    double awaySpeed = RobotContainer.swerveDrive.awayPosPidController.calculate(RobotContainer.swerveDrive.getCurrentPose().getX(), target.getX());
-    //TODO:call the position PIDController for Lateral using param of Pose2d y(getY()) for lateralSpeed
-    double latSpeed = RobotContainer.swerveDrive.lateralPosPidController.calculate(RobotContainer.swerveDrive.getCurrentPose().getY(), target.getY());
-    //TODO:call the position PIDController for rotation using param of Pose2d angle(.getRotation().getRadians()), for rotationSpeed
-    //double rotSpeed = RobotContainer.swerveDrive.robotSpinController.
-    //TODO: above with DutyCycle mode
-    //RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, DutyCycle);
+    //Call the driveFieldCentric method with following paramters
+    //call the position PIDController for away using param of the Pose2d x(getX()) value for awaySpeed
+    double awaySpeed = RobotContainer.swerveDrive.getAwayPositionPIDOut(target.getX());
+    //call the position PIDController for Lateral using param of Pose2d y(getY()) for lateralSpeed
+    double latSpeed = RobotContainer.swerveDrive.getLateralPositionPIDOut(target.getY());
+    //call the position PIDController for rotation using param of Pose2d angle(.getRotation().getRadians()), for rotationSpeed
+    double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(target.getRotation().getRadians());
+    //above with DutyCycle mode
+    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO:Stop all the motors
+    //Stop all the motors
     RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.
+  //compare currentPosition() to target, use Math.abs() on each difference in X, Y and Angle
   @Override
   public boolean isFinished() {
-    return false;//TODO: compare currentPosition() to target, use Math.abs() on each difference in X, Y and Angle
+    Pose2d curPos = RobotContainer.swerveDrive.getCurrentPose();
+    if( Math.abs(target.getX()-curPos.getX()) < 0.001
+      && Math.abs(target.getY()-curPos.getY()) < 0.001
+      && Math.abs(target.getRotation().getRadians()-curPos.getRotation().getRadians()) < 0.001
+    ){
+    return true;
+    }
+    else {
+      return false;
+    }
   }
 }
