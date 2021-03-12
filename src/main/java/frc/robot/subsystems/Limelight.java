@@ -26,8 +26,8 @@ public class Limelight extends SubsystemBase {
    * Creates a new Limelight.
    */
   public Limelight() {
-    led = new PCM_LED(0, 5);
-    setLightState(1);
+    // led = new PCM_LED(0, 5);
+    // setLightState(1);
     //y = -0.104167 for crosshair positioning
   }
 

@@ -90,6 +90,7 @@ public class SwerveModule {
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
         
         rotateRelEncoder = rotationMotor.getEncoder();
+        rotateRelEncoder.setPosition(0);//reset the encoder on boot
         rotatePID = rotationMotor.getPIDController();
         rotatePID.setFeedbackDevice(rotateRelEncoder);
 
@@ -104,7 +105,7 @@ public class SwerveModule {
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
         // use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
-        rotatePID.setOutputRange(Constants.SWERVE_ROT_PID_VOLTAGE_MINIMUM, Constants.SWERVE_ROT_PID_VOLTAGE_MAXIMUM);
+        // rotatePID.setOutputRange(Constants.SWERVE_ROT_PID_VOLTAGE_MINIMUM, Constants.SWERVE_ROT_PID_VOLTAGE_MAXIMUM);
     }
 
     /**
@@ -298,9 +299,11 @@ public class SwerveModule {
      *                  forward
      */
     public void setPosInRad(double targetPos) {
+        // System.out.print("target="+targetPos);
         double posDiff = targetPos - getPosInRad();
+        // System.out.print("   posdiff=" +posDiff);
         double absDiff = Math.abs(posDiff);
-        
+        // System.out.print("   absdiff="+absDiff);
         //The following is for non-inverting 
         // if the distance is more than a half circle,we going the wrong way, fix
         // if (absDiff > Math.PI) {
@@ -358,11 +361,14 @@ public class SwerveModule {
             return;
         }
 
+        // System.out.print("   posdiff2 =" + posDiff);
         // Convert the shortest distance to encoder value(use convertion factor)
         double targetEncDistance = posDiff * Constants.RAD_TO_ENC_CONV_FACTOR;
+        // System.out.print("   TarDist="+targetEncDistance);
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
-
+        // System.out.print("   curr="+rotateRelEncoder.getPosition());
+        // System.out.println("  output="+outputEncValue);
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition);
     }

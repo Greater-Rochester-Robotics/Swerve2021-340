@@ -44,12 +44,17 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     //read the position of all modules and print them
     double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
     double[] moduleDistances = RobotContainer.swerveDrive.getAllModuleDistance();
+    double[] modRelEnc = RobotContainer.swerveDrive.getAllModuleRelEnc();
     
     //test smartdashboard outputs
     SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontLeftEnc", modRelEnc[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("frontRightEnc", modRelEnc[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber("rearLeftEnc", modRelEnc[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
+    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modRelEnc[kSwerveModule.rearRight.getNumber()]);
     SmartDashboard.putNumber("gyroAngle",RobotContainer.swerveDrive.getGyroInDeg());
 
 
