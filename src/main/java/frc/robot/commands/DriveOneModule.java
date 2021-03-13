@@ -45,19 +45,24 @@ public class DriveOneModule extends CommandBase {
   @Override
   public void execute() {
     //check to see if there is a new angle input from the DPad
-    // System.out.println("Getting Driver pad" + Robot.robotContainer.getDriverDPad());
     if(Robot.robotContainer.getDriverDPad() != -1){
       rotatePos = Math.toRadians(Robot.robotContainer.getDriverDPad());
       rotatePos = (rotatePos - Math.PI);
     }
 
     double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
-    SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
-    SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
-    SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
-    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
+    SmartDashboard.putNumber("frontLeftAngle", modAngles[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontRightAngle", modAngles[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("rearLeftAngle", modAngles[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber("rearRightAngle", modAngles[kSwerveModule.rearRight.getNumber()]);
+    
+    double[] moduleVelocities = RobotContainer.swerveDrive.getAllModuleVelocity();
+    SmartDashboard.putNumber("frontLeftVelocity", moduleVelocities[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontRightVelocity", moduleVelocities[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("rearLeftVelocity", moduleVelocities[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber("rearRightVelocity", moduleVelocities[kSwerveModule.rearRight.getNumber()]);
+    
 
-    // System.out.println("getting  kSwerveModule numbers!" + Robot.robotContainer.getDriverAxis(Axis.LEFT_Y) + " " + rotatePos);
     //Set the one module we are working with to an angle and a speed
     RobotContainer.swerveDrive.driveOneModule(
       moduleNum, Robot.robotContainer.getDriverAxis(Axis.LEFT_Y), rotatePos, kDriveMode.percentOutput);

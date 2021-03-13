@@ -7,15 +7,24 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 
 /**
  * This command sets the current position of the modules as the zero
  * degrees. All the modules should be facing forward when running 
- * this command. this command can be run while the robot is disabled.
+ * this command. This command can be run while the robot is disabled.
+ *
+ * As a safety, so that the modules are not zeroed without cause, the 
+ * command waits 10 seconds before the modules are zeroed. If another 
+ * drive command is caled or this command is cancelled the modules' 
+ * zeros will not be reset. Further, the robot MUST be disabled when 
+ * this happens, or the modules will not have their zeros reset.
  */
-public class DriveResetAllModulePositionsToZero extends InstantCommand {
+public class DriveResetAllModulePositionsToZero extends CommandBase {
+  Timer timer = new Timer();
   /**
    * Creates a new DriveResetAllModulePositionsToZero.
    */
@@ -27,7 +36,21 @@ public class DriveResetAllModulePositionsToZero extends InstantCommand {
   @Override
   public void initialize() {
     //Call the reset function to zero all of the modules 
-    RobotContainer.swerveDrive.zeroAllModulePosSensors();
+    timer.reset();
+    timer.start();
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    timer.stop();
+    if(!interrupted && DriverStation.getInstance().isDisabled()){
+      RobotContainer.swerveDrive.zeroAllModulePosSensors();
+    }
+  }
+
+  @Override
+  public boolean isFinished() {
+    return (timer.get() >= 10) || !DriverStation.getInstance().isDisabled();
   }
 
   public boolean runsWhenDisabled(){

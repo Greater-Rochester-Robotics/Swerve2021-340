@@ -11,6 +11,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
@@ -22,11 +27,6 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveResetGyroToZero;
-import frc.robot.subsystems.SwerveDrive;
-import frc.robot.subsystems.Limelight;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.Button;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
@@ -36,6 +36,9 @@ import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.SnekLoader.Regurgitate;
 import frc.robot.commands.SnekLoader.StopSnek;
+
+import frc.robot.subsystems.SwerveDrive;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -63,8 +66,6 @@ public class RobotContainer {
   final Button driverStart = new JoystickButton(driver, 8);
   final Button driverLS = new JoystickButton(driver, 9);
   final Button driverRS = new JoystickButton(driver, 10);
-  final Button driverLTButton = new JoyTriggerButton(driver, .3, Axis.LEFT_TRIGGER);
-  final Button driverRTButton = new JoyTriggerButton(driver, .3, Axis.RIGHT_TRIGGER);
   
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
@@ -75,8 +76,6 @@ public class RobotContainer {
   
 
   
-
-
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -94,6 +93,13 @@ public class RobotContainer {
     
     // Configure the button bindings
     configureButtonBindings();
+    SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
+    SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
+    SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
+    SmartDashboard.putData("Drive Module 1", new DriveOneModule(1));
+    SmartDashboard.putData("Drive Module 2", new DriveOneModule(2));
+    SmartDashboard.putData("Drive Module 3", new DriveOneModule(3));
+    SmartDashboard.putData(new DriveStopAllModules());
   }
 
   /**
@@ -104,18 +110,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    // driverA.whenPressed(new DriveOneModule(0));
-    // driverB.whenPressed(new DriveOneModule(1));
-    // driverX.whenPressed(new DriveOneModule(2));
-    // driverY.whenPressed(new DriveOneModule(3));
     
-    // driverA.whenReleased(new DriveStopAllModules());
-    // driverB.whenReleased(new DriveStopAllModules());
-    // driverX.whenReleased(new DriveStopAllModules());
-    // driverY.whenReleased(new DriveStopAllModules());
-    
-    //driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
-    //driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
     driverA.whenPressed(new Load());
     driverA.whenReleased(new GetSmol());
     // driverA.whenPressed(new SetHarvesterDown());
@@ -127,10 +122,6 @@ public class RobotContainer {
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 
-    driverRTButton.whenPressed(new Load());
-    driverRTButton.whenReleased(new GetSmol());
-
-    driverLTButton.whileHeld(new Regurgitate());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
