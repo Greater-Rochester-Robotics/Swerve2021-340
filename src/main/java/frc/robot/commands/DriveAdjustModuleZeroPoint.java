@@ -24,8 +24,11 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
   /**
    * Creates a new DriveAdjustModuleZeroPoint.
    * 
-   * Each module has a different 0 angle. To solve this, physically angle each module straight. 
+   * Each module has a different 0 angle. To solve this, 
+   * physically angle each module straight. 
    * Then, tell all modules its current position is at 0. 
+   * The later is done by the Command 
+   * DriveResetAllModulePositionsToZero 
    */ 
   public DriveAdjustModuleZeroPoint() {
     addRequirements(RobotContainer.swerveDrive);
@@ -47,7 +50,7 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     double[] modRelEnc = RobotContainer.swerveDrive.getAllModuleRelEnc();
     double[] moduleVelocities = RobotContainer.swerveDrive.getAllModuleVelocity();
     
-    //test smartdashboard outputs
+    //test smartdashboard outputs, Module Angles and Encoder Counts
     SmartDashboard.putNumber("frontLeftAngle", modAngles[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontLeftEnc", modRelEnc[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRightAngle", modAngles[kSwerveModule.frontRight.getNumber()]);
@@ -58,12 +61,13 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     SmartDashboard.putNumber("rearRightEnc", modRelEnc[kSwerveModule.rearRight.getNumber()]);
     // SmartDashboard.putNumber("gyroAngle",RobotContainer.swerveDrive.getGyroInDeg());
 
-
+    //Push distances pulled from the modules' drive motors
     SmartDashboard.putNumber("frontLeftDistance", moduleDistances[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRightDistance", moduleDistances[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeftDistance", moduleDistances[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber("rearRightDistance", moduleDistances[kSwerveModule.rearRight.getNumber()]);
 
+    //push velocities pulled from the drive motors
     SmartDashboard.putNumber("frontLeftVelocity", moduleVelocities[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRightVelocity", moduleVelocities[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeftVelocity", moduleVelocities[kSwerveModule.rearLeft.getNumber()]);

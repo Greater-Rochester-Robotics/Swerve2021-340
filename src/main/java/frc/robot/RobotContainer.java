@@ -88,9 +88,6 @@ public class RobotContainer {
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
     
     
-    // driverLB.whenPressed(new DriveAdjustModuleZeroPoint());
-    // driverRB.whenPressed(new DriveResetAllModulePositionsToZero());
-    
     driverLB.whenPressed(new DriveResetGyroToZero());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
