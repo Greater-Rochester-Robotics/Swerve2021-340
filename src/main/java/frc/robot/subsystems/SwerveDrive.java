@@ -655,6 +655,10 @@ public class SwerveDrive extends SubsystemBase {
     currentPosition = new Pose2d(0, 0, getGyroRotation2d());
   }
 
+  public void setCurrentPos(Pose2d target) {
+    currentPosition = target;
+  }
+
   /**
    * 
    * @param target an angle in radians

@@ -10,6 +10,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,6 +27,7 @@ import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
+import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveResetGyroToZero;
 
@@ -87,7 +90,7 @@ public class RobotContainer {
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
     
-    
+    driverRB.whenPressed(new DriveToPosition(new Pose2d(1, 2, new Rotation2d())));
     driverLB.whenPressed(new DriveResetGyroToZero());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
