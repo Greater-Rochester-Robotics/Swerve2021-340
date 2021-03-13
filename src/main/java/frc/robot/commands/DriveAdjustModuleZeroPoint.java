@@ -45,23 +45,30 @@ public class DriveAdjustModuleZeroPoint extends CommandBase {
     double[] modAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
     double[] moduleDistances = RobotContainer.swerveDrive.getAllModuleDistance();
     double[] modRelEnc = RobotContainer.swerveDrive.getAllModuleRelEnc();
+    double[] moduleVelocities = RobotContainer.swerveDrive.getAllModuleVelocity();
     
     //test smartdashboard outputs
-    SmartDashboard.putNumber("frontLeft", modAngles[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontLeftAngle", modAngles[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontLeftEnc", modRelEnc[kSwerveModule.frontLeft.getNumber()]);
-    SmartDashboard.putNumber("frontRight", modAngles[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("frontRightAngle", modAngles[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("frontRightEnc", modRelEnc[kSwerveModule.frontRight.getNumber()]);
-    SmartDashboard.putNumber("rearLeft", modAngles[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber("rearLeftAngle", modAngles[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber("rearLeftEnc", modRelEnc[kSwerveModule.rearLeft.getNumber()]);
-    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modAngles[kSwerveModule.rearRight.getNumber()]);
-    SmartDashboard.putNumber(kSwerveModule.rearRight.toString(), modRelEnc[kSwerveModule.rearRight.getNumber()]);
-    SmartDashboard.putNumber("gyroAngle",RobotContainer.swerveDrive.getGyroInDeg());
+    SmartDashboard.putNumber("rearRightAngle", modAngles[kSwerveModule.rearRight.getNumber()]);
+    SmartDashboard.putNumber("rearRightEnc", modRelEnc[kSwerveModule.rearRight.getNumber()]);
+    // SmartDashboard.putNumber("gyroAngle",RobotContainer.swerveDrive.getGyroInDeg());
 
 
     SmartDashboard.putNumber("frontLeftDistance", moduleDistances[kSwerveModule.frontLeft.getNumber()]);
     SmartDashboard.putNumber("frontRightDistance", moduleDistances[kSwerveModule.frontRight.getNumber()]);
     SmartDashboard.putNumber("rearLeftDistance", moduleDistances[kSwerveModule.rearLeft.getNumber()]);
     SmartDashboard.putNumber("rearRightDistance", moduleDistances[kSwerveModule.rearRight.getNumber()]);
+
+    SmartDashboard.putNumber("frontLeftVelocity", moduleVelocities[kSwerveModule.frontLeft.getNumber()]);
+    SmartDashboard.putNumber("frontRightVelocity", moduleVelocities[kSwerveModule.frontRight.getNumber()]);
+    SmartDashboard.putNumber("rearLeftVelocity", moduleVelocities[kSwerveModule.rearLeft.getNumber()]);
+    SmartDashboard.putNumber("rearRightVelocity", moduleVelocities[kSwerveModule.rearRight.getNumber()]);
+    
   }
 
   // Called once the command ends or is interrupted.
