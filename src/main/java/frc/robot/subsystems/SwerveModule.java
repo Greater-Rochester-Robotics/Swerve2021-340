@@ -99,7 +99,7 @@ public class SwerveModule {
         rotatePID.setI(Constants.SWERVE_ROT_I_VALUE);
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
-        rotatePID.setFF(Constants.SWERVE_ROT_FF_VALUE);
+        rotatePID.setFF(0.0);//Not arbitrary, this is multiplied by setpoint, must be 0 in position PID
         
         rotateAbsSensor = new CANCoder(canCoderID);//this sensor is angle of the module, as an absolute value
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
@@ -299,9 +299,9 @@ public class SwerveModule {
      *                  forward
      */
     public void setPosInRad(double targetPos) {
-        // System.out.print("target="+targetPos);
+        // SmartDashboard.putNumber("target(rad)",targetPos);
         double posDiff = targetPos - getPosInRad();
-        // System.out.print("   posdiff=" +posDiff);
+        // SmartDashboard.putNumber("posDiff(rad)",posDiff);
         double absDiff = Math.abs(posDiff);
         // System.out.print("   absdiff="+absDiff);
         //The following is for non-inverting 
@@ -364,13 +364,15 @@ public class SwerveModule {
         // System.out.print("   posdiff2 =" + posDiff);
         // Convert the shortest distance to encoder value(use convertion factor)
         double targetEncDistance = posDiff * Constants.RAD_TO_ENC_CONV_FACTOR;
-        // System.out.print("   TarDist="+targetEncDistance);
+        // SmartDashboard.putNumber("TarDist(EncCount)",targetEncDistance);
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
-        // System.out.print("   curr="+rotateRelEncoder.getPosition());
-        // System.out.println("  output="+outputEncValue);
+        // SmartDashboard.putNumber("curr(Enc)",rotateRelEncoder.getPosition());
+        // SmartDashboard.putNumber("output(Enc)",outputEncValue);
         // Set the setpoint using setReference on the PIDController
-        rotatePID.setReference(outputEncValue, ControlType.kPosition);
+        rotatePID.setReference(outputEncValue, ControlType.kPosition, 0,
+            Constants.SWERVE_ROT_ARB_FF_VOLTAGE*Math.signum(posDiff),
+            CANPIDController.ArbFFUnits.kVoltage);
     }
 
     /**

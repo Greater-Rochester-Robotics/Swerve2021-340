@@ -72,7 +72,7 @@ public final class Constants {
     public static final double SWERVE_ROT_I_VALUE = 0.0;
     public static final double SWERVE_ROT_D_VALUE = 0.0;
     public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
-    public static final double SWERVE_ROT_FF_VALUE = 0.0001;
+    public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.8;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
     public static final double SWERVE_MODULE_TOLERANCE = 0.017;//this is in radians

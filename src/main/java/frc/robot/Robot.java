@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   public static RobotContainer robotContainer;
-  public SwerveModule rearLeft;
+  // public SwerveModule rearLeft;
   // final Joystick driver = new Joystick(0);
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -97,8 +97,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // rearLeft.driveRotateMotor(driver.getRawAxis(1));
-    // System.out.println(rearLeft.getAbsPosInDeg());
+    // double output = (driver.getRawButton(1)?.05:0)+(driver.getRawButton(2)?.1:0)+(driver.getRawButton(3)?1:0);
+    // rearLeft.driveRotateMotor(output);
+    // System.out.println("Output="+output);
   }
 
   @Override
