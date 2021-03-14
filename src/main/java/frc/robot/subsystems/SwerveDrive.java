@@ -170,6 +170,8 @@ public class SwerveDrive extends SubsystemBase {
       currentVelocities[1]*currentRot.getCos() - currentVelocities[0]*currentRot.getSin(),
       currentRot
     );
+    SmartDashboard.putNumber("Current position X", currentPosition.getX());
+    SmartDashboard.putNumber("Current position Y", currentPosition.getY());
   }
 
   /**
