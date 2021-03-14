@@ -50,7 +50,7 @@ public class DriveToPosition extends CommandBase {
     //call the position PIDController for rotation using param of Pose2d angle(.getRotation().getRadians()), for rotationSpeed
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(target.getRotation().getRadians());
     //above with DutyCycle mode
-    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
+    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed*.25, latSpeed*.25, rotSpeed*.5, kDriveMode.percentOutput);
     
   }
 
