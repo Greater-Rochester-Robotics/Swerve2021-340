@@ -9,6 +9,7 @@ import java.nio.file.Path;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
@@ -51,15 +53,21 @@ public class RunPath extends CommandBase {
   public void execute() {
     // Gives a current position between the points, based on the time in seconds
     State curState = robotPath.sample(timer.get());
-    //TODO: figure out what these speeds need to be set to
+
+    //TODO: DOUBLE CHECK ALL OF THIS
+
+    double targetVelocity = curState.velocityMetersPerSecond;
+    double targetAngle = curState.curvatureRadPerMeter;
+    double targetAcceleration = curState.accelerationMetersPerSecondSq;
     // 1. obtain the targetVelocity and the targetAngle from curState
     // 2. use the targetVelocity and targetAngle to determine away and lateral speed
     // 3. pass the away and lateral speeds to our PID loops (cereal)
     // 4. pass our targetAngle to the rotationPID
     // 5. pass our new speeds to driveFieldCentric
-    double awaySpeed = 0;
-    double latSpeed = 0;
-    double rotSpeed = 0;
+    double awaySpeed = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity, targetAcceleration);
+    double latSpeed = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity, targetAcceleration);
+    double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle);
+
     RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
 
   }
