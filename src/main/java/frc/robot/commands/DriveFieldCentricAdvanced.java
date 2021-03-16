@@ -18,7 +18,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
  * from the driver. If this is true, then left and right 
  * on the stick will cause the robot to move to the 
  * driver's left and right, respectively. This command 
- * does not end of its own accord so it must be interupted 
+ * does not end of its own accord so it must be interrupted 
  * to end.
  * 
  * UNLIKE DriveFieldCentric this command uses a PIDController 

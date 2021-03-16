@@ -17,7 +17,11 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 import frc.robot.Constants;
 
-import com.analog.adis16448.frc.ADIS16448_IMU;
+import com.analog.adis16470.frc.ADIS16470_IMU;
+import com.analog.adis16470.frc.ADIS16470_IMU.ADIS16470CalibrationTime;
+import com.analog.adis16470.frc.ADIS16470_IMU.IMUAxis;
+
+import edu.wpi.first.wpilibj.SPI;
 
 /**
  * This is the subsystem that governs the four swerve module objects.
@@ -34,7 +38,7 @@ public class SwerveDrive extends SubsystemBase {
   private static SwerveModule frontLeft, rearLeft, rearRight, frontRight;
   private Pose2d currentPosition = new Pose2d(new Translation2d(),new Rotation2d());
   private Pose2d currentVelocity = new Pose2d(new Translation2d(), new Rotation2d());
-  public ADIS16448_IMU imu;
+  public ADIS16470_IMU imu;
   public PIDController robotSpinController;
 
   public PIDController lateralSpeedPIDController;
@@ -105,7 +109,7 @@ public class SwerveDrive extends SubsystemBase {
     };
     
     // Constructs IMU object
-    imu = new ADIS16448_IMU();
+    imu = new ADIS16470_IMU(IMUAxis.kY, SPI.Port.kOnboardCS0, ADIS16470CalibrationTime._4s);
 
     //construct the wpilib PIDcontroller for rotation.
     robotSpinController = new PIDController(Constants.ROBOT_SPIN_P, Constants.ROBOT_SPIN_I, Constants.ROBOT_SPIN_D);
@@ -170,6 +174,8 @@ public class SwerveDrive extends SubsystemBase {
       currentVelocities[1]*currentRot.getCos() - currentVelocities[0]*currentRot.getSin(),
       currentRot
     );
+    SmartDashboard.putNumber("Current position X", currentPosition.getX());
+    SmartDashboard.putNumber("Current position Y", currentPosition.getY());
   }
 
   /**
@@ -555,7 +561,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return the angle of the robot in degrees
    */
   public double getGyroInDeg(){
-    return imu.getGyroAngleZ()*-1;//Pull gyro in degrees
+    return imu.getAngle();//getYawAxis();//*-1;//Pull gyro in degrees
     //note counterclockwise rotation is positive
   }
 
@@ -653,6 +659,10 @@ public class SwerveDrive extends SubsystemBase {
    */
   public void resetCurrentPos(){
     currentPosition = new Pose2d(0, 0, getGyroRotation2d());
+  }
+
+  public void setCurrentPos(Pose2d target) {
+    currentPosition = target;
   }
 
   /**

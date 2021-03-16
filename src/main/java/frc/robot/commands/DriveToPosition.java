@@ -42,7 +42,7 @@ public class DriveToPosition extends CommandBase {
   
   @Override
   public void execute() {
-    //Call the driveFieldCentric method with following paramters
+    //Call the driveFieldCentric method with following parameters
     //call the position PIDController for away using param of the Pose2d x(getX()) value for awaySpeed
     double awaySpeed = RobotContainer.swerveDrive.getAwayPositionPIDOut(target.getX());
     //call the position PIDController for Lateral using param of Pose2d y(getY()) for lateralSpeed
@@ -50,7 +50,7 @@ public class DriveToPosition extends CommandBase {
     //call the position PIDController for rotation using param of Pose2d angle(.getRotation().getRadians()), for rotationSpeed
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(target.getRotation().getRadians());
     //above with DutyCycle mode
-    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
+    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed*.5, latSpeed*.5, rotSpeed*.5, kDriveMode.percentOutput);
     
   }
 

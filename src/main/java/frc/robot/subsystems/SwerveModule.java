@@ -78,7 +78,7 @@ public class SwerveModule {
                           Constants.SWERVE_DRIVE_D_VALUE, Constants.SWERVE_DRIVE_F_VALUE);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10);
         driveMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10);
-        
+        driveMotor.setSelectedSensorPosition(0.0);
 
 
         rotationMotor = new CANSparkMax(rotationMotorID, MotorType.kBrushless);
@@ -128,7 +128,7 @@ public class SwerveModule {
         double averAngle = (this.currentRotPos.getRadians() + this.prevAngle) / 2;
 
         // pull the distance travelled by the driveMotor
-        this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition();
+        this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition()*Constants.DRIVE_ENC_TO_METERS_FACTOR;
         // find the distance travelled since the previous cycle
         double deltaPos = this.currentPosition - this.prevPosition;
 
@@ -192,7 +192,7 @@ public class SwerveModule {
      * @return speed of the drive wheel
      */
     public double getDriveVelocity() {
-        return driveMotor.getSensorCollection().getIntegratedSensorVelocity();
+        return driveMotor.getSensorCollection().getIntegratedSensorVelocity()*10*Constants.DRIVE_ENC_TO_METERS_FACTOR;
     }
 
     /**

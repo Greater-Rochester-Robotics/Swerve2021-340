@@ -16,21 +16,18 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 public class DriveOnTargetWithLimeLight extends CommandBase {
   /** Creates a new DriveOnTargetWithLimeLight. */
   public DriveOnTargetWithLimeLight() {
-    //TODO: Use addRequirements() here for just swervedrive
     addRequirements(RobotContainer.swerveDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //TODO:Turn On Limelight lights
     RobotContainer.limelight.setLightState(3);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //TODO:copy exectute() loop from DriveFieldCentricAdvanced
     double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
     double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
     if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
@@ -62,13 +59,11 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
       kDriveMode.percentOutput
     );
   
-    //TODO:remove references to rotSpeed and currentAngle, make the angle a angle from the limelight
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    //TODO: turn off limelight lights
     RobotContainer.limelight.setLightState(1);
   }
 
