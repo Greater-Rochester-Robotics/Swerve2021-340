@@ -99,8 +99,7 @@ public class SwerveModule {
         rotatePID.setI(Constants.SWERVE_ROT_I_VALUE);
         rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
         rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
-        rotatePID.setFF(0.0);//Not arbitrary, this is multiplied by setpoint, must be 0 in position PID
-        
+        rotatePID.setFF(Constants.SWERVE_ROT_NONARB_FF_VALUE);
         rotateAbsSensor = new CANCoder(canCoderID);//this sensor is angle of the module, as an absolute value
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
@@ -116,6 +115,10 @@ public class SwerveModule {
      * Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
      */
     public double[] periodic() {
+
+        // if (Math.abs(this.getRelEncCount())>70){
+        //     rotateRelEncoder.setPosition(0);
+        // }
         
         rotationHealthCheckup();
 
