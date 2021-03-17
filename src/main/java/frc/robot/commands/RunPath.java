@@ -55,7 +55,8 @@ public class RunPath extends CommandBase {
     State curState = robotPath.sample(timer.get());
 
     //TODO: DOUBLE CHECK ALL OF THIS
-
+    Pose2d targetPose = curState.poseMeters;
+    Rotation2d targetRotation = targetPose.getRotation();
     double targetVelocity = curState.velocityMetersPerSecond;
     double targetAngle = curState.curvatureRadPerMeter;
     double targetAcceleration = curState.accelerationMetersPerSecondSq;
@@ -64,8 +65,8 @@ public class RunPath extends CommandBase {
     // 3. pass the away and lateral speeds to our PID loops (cereal)
     // 4. pass our targetAngle to the rotationPID
     // 5. pass our new speeds to driveFieldCentric
-    double awaySpeed = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity, targetAcceleration);
-    double latSpeed = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity, targetAcceleration);
+    double awaySpeed = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity*targetRotation.getCos(), targetAcceleration*targetRotation.getCos());
+    double latSpeed = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity*targetRotation.getSin(), targetAcceleration*targetRotation.getSin());
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle);
 
     RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
