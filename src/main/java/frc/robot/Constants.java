@@ -68,14 +68,15 @@ public final class Constants {
     public static final double SWERVE_DRIVE_F_VALUE = 1023/(MAXIMUM_VELOCITY/DRIVE_ENC_TO_METERS_FACTOR);
 
     /* Swerve Module Rotation constants */
-    public static final double SWERVE_ROT_P_VALUE = 0.050;//if sluggish, increase P value
+    public static final double SWERVE_ROT_P_VALUE = .105;//if sluggish, increase P value
     public static final double SWERVE_ROT_I_VALUE = 0.0;
-    public static final double SWERVE_ROT_D_VALUE = 2.0;
+    public static final double SWERVE_ROT_D_VALUE = 2.5;
     public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
-    public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.5;
+    public static final double SWERVE_ROT_NONARB_FF_VALUE = 0.0;//.0001;//Not arbitrary, this is multiplied by setpoint, must be 0 in position PID
+    public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 1.1;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
-    public static final double SWERVE_MODULE_TOLERANCE = 0.017;//this is in radians
+    public static final double SWERVE_MODULE_TOLERANCE = 0.034;//this is in radians
     
     /* Robot Motion PID controller constants */
     public static final double ROBOT_SPIN_P = .55;
