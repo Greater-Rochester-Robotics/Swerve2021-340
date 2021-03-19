@@ -75,15 +75,18 @@ public class Limelight extends SubsystemBase {
     double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-12.5;
     //distance equation: rpm = -0.0000401877572016x^3 +.220114087301592x^2 -33.7714947089957x + 4919.04761904768
     //Practice bot shooter value
-    // double rpm = (-0.0000401877572016*Math.pow(distance, 3)) + (.220114087301592*Math.pow(distance,2)) - (33.7714947089957*distance)+4919.04761904768;
-   //Comp Bot Equation
-   rpm = -(.000007334124*Math.pow(distance,4))+(.005258407*Math.pow(distance,3))-(1.362595281*Math.pow(distance,2)) + (152.7787877 * distance) -2372.967082;
-   rpm *= Constants.RPM_MUL_FACTOR;
-   rpm += Constants.RPM_ADD_FACTOR; 
-   if (rpm > 0 ){
-    rpm = Math.min(rpm, 20000); 
-   }
+    //double rpm = (-0.0000401877572016*Math.pow(distance, 3)) + (.220114087301592*Math.pow(distance,2)) - (33.7714947089957*distance)+4919.04761904768;
+    //Comp Bot Equation
+    //15001 + -1421x + 478x^2 + -73.3x^3 + 2.62x^4 + 0.344x^5 + -0.0231x^6
+    //rpm = -(.000007334124*Math.pow(distance,4))+(.005258407*Math.pow(distance,3))-(1.362595281*Math.pow(distance,2)) + (152.7787877 * distance) -2372.967082;
+    rpm = 15001 - (1421*distance) + (478 * Math.pow(distance,2)) - (73.3 * Math.pow(distance,3)) + (2.62 * Math.pow(distance,4)) + (.344 * Math.pow(distance,5)) - (.0231 * Math.pow(distance,6));
+    rpm *= Constants.RPM_MUL_FACTOR;
+    rpm += Constants.RPM_ADD_FACTOR; 
+    if (rpm > 0 ){
+      rpm = Math.min(rpm, 20000); 
+    }
     // double rpm = 0.0;
+    SmartDashboard.putString("LimeLight RPM", rpm + "");
     return (int) rpm;
   }
 

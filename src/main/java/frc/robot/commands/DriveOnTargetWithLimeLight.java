@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Robot;
@@ -38,21 +39,24 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
     
     double targetAngle = RobotContainer.swerveDrive.getGyroInRad();
 
+    //
     if(RobotContainer.limelight.haveTarget())
     {
-      targetAngle += RobotContainer.limelight.angleToTarget();
-    }else{
-      targetAngle /= (Math.PI);
-      if(Math.floor(targetAngle)%2 != 0)
-      {
-        targetAngle = Math.floor(targetAngle);
-      }else{
-        targetAngle = Math.ceil(targetAngle);
-      }
-      targetAngle *= Math.PI;
-    }
-  
-    RobotContainer.swerveDrive.driveFieldCentric(
+      targetAngle -= Math.toRadians(RobotContainer.limelight.angleToTarget());
+    }//else{
+      // targetAngle /= (Math.PI);
+      // if(Math.floor(targetAngle)%2 != 0)
+      // {
+      //   targetAngle = Math.floor(targetAngle);
+      // }else{
+      //   targetAngle = Math.ceil(targetAngle);
+      // }
+      // targetAngle *= Math.PI;
+
+    //}
+      SmartDashboard.putNumber("angle to target", RobotContainer.limelight.angleToTarget());
+      SmartDashboard.putNumber("target angle", targetAngle);
+      RobotContainer.swerveDrive.driveFieldCentric(
       awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
       lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
       RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle),
@@ -65,6 +69,7 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.limelight.setLightState(1);
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.

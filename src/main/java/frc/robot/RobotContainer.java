@@ -22,6 +22,7 @@ import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveFieldCentricVelocity;
+import frc.robot.commands.DriveOnTargetWithLimeLight;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
@@ -35,6 +36,7 @@ import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.ShootWithLimelight;
+import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.SnekLoader.Regurgitate;
@@ -119,8 +121,9 @@ public class RobotContainer {
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    driverX.whenPressed(new ShootWithLimelight());
+    driverX.whenPressed(new SmartLimeShot());
     driverX.whenReleased(new StopSnek());
+    driverLB.whileHeld(new DriveOnTargetWithLimeLight());
 
     
     driverLB.whenPressed(new DriveResetGyroToZero());

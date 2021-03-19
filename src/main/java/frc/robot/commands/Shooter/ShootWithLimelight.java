@@ -35,7 +35,7 @@ public class ShootWithLimelight extends CommandBase {
   public void initialize() {
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
-    speedRpm = Constants.WALL_SHOT_RPM; //Limelight.calcHoodRPM();
+    speedRpm = Limelight.calcHoodRPM();
     RobotContainer.shooter.resetBallsShot();
     stateIndex = 4;
     RobotContainer.shooter.setShooterWheel(speedRpm);
@@ -46,6 +46,10 @@ public class ShootWithLimelight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    
+    speedRpm = Limelight.calcHoodRPM();
+    RobotContainer.shooter.setShooterWheel(speedRpm);
+    SmartDashboard.putString("Wheel Speed", speedRpm + "");
     // Check speed if PID loop isn't working for the flywheel to spin up between
     // shots
     // SmartDashboard.putString("TEST", "Happy");
