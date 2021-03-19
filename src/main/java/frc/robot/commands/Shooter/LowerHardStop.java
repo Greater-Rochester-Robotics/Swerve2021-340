@@ -22,7 +22,6 @@ public class LowerHardStop extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.lowerHardStop();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
