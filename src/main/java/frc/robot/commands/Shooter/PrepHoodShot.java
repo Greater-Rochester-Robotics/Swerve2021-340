@@ -29,8 +29,8 @@ public class PrepHoodShot extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.raiseHardStop();
     RobotContainer.shooter.raiseHood();
+    //TODO: Update the below constant to use a new value of 10000 for warmup. Recommend creating new constant value
     RobotContainer.shooter.setShooterWheel(Constants.INITIATION_SHOT_RPM);
     RobotContainer.snekLoader.setState(SnekLoader.State.kFillTo4);
   }

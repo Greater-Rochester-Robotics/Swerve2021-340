@@ -78,7 +78,6 @@ public class Shooter extends SubsystemBase {
     ballCounter = new DigitalInput(Constants.BALL_COUNTER_SENSOR);
     ballWasPresent = false;
     hoodMover = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL);
-    hardStop = new Solenoid(4);
     // shooterWheel.enableVoltageCompensation(12.0);
     if (SmartDashboard.isPersistent("Total Balls Shot")) {
       totalBallsShot = Integer.valueOf(SmartDashboard.getString("Total Balls Shot", "0"));
@@ -165,14 +164,6 @@ public class Shooter extends SubsystemBase {
 
   public void lowerHood() {
     hoodMover.set(false);
-  }
-
-  public void lowerHardStop() {
-    hardStop.set(true);
-  }
-
-  public void raiseHardStop() {
-    hardStop.set(false);
   }
 
   public void resetBallsShot() {

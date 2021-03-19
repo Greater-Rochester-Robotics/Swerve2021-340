@@ -47,9 +47,9 @@ public class ShootWithLimelight extends CommandBase {
   @Override
   public void execute() {
     
+    //TODO: Determine if this is in the correct location to allow a more accurate speed. - Robot can move while aiming
     speedRpm = Limelight.calcHoodRPM();
     RobotContainer.shooter.setShooterWheel(speedRpm);
-    SmartDashboard.putString("Wheel Speed", speedRpm + "");
     // Check speed if PID loop isn't working for the flywheel to spin up between
     // shots
     // SmartDashboard.putString("TEST", "Happy");
