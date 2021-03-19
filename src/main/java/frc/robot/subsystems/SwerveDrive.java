@@ -176,6 +176,8 @@ public class SwerveDrive extends SubsystemBase {
     );
     SmartDashboard.putNumber("Current position X", currentPosition.getX());
     SmartDashboard.putNumber("Current position Y", currentPosition.getY());
+    SmartDashboard.putNumber("Current velocity X", currentVelocity.getX());
+    SmartDashboard.putNumber("Current velocity Y", currentVelocity.getY());
   }
 
   /**

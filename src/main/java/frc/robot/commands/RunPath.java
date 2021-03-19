@@ -22,20 +22,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class RunPath extends CommandBase {
-  private Timer timer;
+  private Timer timer = new Timer();
   private Trajectory robotPath;
   /** Creates a new RunPath. */
-  public RunPath() {
+  public RunPath(String fileName) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
-  }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    timer.reset();
-    timer.start();
-    String trajectoryJSON = "PathWeaver/output/Straight.wpilib.JSON";
+    String trajectoryJSON = "output/output/" + fileName + ".wpilib.json";
     robotPath = new Trajectory();
     try {
       Path filePath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
@@ -44,8 +38,16 @@ public class RunPath extends CommandBase {
     catch (IOException ex) {
       System.out.println("Unable to open trajectory: " + trajectoryJSON);
     }
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    timer.reset();
+    timer.start();
     //Sets the initial position of the path to the current position of the robot
-    robotPath.transformBy(new Transform2d(robotPath.getInitialPose(), RobotContainer.swerveDrive.getCurrentPose()));
+    //robotPath.transformBy(new Transform2d(robotPath.getInitialPose(), RobotContainer.swerveDrive.getCurrentPose()));
+    RobotContainer.swerveDrive.setCurrentPos(new Pose2d(robotPath.getInitialPose().getTranslation(), RobotContainer.swerveDrive.getGyroRotation2d()));
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -82,6 +84,6 @@ public class RunPath extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return robotPath.getTotalTimeSeconds() <= timer.get();
   }
 }

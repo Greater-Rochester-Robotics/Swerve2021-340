@@ -29,6 +29,7 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
 
 import frc.robot.subsystems.SwerveDrive;
@@ -89,6 +90,8 @@ public class RobotContainer {
     // driverA.whenPressed(new DriveTurnToAngle(0));
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
+
+    driverY.whenPressed(new RunPath("Straight"));
     
     driverRB.whenPressed(new DriveToPosition(new Pose2d(1, 0, new Rotation2d())));
     driverLB.whenPressed(new DriveResetGyroToZero());

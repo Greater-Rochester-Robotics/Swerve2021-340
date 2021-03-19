@@ -88,7 +88,6 @@ public class Limelight extends SubsystemBase {
   }
 
   public double getDistance(){
-    //TODO: find actual values for these, and implement/test them
     //all distance values are in inches
     double cameraHeight =  24.56;    //not final value
     double targetHeight = 98.5; //final value = 98
