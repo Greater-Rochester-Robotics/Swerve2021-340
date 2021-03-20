@@ -123,7 +123,7 @@ public class RobotContainer {
     driverB.whileHeld(new Regurgitate());
     driverX.whenPressed(new SmartLimeShot());
     driverX.whenReleased(new StopSnek());
-    driverLB.whileHeld(new DriveOnTargetWithLimeLight());
+    driverRB.whileHeld(new DriveOnTargetWithLimeLight());
 
     
     driverLB.whenPressed(new DriveResetGyroToZero());

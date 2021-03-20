@@ -74,12 +74,14 @@ public class Limelight extends SubsystemBase {
     double rpm;
     double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-12.5;
     //Comp Bot Equation
-    //Base Equation: -.000000008x^6 + .000007x^5 - .0024x^4 + .03631x^3 - 18.414x^2 - 1034.6x + 119076
-    rpm = 0; // TODO: Translafe the above equation into code where x = distance
+    //Base Equation: 111226.8065 - 2100.88141025641x + 16.945294289044288x^2 - 0.06080435767935767x^3 + 0.00008149964747186968x^4
+    rpm = 111226.8065 - (2100.88141025641 * distance) + (16.945294289044288 * Math.pow(distance,2)) - 
+    (0.06080435767935767 * Math.pow(distance,3)) + (0.00008149964747186968 * Math.pow(distance, 4)); // TODO: Translafe the above equation into code where x = distance
     rpm *= Constants.RPM_MUL_FACTOR;
     rpm += Constants.RPM_ADD_FACTOR; 
+    SmartDashboard.putString("LimeLight pre-min RPM", rpm + "");
     if (rpm > 0 ){
-      rpm = Math.min(rpm, 20000); 
+      rpm = Math.min(rpm, 18000); 
     }
     // double rpm = 0.0;
     SmartDashboard.putString("LimeLight RPM", rpm + "");

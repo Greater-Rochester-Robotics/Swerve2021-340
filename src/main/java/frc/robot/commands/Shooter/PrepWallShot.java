@@ -26,7 +26,6 @@ public class PrepWallShot extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM);
-    RobotContainer.shooter.lowerHardStop();
     RobotContainer.shooter.lowerHood();
     RobotContainer.snekLoader.setState(SnekLoader.State.kFillTo4);
   }
