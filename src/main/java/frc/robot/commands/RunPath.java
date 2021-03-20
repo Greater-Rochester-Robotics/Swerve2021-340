@@ -62,16 +62,28 @@ public class RunPath extends CommandBase {
     double targetVelocity = curState.velocityMetersPerSecond;
     double targetAngle = curState.curvatureRadPerMeter;
     double targetAcceleration = curState.accelerationMetersPerSecondSq;
+    Pose2d currentVelocity = RobotContainer.swerveDrive.getCurrentVelocity();
     // 1. obtain the targetVelocity and the targetAngle from curState
     // 2. use the targetVelocity and targetAngle to determine away and lateral speed
     // 3. pass the away and lateral speeds to our PID loops (cereal)
     // 4. pass our targetAngle to the rotationPID
     // 5. pass our new speeds to driveFieldCentric
-    double awaySpeed = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity*targetRotation.getCos(), targetAcceleration*targetRotation.getCos());
-    double latSpeed = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity*targetRotation.getSin(), targetAcceleration*targetRotation.getSin());
+    double awaySpeedDiff = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity*targetRotation.getCos(), targetAcceleration*targetRotation.getCos());
+    double latSpeedDiff = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity*targetRotation.getSin(), targetAcceleration*targetRotation.getSin());
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle);
 
-    RobotContainer.swerveDrive.driveFieldCentric(awaySpeed, latSpeed, rotSpeed, kDriveMode.percentOutput);
+    SmartDashboard.putNumber("Away Speed", awaySpeedDiff + currentVelocity.getX());
+    SmartDashboard.putNumber("Lateral Speed", latSpeedDiff + currentVelocity.getY());
+    SmartDashboard.putNumber("Target Position X", targetPose.getX());
+    SmartDashboard.putNumber("Target Position Y", targetPose.getY());
+
+    RobotContainer.swerveDrive.driveFieldCentric(awaySpeedDiff + currentVelocity.getX(), latSpeedDiff + currentVelocity.getY(), rotSpeed, kDriveMode.percentOutput);
+
+    try{
+      Thread.sleep(100);
+    } catch (InterruptedException e){
+      e.printStackTrace();
+    }
 
   }
 
@@ -79,6 +91,7 @@ public class RunPath extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     timer.stop();
+    RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.
