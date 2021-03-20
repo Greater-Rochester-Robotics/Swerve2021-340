@@ -147,7 +147,8 @@ public final class Constants {
     /* Solenoids/LED PCM */
     public static final int HARVESTER_FWD_CHANNEL = 7;
     public static final int HARVESTER_REV_CHANNEL = 1;
-    public static final int SHOOTER_HOOD_SOLENOID_CHANNEL = 2;
+    public static final int SHOOTER_HOOD_SOLENOID_CHANNEL_UP = 3;
+    public static final int SHOOTER_HOOD_SOLENOID_CHANNEL_DOWN = 4;
     public static final int CLIMBER_BRAKE_CHANNEL = 6;// No brake
     public static final int SECONDARY_PCM_ID = 11;// does not exist
 
@@ -162,7 +163,9 @@ public final class Constants {
 
     public static TreeMap<Double,Double> SHOOTER_LOOKUP_TABLE = new TreeMap<>();
     static{
-        SHOOTER_LOOKUP_TABLE.put(10.0, 15000.0);
+        SHOOTER_LOOKUP_TABLE.put(8.0, 14090.0);
+        SHOOTER_LOOKUP_TABLE.put(9.0, 14140.0);
+        SHOOTER_LOOKUP_TABLE.put(10.0, 14180.0);
         SHOOTER_LOOKUP_TABLE.put(11.0, 14000.0);
         SHOOTER_LOOKUP_TABLE.put(12.0, 13500.0);
         SHOOTER_LOOKUP_TABLE.put(13.0, 13400.0);
@@ -170,9 +173,15 @@ public final class Constants {
         SHOOTER_LOOKUP_TABLE.put(15.0, 13000.0);
         SHOOTER_LOOKUP_TABLE.put(16.0, 12900.0);
         SHOOTER_LOOKUP_TABLE.put(17.0, 12750.0);
-        SHOOTER_LOOKUP_TABLE.put(18.0, 12625.0);
-        SHOOTER_LOOKUP_TABLE.put(19.0, 12800.0);
+        SHOOTER_LOOKUP_TABLE.put(18.0, 11200.0);
+        SHOOTER_LOOKUP_TABLE.put(19.0, 11700.0);
         SHOOTER_LOOKUP_TABLE.put(20.0, 12850.0);
+    }
+    public static TreeMap<Double,Double> SHOOTER_HOOD_DOWN_LOOKUP_TABLE = new TreeMap<>();
+    static{
+        SHOOTER_HOOD_DOWN_LOOKUP_TABLE.put(8.0, 9000.0);
+        SHOOTER_HOOD_DOWN_LOOKUP_TABLE.put(9.0, 10000.0);
+        SHOOTER_HOOD_DOWN_LOOKUP_TABLE.put(10.0, 11000.0);
     }
 
     

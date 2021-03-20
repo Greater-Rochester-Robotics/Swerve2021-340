@@ -35,10 +35,12 @@ import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
+import frc.robot.commands.Shooter.DriveAimAndPrepHood;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.StopShoot;
+import frc.robot.commands.Shooter.WallShot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.SnekLoader.Regurgitate;
 import frc.robot.commands.SnekLoader.StopSnek;
@@ -96,7 +98,7 @@ public class RobotContainer {
     limelight.setLightState(1);
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
-    
+    swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
     configureButtonBindings();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
@@ -119,7 +121,7 @@ public class RobotContainer {
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
 
-    driverY.whenPressed(new RunPath("Straight"));
+    //driverY.whenPressed(new RunPath("Straight"));
     
     
     driverA.whenPressed(new Load());
@@ -128,8 +130,10 @@ public class RobotContainer {
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
     driverX.whenPressed(new SmartLimeShot());
-    driverX.whenReleased(new StopSnek());
-    driverRB.whileHeld(new DriveOnTargetWithLimeLight());
+    driverX.whenReleased(new GetSmol());
+    driverRB.whileHeld(new DriveAimAndPrepHood());
+    driverY.whenPressed(new WallShot());
+    driverY.whenReleased(new GetSmol());
 
     
     driverLB.whenPressed(new DriveResetGyroToZero());

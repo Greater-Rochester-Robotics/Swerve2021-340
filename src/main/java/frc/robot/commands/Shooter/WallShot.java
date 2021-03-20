@@ -21,10 +21,6 @@ public class WallShot extends SequentialCommandGroup {
   public WallShot() {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new LowerCobraHood(), 
-    /** auto align here */ 
-    new Shoot(Constants.WALL_SHOT_RPM), 
-    new StopShoot(), 
-    new StopSnek());
+    super(new LowerCobraHood(), new ShootWithLimelight(true));
   }
 }

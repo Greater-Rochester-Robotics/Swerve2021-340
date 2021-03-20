@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
   // private CANEncoder shooterEncoder;
   private double targetVelocity;
   private DigitalInput ballCounter;
-  private Solenoid hoodMover, hardStop;
+  private Solenoid hoodMoverUp, hoodMoverDown;
 
   private int ballsShot = 0;
   private int totalBallsShot = 0;
@@ -77,13 +77,15 @@ public class Shooter extends SubsystemBase {
     //shooterEncoder = shooterWheel.getEncoder();
     ballCounter = new DigitalInput(Constants.BALL_COUNTER_SENSOR);
     ballWasPresent = false;
-    hoodMover = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL);
+    hoodMoverUp = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL_UP);
+    hoodMoverDown = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL_DOWN);
     // shooterWheel.enableVoltageCompensation(12.0);
     if (SmartDashboard.isPersistent("Total Balls Shot")) {
       totalBallsShot = Integer.valueOf(SmartDashboard.getString("Total Balls Shot", "0"));
     } else {
       totalBallsShot = 0;
     }
+    lowerHood();
   }
 
   @Override
@@ -159,11 +161,13 @@ public class Shooter extends SubsystemBase {
   }
 
   public void raiseHood() {
-    hoodMover.set(true);
+    hoodMoverDown.set(false);
+    hoodMoverUp.set(true);
   }
 
   public void lowerHood() {
-    hoodMover.set(false);
+    hoodMoverDown.set(true);
+    hoodMoverUp.set(false);
   }
 
   public void resetBallsShot() {

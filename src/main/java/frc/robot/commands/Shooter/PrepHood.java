@@ -5,32 +5,24 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SnekLoader;
 
-public class GetSmol extends CommandBase {
+public class PrepHood extends CommandBase {
   /**
-   * Creates a new GetSmall.
+   * Creates a new StopShoot.
    */
-  public GetSmol() {
+  public PrepHood() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
+    addRequirements(RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.harvester.raiseHarvester();
-    RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
-    // RobotContainer.shooter.stop();
-    RobotContainer.shooter.lowerHood();
-    // RobotContainer.shooter.raiseHardStop();
-    RobotContainer.limelight.setLightState(1);
-   RobotContainer.snekLoader.setPause(false);
-    //colour wheel down
+    RobotContainer.shooter.raiseHood();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

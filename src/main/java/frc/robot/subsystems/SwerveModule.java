@@ -318,29 +318,6 @@ public class SwerveModule {
         //     rotatePID.setReference(0.0, ControlType.kDutyCycle);
         //     return;
         // }
-        // //This is for inverting the motor if target angle is 90-270 degrees away,
-        // invert
-        //To fix going the wrong way around the circle, distance is larger than 270
-        if(absDiff >= Constants.THREE_PI_OVER_TWO){
-            //the distance the other way around the circle
-            posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
-        //if between 90 and 270 invert the motor
-        }else if(absDiff < Constants.THREE_PI_OVER_TWO && absDiff >
-            Constants.PI_OVER_TWO){
-            //switch the motor inversion
-            isInverted = !isInverted;
-            //Since inverted, recompute everything
-            posDiff = targetPos - getPosInRad();
-            absDiff = Math.abs(posDiff);
-            if(absDiff > Constants.THREE_PI_OVER_TWO){
-                //the distance the other way around the circle
-                posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
-            }
-        }else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
-            //if the distance to the goal is small enough, stop rotation and return
-            rotatePID.setReference(0.0, ControlType.kDutyCycle);
-            return;
-        }
 
         //if the distance is larger than 270, this is the wrong way round the circle
         if(absDiff >= Constants.THREE_PI_OVER_TWO){

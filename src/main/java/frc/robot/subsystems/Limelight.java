@@ -15,6 +15,9 @@ import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.TreeMap;
+
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -83,7 +86,7 @@ public class Limelight extends SubsystemBase {
     rpm += Constants.RPM_ADD_FACTOR; 
     SmartDashboard.putString("LimeLight pre-min RPM", rpm + "");
     if (rpm > 0 ){
-      rpm = Math.min(rpm, 18000); 
+      rpm = Math.min(rpm, 20000); 
     }
     // double rpm = 0.0;
     SmartDashboard.putString("LimeLight RPM", rpm + "");
@@ -91,8 +94,15 @@ public class Limelight extends SubsystemBase {
   }
   // Calculate the speed
   public static double calcSpeed(double distance){
-    double lowSpeed = Constants.SHOOTER_LOOKUP_TABLE.get(Math.floor(distance));
-    double highSpeed =  Constants.SHOOTER_LOOKUP_TABLE.get(Math.ceil(distance));
+    TreeMap<Double,Double> lookUp;
+    if(distance < 8){
+      lookUp = Constants.SHOOTER_HOOD_DOWN_LOOKUP_TABLE;
+    }
+    else{
+      lookUp = Constants.SHOOTER_LOOKUP_TABLE;
+    }
+    double lowSpeed = lookUp.get(Math.floor(distance));
+    double highSpeed =  lookUp.get(Math.ceil(distance));
     double decimal = distance % 1;
     return ((highSpeed - lowSpeed) * decimal) + lowSpeed;
   }

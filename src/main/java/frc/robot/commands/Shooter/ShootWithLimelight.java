@@ -20,8 +20,10 @@ public class ShootWithLimelight extends CommandBase {
   private int ballsToShoot;
   private int speedRpm;
   private Timer timer;
+  private boolean wallShot;
 
-  public ShootWithLimelight() {
+  public ShootWithLimelight(boolean shootFromWall) {
+    wallShot = shootFromWall;
     this.ballsToShoot = -1;
     System.out.println(
       "constructed"
@@ -33,9 +35,19 @@ public class ShootWithLimelight extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
-    speedRpm = Limelight.calcHoodRPM();
+    if(RobotContainer.limelight.getDistance() < 96 || wallShot){
+      RobotContainer.shooter.lowerHood();
+    }
+    else{
+      RobotContainer.shooter.raiseHood();
+    }
+    if(wallShot){
+      speedRpm = Constants.WALL_SHOT_RPM;
+    }
+    else{
+      speedRpm = Limelight.calcHoodRPM();
+    }
     RobotContainer.shooter.resetBallsShot();
     stateIndex = 4;
     RobotContainer.shooter.setShooterWheel(speedRpm);

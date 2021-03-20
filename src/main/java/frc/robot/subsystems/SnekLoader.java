@@ -228,8 +228,8 @@ public class SnekLoader extends SubsystemBase {
     setAllHandleMotors(speeds);
 
     //SmartDashboard Pushes
-    if(smartCount == 50){
-      smartCount = 0;
+    if(smartCount == smartCount){
+      smartCount = smartCount == 5 ? 0 : smartCount;
       if (isJammed() && getState() != State.kSpitBalls) {
         SmartDashboard.putBoolean("isJammed", true);
       } else {
@@ -246,11 +246,11 @@ public class SnekLoader extends SubsystemBase {
           harvesterJammed = false;
         }
       }
-      SmartDashboard.putBoolean("Ball 0", handleSensors[0].get());
-      SmartDashboard.putBoolean("Ball 1", handleSensors[1].get());
-      SmartDashboard.putBoolean("Ball 2", handleSensors[2].get());
-      SmartDashboard.putBoolean("Ball 3", handleSensors[3].get());
-      SmartDashboard.putBoolean("Ball 4", handleSensors[4].get());
+      SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
+      // SmartDashboard.putBoolean("Ball 1", handleSensors[1].get());
+      // SmartDashboard.putBoolean("Ball 2", handleSensors[2].get());
+      // SmartDashboard.putBoolean("Ball 3", handleSensors[3].get());
+      // SmartDashboard.putBoolean("Ball 4", handleSensors[4].get());
       SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
     }
     smartCount++;
