@@ -187,7 +187,7 @@ public class SwerveModule {
     public double getDriveDistance() {
         // return this.currentPosition;//if we use the periodic call thread/method use
         // this instead(might change to volatile)
-        return driveMotor.getSensorCollection().getIntegratedSensorPosition();
+        return driveMotor.getSensorCollection().getIntegratedSensorPosition()*Constants.DRIVE_ENC_TO_METERS_FACTOR;
     }
 
     /**

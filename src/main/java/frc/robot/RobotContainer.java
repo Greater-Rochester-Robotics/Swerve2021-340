@@ -30,6 +30,7 @@ import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
@@ -114,6 +115,11 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // driverA.whenPressed(new DriveTurnToAngle(0));
+    // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
+    // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
+
+    driverY.whenPressed(new RunPath("Straight"));
     
     
     driverA.whenPressed(new Load());
