@@ -72,18 +72,18 @@ public class RunPath extends CommandBase {
     double latSpeedDiff = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity*targetRotation.getSin(), targetAcceleration*targetRotation.getSin());
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle);
 
-    SmartDashboard.putNumber("Away Speed", awaySpeedDiff + currentVelocity.getX());
-    SmartDashboard.putNumber("Lateral Speed", latSpeedDiff + currentVelocity.getY());
+    SmartDashboard.putNumber("Away Speed", targetVelocity*targetRotation.getCos());//awaySpeedDiff + currentVelocity.getX());
+    SmartDashboard.putNumber("Lateral Speed", targetVelocity*targetRotation.getSin());//latSpeedDiff + currentVelocity.getY());
     SmartDashboard.putNumber("Target Position X", targetPose.getX());
     SmartDashboard.putNumber("Target Position Y", targetPose.getY());
 
-    RobotContainer.swerveDrive.driveFieldCentric(awaySpeedDiff + currentVelocity.getX(), latSpeedDiff + currentVelocity.getY(), rotSpeed, kDriveMode.percentOutput);
-
-    try{
-      Thread.sleep(100);
-    } catch (InterruptedException e){
-      e.printStackTrace();
-    }
+    //RobotContainer.swerveDrive.driveFieldCentric(awaySpeedDiff + currentVelocity.getX(), latSpeedDiff + currentVelocity.getY(), rotSpeed, kDriveMode.percentOutput);
+    RobotContainer.swerveDrive.driveFieldCentric(targetVelocity*targetRotation.getCos(), targetVelocity*targetRotation.getSin(), rotSpeed, kDriveMode.percentOutput);
+    // try{
+    //   Thread.sleep(100);
+    // } catch (InterruptedException e){
+    //   e.printStackTrace();
+    // }
 
   }
 

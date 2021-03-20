@@ -1,9 +1,9 @@
 {
   "lengthUnit": "Meter",
   "exportUnit": "Always Meters",
-  "maxVelocity": 0.1,
+  "maxVelocity": 0.25,
   "maxAcceleration": 0.1,
-  "wheelBase": 0.762,
+  "wheelBase": 0.6096,
   "gameName": "Barrel Racing Path",
   "outputDir": "../src/main/deploy/output"
 }
