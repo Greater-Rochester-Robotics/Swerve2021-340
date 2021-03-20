@@ -69,6 +69,7 @@ public class RobotContainer {
   public RobotContainer() {
     swerveDrive = new SwerveDrive();
     limelight = new Limelight();
+    swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
     configureButtonBindings();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
