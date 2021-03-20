@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
+import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveFieldCentricVelocity;
@@ -79,6 +80,7 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Module 2", new DriveOneModule(2));
     SmartDashboard.putData("Drive Module 3", new DriveOneModule(3));
     SmartDashboard.putData(new DriveStopAllModules());
+    SmartDashboard.putData(new DriveAllModulesPositionOnly());
   }
 
   /**
