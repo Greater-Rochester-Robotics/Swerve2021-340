@@ -421,7 +421,7 @@ public class SwerveDrive extends SubsystemBase {
     }
     //set each module to the angle in arcArray(the first value)
     for (int i=0; i<4; i++){
-      swerveModules[i].setPosInRad(arcArray[0][i]); 
+      swerveModules[i].setPosInRad(arcArray[i][0]); 
     }
 
     double[] curAngles = new double[4]; // pull the current angles of the modules
@@ -433,10 +433,10 @@ public class SwerveDrive extends SubsystemBase {
     //Reduce power to motors until they align with the target angle(might remove later)
     for(int i=0 ; i<4 ; i++){
       if (mode == kDriveMode.percentOutput){ 
-        swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+        swerveModules[i].setDriveMotor(speed*Math.cos(arcArray[i][0]-curAngles[i])*arcArray[i][1]);
       }
       else {
-        swerveModules[i].setDriveSpeed(speed*Math.cos(arcArray[0][i]-curAngles[i])*arcArray[1][i]);
+        swerveModules[i].setDriveSpeed(speed*Math.cos(arcArray[i][0]-curAngles[i])*arcArray[i][1]);
       }
     }
   }
@@ -500,7 +500,7 @@ public class SwerveDrive extends SubsystemBase {
     for(int i=0 ; i<4 ; i++){
       targetMotorSpeeds[i] = speed*Math.cos(angle-curAngles[i]);
     }
-    //set all modules to targetMotorSpeeds, use setDriveMotor if in percentOUtput, and setDriveSpeed if in velocity
+    //set all modules to targetMotorSpeeds, use setDriveMotor if in percentOutput, and setDriveSpeed if in velocity
     if (mode.equals(kDriveMode.percentOutput)){
       for (int i=0; i<4; i++){
         swerveModules[i].setDriveMotor(targetMotorSpeeds[i]);
@@ -540,7 +540,7 @@ public class SwerveDrive extends SubsystemBase {
    * @return a Rotation2d object
    */
   public Rotation2d getGyroRotation2d(){
-    //return a newly constructed Rotation2d object, it takes the angle in radians as a constructor arguement
+    //return a newly constructed Rotation2d object, it takes the angle in radians as a constructor argument
     return new Rotation2d(getGyroInRad());
     //note that counterclockwise rotation is positive
   }

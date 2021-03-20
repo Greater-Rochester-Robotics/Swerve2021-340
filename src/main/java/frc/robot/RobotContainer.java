@@ -22,6 +22,7 @@ import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
+import frc.robot.commands.DriveFieldCentricArc;
 import frc.robot.commands.DriveFieldCentricVelocity;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
@@ -93,6 +94,8 @@ public class RobotContainer {
     // driverA.whenPressed(new DriveTurnToAngle(0));
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
+    driverB.whenPressed(new DriveFieldCentricArc(-1));
+    driverX.whenPressed(new DriveFieldCentricArc(1));
 
     driverY.whenPressed(new RunPath("Straight"));
     
