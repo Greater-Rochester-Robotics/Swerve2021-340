@@ -21,17 +21,14 @@ import java.util.TreeMap;
  */
 public final class Constants {
     /* Swerve conversion factors */
-    public static final double RAD_TO_ENC_CONV_FACTOR = 10.1859;// 10.17985; //the radian to enc factor
-    public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.00002226;// TODO:find this ratio from mechanical specs
-    public static final double PI_OVER_TWO = Math.PI / 2;
-    public static final double THREE_PI_OVER_TWO = 3 * PI_OVER_TWO;
-    public static final double TWO_PI = 2 * Math.PI;
+    public static final double RAD_TO_ENC_CONV_FACTOR = 10.1859;//10.17985; //the radian to enc factor
+    public static final double DRIVE_ENC_TO_METERS_FACTOR = 0.00002226;//the ratio from mechanical specs
+    public static final double PI_OVER_TWO = Math.PI/2;
+    public static final double THREE_PI_OVER_TWO = 3*PI_OVER_TWO;
+    public static final double TWO_PI = 2*Math.PI;
 
-    /*
-     * Swerve dimension factors, distances from center of mass(units must be in
-     * meters!)
-     */
-    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = .294;// this is to robot center
+    /*Swerve dimension factors, distances from center of mass(units must be in meters!)*/
+    public static final double X_POSITIVE_DISTANCE_FROM_CENTER = .294;//this is to robot center
     public static final double Y_POSITIVE_DISTANCE_FROM_CENTER = .294;
     public static final double X_NEGATIVE_DISTANCE_FROM_CENTER = -.294;// THIS NUMBER MUST BE NEGATIVE!!!!!
     public static final double Y_NEGATIVE_DISTANCE_FROM_CENTER = -.294;// THIS NUMBER MUST BE NEGATIVE!!!!!
