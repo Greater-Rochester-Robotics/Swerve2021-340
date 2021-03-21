@@ -150,8 +150,9 @@ public final class Constants {
     public static final int SECONDARY_PCM_ID = 11;// does not exist
 
     /* Shooter Speeds */
-    public static final int INITIATION_SHOT_RPM = 13500; // Put real value here for safe keeping, rpm: 3425
+    public static final int INITIATION_SHOT_RPM = 13000; // Put real value here for safe keeping, rpm: 3425
     public static final int WALL_SHOT_RPM = 12750; // Old value 2550 MAX SPEED 21777
+    public static final int TEST_SHOOTER = 12600;
     public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
     public static final int RPM_ADD_FACTOR = 0;
 
@@ -162,17 +163,17 @@ public final class Constants {
     static{
         SHOOTER_LOOKUP_TABLE.put(8.0, 14090.0);
         SHOOTER_LOOKUP_TABLE.put(9.0, 14140.0);
-        SHOOTER_LOOKUP_TABLE.put(10.0, 14180.0);
-        SHOOTER_LOOKUP_TABLE.put(11.0, 14000.0);
-        SHOOTER_LOOKUP_TABLE.put(12.0, 13500.0);
-        SHOOTER_LOOKUP_TABLE.put(13.0, 13400.0);
-        SHOOTER_LOOKUP_TABLE.put(14.0, 13200.0);
-        SHOOTER_LOOKUP_TABLE.put(15.0, 13000.0);
-        SHOOTER_LOOKUP_TABLE.put(16.0, 12900.0);
+        SHOOTER_LOOKUP_TABLE.put(10.0, 14000.0);
+        SHOOTER_LOOKUP_TABLE.put(11.0, 13850.0);
+        SHOOTER_LOOKUP_TABLE.put(12.0, 13370.0);
+        SHOOTER_LOOKUP_TABLE.put(13.0, 12700.0);
+        SHOOTER_LOOKUP_TABLE.put(14.0, 12400.0);
+        SHOOTER_LOOKUP_TABLE.put(15.0, 12150.0);
+        SHOOTER_LOOKUP_TABLE.put(16.0, 12150.0);
         SHOOTER_LOOKUP_TABLE.put(17.0, 12750.0);
-        SHOOTER_LOOKUP_TABLE.put(18.0, 11200.0);
-        SHOOTER_LOOKUP_TABLE.put(19.0, 11700.0);
-        SHOOTER_LOOKUP_TABLE.put(20.0, 12850.0);
+        SHOOTER_LOOKUP_TABLE.put(18.0, 12400.0);
+        SHOOTER_LOOKUP_TABLE.put(19.0, 12450.0);
+        SHOOTER_LOOKUP_TABLE.put(20.0, 12600.0);
     }
     public static TreeMap<Double,Double> SHOOTER_HOOD_DOWN_LOOKUP_TABLE = new TreeMap<>();
     static{
