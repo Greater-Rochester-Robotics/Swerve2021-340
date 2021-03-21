@@ -79,7 +79,7 @@ public final class Constants {
     public static final double SWERVE_MODULE_TOLERANCE = 0.034;//this is in radians
     
     /* Robot Motion PID controller constants */
-    public static final double ROBOT_SPIN_P = .55;
+    public static final double ROBOT_SPIN_P = 1;
     public static final double ROBOT_SPIN_I = 0;
     public static final double ROBOT_SPIN_D = 0;
 

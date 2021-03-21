@@ -10,7 +10,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveTurnToAngle extends CommandBase {
   private double angle = 0;
-  /** Creates a new DriveTurnToAngle. */
+  /** Creates a new DriveTurnToAngle. Takes angle in radians */
   public DriveTurnToAngle(double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
