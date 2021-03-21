@@ -63,11 +63,13 @@ public class RunPath extends CommandBase {
     double targetAngle = curState.curvatureRadPerMeter;
     double targetAcceleration = curState.accelerationMetersPerSecondSq;
     Pose2d currentVelocity = RobotContainer.swerveDrive.getCurrentVelocity();
-    // 1. obtain the targetVelocity and the targetAngle from curState
-    // 2. use the targetVelocity and targetAngle to determine away and lateral speed
-    // 3. pass the away and lateral speeds to our PID loops (cereal)
-    // 4. pass our targetAngle to the rotationPID
-    // 5. pass our new speeds to driveFieldCentric
+
+    //TODO: 1. Use the rotation speed calculation that we use in DriveToPosition
+    //TODO: 2. ^ If we want to try position, 
+    // get the time we last completed a loop
+    // get the current time
+    // get our difference in position, the same we did in DriveToPosition
+    // set our speeds to the difference in position divided by the difference in times
     double awaySpeedDiff = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(targetVelocity*targetRotation.getCos(), targetAcceleration*targetRotation.getCos());
     double latSpeedDiff = RobotContainer.swerveDrive.getLateralSpeedPIDFFOut(targetVelocity*targetRotation.getSin(), targetAcceleration*targetRotation.getSin());
     double rotSpeed = RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle);
