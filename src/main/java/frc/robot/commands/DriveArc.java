@@ -12,38 +12,35 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveArc extends CommandBase {
-  private double driveSpd;
+  private double driveSpd; //The speed we will drive on the arc
+  private double angleToArcCenterAbs;//The angle from the robot to the circle center, measured from field x-axis
   private double arcCenterAng; // This is the angle relative to the front of the robot.
-  private double arcRad;
-  private double arcDist;
-  private boolean tidLock;
-  private double[][] moduleVectors; // Speed and direction for all modules.
+  private double arcRad; //the radius of the arc we are driving
+  private double[][] moduleVectors = new double[4][2]; // Speed reduction factor and direction for all modules.
+  private double targetAngle;//The amount of turn the robot will go through
+  private double targetGyroAngle;//the angle at the end of turning
 
-  // Tidally locked means that as we drive around a point, our orientation relative to that point stays the same.
-  // Non tidally locked means that as we drive around a point, our orientation relative to the field stays the same.
-  // For now, we will only do tidally locked.
-  public DriveArc(double driveSpeed,double arcCenterAngle,double arcRadius, boolean tidalLock) {
-    
-    this(driveSpeed, arcCenterAngle, arcRadius, 100, tidalLock);
+  /**
+   * 
+   * @param driveSpeed the speed we will drive on the arc (-1.0 to  1.0)
+   * @param angleToArcCenterAbs the absolute angle of to the arc center from field relative(radians)
+   * @param arcRadius the radius of the arc the robot is going to drive
+   * @param targetAngle the amount of turn the robot will move
+   */
+  public DriveArc(double driveSpeed, double angleToArcCenterAbs, double arcRadius, double targetAngle) {
+    addRequirements(RobotContainer.swerveDrive);
+    driveSpd = driveSpeed;
+    arcRad = arcRadius;
+    this.angleToArcCenterAbs = angleToArcCenterAbs;
+    this.targetAngle = targetAngle;
   }
   
-  public DriveArc(double driveSpeed,double arcCenterAngle,double arcRadius,double arcDistance, boolean tidalLock) {
-    driveSpd = driveSpeed;
-    arcCenterAng = arcCenterAngle;
-    arcRad = arcRadius; 
-    arcDist = arcDistance;
-    tidLock = tidalLock;
-    moduleVectors = new double[2][4];
-
-    addRequirements(RobotContainer.swerveDrive);
-    moduleVectors = RobotContainer.swerveDrive.generateArcAngles(arcRadius, arcCenterAngle); 
-
-  }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //somehow we need to get the distance traveled, and I dont want to reset the Pose, but might have to
+    arcCenterAng = 0.0;
+    moduleVectors = RobotContainer.swerveDrive.generateArcAngles(arcRad, arcCenterAng); 
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -61,6 +58,6 @@ public class DriveArc extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return  Math.abs(RobotContainer.swerveDrive.getGyroInRad() - targetGyroAngle) < .03;
   }
 }

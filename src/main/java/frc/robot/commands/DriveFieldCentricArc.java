@@ -16,24 +16,46 @@ import frc.robot.RobotContainer.Axis;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveFieldCentricArc extends CommandBase {
-  private double driveSpd;
+  private double driveSpd; //The speed we will drive on the arc
   private double arcCenterAng; // This is the angle relative to the front of the robot.
-  private double arcRad;
-  private double[][] moduleVectors = new double[4][2];; // Speed and direction for all modules.
-  private boolean isFinished = false;
-  private double targetGyroAngle;
+  private double arcRad; //the radius of the arc we are driving
+  private double[][] moduleVectors = new double[4][2]; // Speed reduction factor and direction for all modules.
+  private boolean isFinished = false;//a finished boolean, when inpputs are too small
+  private double targetAngle;//The amount of turn the robot will go through
+  private double targetGyroAngle;//the angle at the end of turning
 
-  // Tidally locked means that as we drive around a point, our orientation relative to that point stays the same.
-  // Non tidally locked means that as we drive around a point, our orientation relative to the field stays the same.
-  // For now, we will only do tidally locked.
-  public DriveFieldCentricArc (double arcRadius){
+  /**
+   * A drive command that, when started, will take the current direction
+   * the robot is being told to move, and drive a circular arc starting 
+   * in the same direction, with an arcRadius to the immediate right or 
+   * left of the starting point. The robot will make a total turn of the 
+   * input targetAngle, or until the command is canceled.
+   * 
+   * @param arcRadius the radius of the arc the robot is going to drive
+   * @param targetAngle the amount of turn the robot will move
+   */
+  public DriveFieldCentricArc (double arcRadius, double targetAngle){
     this.arcRad = arcRadius;
+    this.targetAngle = targetAngle * Math.signum(arcRadius);
     addRequirements(RobotContainer.swerveDrive);
+  }
+
+  /**
+   * A drive command that, when started, will take the current direction
+   * the robot is being told to move, and drive a circular arc starting 
+   * in the same direction, with an arcRadius to the immediate right or 
+   * left of the starting point. The robot will make a 90 degree turn.
+   * 
+   * @param arcRadius the radius of the arc the robot is going to drive
+   */
+  public DriveFieldCentricArc (double arcRadius){
+    this(arcRadius, Constants.PI_OVER_TWO);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    //First, check the direction the robot is being told to go
     double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
     double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
     if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
@@ -44,25 +66,30 @@ public class DriveFieldCentricArc extends CommandBase {
     awaySpeed*=-Constants.DRIVER_SPEED_SCALE_LATERAL;
     lateralSpeed*=-Constants.DRIVER_SPEED_SCALE_LATERAL;
 
+    //Find out the total output speed the robot is being told to go
     driveSpd = Math.sqrt((awaySpeed*awaySpeed) + (lateralSpeed *lateralSpeed));
+    //If drive speed is too small, end this command
     if (driveSpd < .01){
       isFinished=true;
       return;
     }
 
+    //pull the current orientation of the robot as a Rotation2d object
     Rotation2d gyro = RobotContainer.swerveDrive.getGyroRotation2d();
+    //find the forward and the strafe speed of the robot
     double robotForwardSpeed = (gyro.getCos()*awaySpeed) + (gyro.getSin() * lateralSpeed);
     double robotStrafeSpeed = (gyro.getCos()*lateralSpeed) - (gyro.getSin() * awaySpeed);
 
+    //if arc radius is positive we are going counter clockwise, negaative is clockwise
     if (arcRad > 0){ 
       arcCenterAng = Math.atan2(robotStrafeSpeed, robotForwardSpeed) + Constants.PI_OVER_TWO;
-      targetGyroAngle = RobotContainer.swerveDrive.getGyroInRad() + Constants.PI_OVER_TWO;
+      targetGyroAngle = RobotContainer.swerveDrive.getGyroInRad() + targetAngle;
       moduleVectors = RobotContainer.swerveDrive.generateArcAngles(arcRad, arcCenterAng); 
       driveSpd *= -1;
     }
     else {
       arcCenterAng = Math.atan2(robotStrafeSpeed, robotForwardSpeed) - Constants.PI_OVER_TWO;
-      targetGyroAngle = RobotContainer.swerveDrive.getGyroInRad() - Constants.PI_OVER_TWO;
+      targetGyroAngle = RobotContainer.swerveDrive.getGyroInRad() + targetAngle;
       moduleVectors = RobotContainer.swerveDrive.generateArcAngles(-arcRad, arcCenterAng); 
     }
     
