@@ -15,7 +15,7 @@ import frc.robot.RobotContainer;
 import frc.robot.RobotContainer.Axis;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveFieldCentricArc extends CommandBase {
+public class DriveArcDriverControl extends CommandBase {
   private double driveSpd; //The speed we will drive on the arc
   private double arcCenterAng; // This is the angle relative to the front of the robot.
   private double arcRad; //the radius of the arc we are driving
@@ -34,7 +34,7 @@ public class DriveFieldCentricArc extends CommandBase {
    * @param arcRadius the radius of the arc the robot is going to drive
    * @param targetAngle the amount of turn the robot will move
    */
-  public DriveFieldCentricArc (double arcRadius, double targetAngle){
+  public DriveArcDriverControl (double arcRadius, double targetAngle){
     this.arcRad = arcRadius;
     this.targetAngle = targetAngle * Math.signum(arcRadius);
     addRequirements(RobotContainer.swerveDrive);
@@ -48,7 +48,7 @@ public class DriveFieldCentricArc extends CommandBase {
    * 
    * @param arcRadius the radius of the arc the robot is going to drive
    */
-  public DriveFieldCentricArc (double arcRadius){
+  public DriveArcDriverControl (double arcRadius){
     this(arcRadius, Constants.PI_OVER_TWO);
   }
 
