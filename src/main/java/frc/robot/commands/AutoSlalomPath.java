@@ -6,12 +6,12 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class AutoSalomPath extends SequentialCommandGroup {
+/**
+ * Running the slalom path using DriveStraight and DriveArc commands
+ */
+public class AutoSlalomPath extends SequentialCommandGroup {
   /** Creates a new AutoSalomPath. */
-  public AutoSalomPath() {
+  public AutoSlalomPath() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands();
