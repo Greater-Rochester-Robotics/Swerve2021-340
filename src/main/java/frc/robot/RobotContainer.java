@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
+import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveFieldCentricVelocity;
@@ -38,6 +39,7 @@ import frc.robot.commands.Harvester.SetHarvesterDown;
 import frc.robot.commands.Shooter.DriveAimAndPrepHood;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
+import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -76,6 +78,10 @@ public class RobotContainer {
   final Button driverStart = new JoystickButton(driver, 8);
   final Button driverLS = new JoystickButton(driver, 9);
   final Button driverRS = new JoystickButton(driver, 10);
+  final Button driverDUp = new DPad(driver, DPad.Direction.UP);
+  final Button driverDDown = new DPad(driver, DPad.Direction.DOWN);
+  final Button driverDLeft = new DPad(driver, DPad.Direction.LEFT);
+  final Button driverDRight = new DPad(driver, DPad.Direction.RIGHT);
   
   final Button coDriverA = new JoystickButton(coDriver, 1);
   final Button coDriverB = new JoystickButton(coDriver, 2);
@@ -121,6 +127,7 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Module 2", new DriveOneModule(2));
     SmartDashboard.putData("Drive Module 3", new DriveOneModule(3));
     SmartDashboard.putData(new DriveStopAllModules());
+    SmartDashboard.putData(new DriveAllModulesPositionOnly());
   }
 
   /**
@@ -142,12 +149,14 @@ public class RobotContainer {
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
+    // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverRB.whileHeld(new DriveAimAndPrepHood());
     driverY.whenPressed(new WallShot());
     driverY.whenReleased(new GetSmol());
-
+    
+    driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 

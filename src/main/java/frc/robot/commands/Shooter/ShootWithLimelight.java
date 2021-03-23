@@ -69,7 +69,7 @@ public class ShootWithLimelight extends CommandBase {
     if(!timer.hasElapsed(0.1)){
       timer.start();
     }
-    if (!timer.hasElapsed(2)){
+    if (!timer.hasElapsed(2.5)){
       return;
     }
     else{

@@ -19,6 +19,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   private double angle;
 
   /** Creates a new DriveStraightTrapProfile. */
+  @Deprecated
   public DriveStraightTrapProfile(double angle,TrapezoidProfile.State target,TrapezoidProfile.State start) {
     addRequirements(RobotContainer.swerveDrive);
     

@@ -26,7 +26,7 @@ public class GetSmol extends CommandBase {
     RobotContainer.harvester.raiseHarvester();
     RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
     // RobotContainer.shooter.stop();
-    RobotContainer.shooter.lowerHood();
+    // RobotContainer.shooter.lowerHood();
     // RobotContainer.shooter.raiseHardStop();
     RobotContainer.limelight.setLightState(1);
    RobotContainer.snekLoader.setPause(false);
