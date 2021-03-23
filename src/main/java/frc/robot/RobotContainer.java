@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
+import frc.robot.commands.DriveArc;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveArcDriverControl;
@@ -94,10 +95,11 @@ public class RobotContainer {
     // driverA.whenPressed(new DriveTurnToAngle(0));
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
-    driverB.whenPressed(new DriveArcDriverControl(-1));
-    driverX.whenPressed(new DriveArcDriverControl(1));
-
-    driverY.whenPressed(new RunPath("Straight"));
+    driverB.whileHeld(new DriveArcDriverControl(-.76,999));
+    driverX.whileHeld(new DriveArcDriverControl(.76,999));
+    driverA.whenPressed(new DriveArc(.3,Math.toRadians(-90),.76,Math.toRadians(-45)));
+    driverY.whenPressed(new DriveArc(.3,Math.toRadians(90),.76,Math.toRadians(90)));
+    // driverY.whenPressed(new RunPath("Straight"));
     
     driverRB.whenPressed(new DriveToPosition(new Pose2d(1, 0, new Rotation2d())));
     driverLB.whenPressed(new DriveResetGyroToZero());

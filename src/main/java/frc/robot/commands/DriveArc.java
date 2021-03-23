@@ -29,7 +29,8 @@ public class DriveArc extends CommandBase {
    */
   public DriveArc(double driveSpeed, double angleToArcCenterAbs, double arcRadius, double targetAngle) {
     addRequirements(RobotContainer.swerveDrive);
-    driveSpd = driveSpeed;
+    driveSpd = Math.abs(driveSpeed);
+    driveSpd *= Math.signum(targetAngle)*-1;
     arcRad = arcRadius;
     this.angleToArcCenterAbs = angleToArcCenterAbs;
     this.targetAngle = targetAngle;
@@ -39,8 +40,10 @@ public class DriveArc extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    arcCenterAng = 0.0;
+    double currentRobotAngle = RobotContainer.swerveDrive.getGyroInRad();
+    arcCenterAng = angleToArcCenterAbs - currentRobotAngle;
     moduleVectors = RobotContainer.swerveDrive.generateArcAngles(arcRad, arcCenterAng); 
+    targetGyroAngle = currentRobotAngle + targetAngle;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
