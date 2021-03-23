@@ -36,9 +36,11 @@ import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
 import frc.robot.commands.Shooter.DriveAimAndPrepHood;
+import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
+import frc.robot.commands.Shooter.SpinUpShooterWheel;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.WallShot;
 import frc.robot.commands.SnekLoader.Load;
@@ -74,6 +76,17 @@ public class RobotContainer {
   final Button driverStart = new JoystickButton(driver, 8);
   final Button driverLS = new JoystickButton(driver, 9);
   final Button driverRS = new JoystickButton(driver, 10);
+  
+  final Button coDriverA = new JoystickButton(coDriver, 1);
+  final Button coDriverB = new JoystickButton(coDriver, 2);
+  final Button coDriverX = new JoystickButton(coDriver, 3);
+  final Button coDriverY = new JoystickButton(coDriver, 4);
+  final Button coDriverLB = new JoystickButton(coDriver, 5);
+  final Button coDriverRB = new JoystickButton(coDriver, 6);
+  final Button coDriverBack = new JoystickButton(coDriver, 7);
+  final Button coDriverStart = new JoystickButton(coDriver, 8);
+  final Button coDriverLS = new JoystickButton(coDriver, 9);
+  final Button coDriverRS = new JoystickButton(coDriver, 10);
   
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
@@ -129,7 +142,7 @@ public class RobotContainer {
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    driverX.whenPressed(new SmartLimeShot());
+    driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverRB.whileHeld(new DriveAimAndPrepHood());
     driverY.whenPressed(new WallShot());
@@ -141,6 +154,8 @@ public class RobotContainer {
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
+
+    coDriverB.whenPressed(new SpinUpShooterWheel());
   }
   
   public enum Axis {
