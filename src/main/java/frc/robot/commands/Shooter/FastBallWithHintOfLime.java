@@ -55,7 +55,6 @@ public class FastBallWithHintOfLime extends CommandBase {
   public void end(boolean interrupted) {
     RobotContainer.shooter.stop();
     RobotContainer.snekLoader.setPause(false);
-    RobotContainer.limelight.setLightState(1);
   }
 
   // Returns true when the command should end.

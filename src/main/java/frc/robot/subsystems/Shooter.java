@@ -59,7 +59,7 @@ public class Shooter extends SubsystemBase {
     shooterWheel.setNeutralMode(NeutralMode.Coast);
     shooterWheel.config_kP(0,.5);//.setP(0.05);
     shooterWheel.config_kI(0,0.0);//.setI(0.0);
-    shooterWheel.config_kD(0,1);//.setD(1.5);
+    shooterWheel.config_kD(0,1.5);//.setD(1.5);
     shooterWheel.config_kF(0,0.05);//.setFF(0.05);
     shooterWheel.enableVoltageCompensation(true);
     shooterWheel.configVoltageCompSaturation(12.5);
