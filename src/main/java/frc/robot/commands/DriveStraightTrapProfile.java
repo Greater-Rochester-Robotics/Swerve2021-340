@@ -41,7 +41,7 @@ public class DriveStraightTrapProfile extends CommandBase {
     //generate a trapezoidal profile for driving a straight line
     profile = new TrapezoidProfile(
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(Constants.MAXIMUM_VELOCITY, Constants.MAXIMUM_ACCELERATION),
+            new TrapezoidProfile.Constraints(.8, .8),
             // Goal state
             target,
             // Initial state
@@ -66,24 +66,28 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void execute() {
     //use profile to create a position and speed for the motors
-    TrapezoidProfile.State midPoint = profile.calculate(timer.get());
-
+    TrapezoidProfile.State currentPoint = profile.calculate(timer.get());
+    // System.out.println("position:" + currentPoint.position);
     //get current position relative to initial position
     Translation2d currentRelPostion = 
       RobotContainer.swerveDrive.getCurrentPose().getTranslation().minus(initialPosition);
 
     //get the position in drive orientation, uses directionAsAngle
-    //Translation2d currentDrivePositon = 
+    Translation2d currentDrivePositon = currentRelPostion.rotateBy(directionAsAngle);
 
     //use PID controller to get drive orientation outputs
-    double movingDirection = 0.0;//position or velocity pid
-    double notMovingDirection = 0.0;//Position PID
+    double movingDirection = RobotContainer.swerveDrive.awayPosPidController.calculate(
+      currentDrivePositon.getX(), currentPoint.position);//position or velocity pid
+    double notMovingDirection = RobotContainer.swerveDrive.lateralPosPidController.calculate(
+      currentDrivePositon.getY(), 0.0);//Position PID
+    //  System.out.println("Move output:" + movingDirection);
 
+    Translation2d output = new Translation2d(movingDirection, notMovingDirection).rotateBy(directionAsAngle.unaryMinus());
     //convert back to field centric drive speeds
-    double forwardSpeed = 0.0;
-    double strafeSpeed = 0.0;
+    System.out.println("output x:" + output.getX());
 
-    RobotContainer.swerveDrive.driveFieldCentric(forwardSpeed, strafeSpeed,
+    
+    RobotContainer.swerveDrive.driveFieldCentric(output.getX(), output.getY(),
      RobotContainer.swerveDrive.getRobotRotationPIDOut(angleOfRobot), kDriveMode.percentOutput);
   }
 

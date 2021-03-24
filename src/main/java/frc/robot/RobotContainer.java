@@ -25,11 +25,13 @@ import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveArcDriverControl;
 import frc.robot.commands.DriveFieldCentricVelocity;
+import frc.robot.commands.DriveFindMaxAccel;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
+import frc.robot.commands.DriveStraightTrapProfile;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.RunPath;
@@ -95,10 +97,13 @@ public class RobotContainer {
     // driverA.whenPressed(new DriveTurnToAngle(0));
     // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
     // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
-    driverB.whileHeld(new DriveArcDriverControl(-.76,999));
-    driverX.whileHeld(new DriveArcDriverControl(.76,999));
-    driverA.whenPressed(new DriveArc(.3,Math.toRadians(-90),.76,Math.toRadians(-45)));
-    driverY.whenPressed(new DriveArc(.3,Math.toRadians(90),.76,Math.toRadians(90)));
+    // driverB.whileHeld(new DriveArcDriverControl(-.76,999));
+    // driverX.whileHeld(new DriveArcDriverControl(.76,999));
+    // driverA.whenPressed(new DriveArc(.3,Math.toRadians(-90),.76,Math.toRadians(-45)));
+    // driverY.whenPressed(new DriveArc(.3,Math.toRadians(90),.76,Math.toRadians(90)));
+
+    driverA.whenPressed(new DriveStraightTrapProfile(Math.toRadians(45),3.0,0.0,0.0));
+    driverB.whenPressed(new DriveFindMaxAccel());
     // driverY.whenPressed(new RunPath("Straight"));
     
     driverRB.whenPressed(new DriveToPosition(new Pose2d(1, 0, new Rotation2d())));
