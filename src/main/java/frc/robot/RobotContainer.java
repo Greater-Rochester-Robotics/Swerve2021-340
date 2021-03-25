@@ -34,6 +34,7 @@ import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveStraightTrapProfile;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.DriveVelocityPIDTune;
 import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
 
@@ -85,6 +86,7 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Module 3", new DriveOneModule(3));
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
+    SmartDashboard.putData(new DriveVelocityPIDTune());
   }
 
   /**
