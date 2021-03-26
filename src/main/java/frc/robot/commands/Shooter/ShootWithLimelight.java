@@ -66,31 +66,35 @@ public class ShootWithLimelight extends CommandBase {
     // shots
     // SmartDashboard.putString("TEST", "Happy");
     String shootSpeed = "";
+    if(!RobotContainer.shooter.isShooterAtSpeed()) {
+      // SmartDashboard.putString("Speed?", "No");
+      RobotContainer.snekLoader.setPause(true);
+      // RobotContainer.snekLoader.setState(State.kFillTo4);
+      // stateIndex=4;
+      return;
+      }
+      //timer.reset();
+  
+    RobotContainer.snekLoader.setPause(false);
     if(!timer.hasElapsed(0.1)){
       timer.start();
     }
-    if (!timer.hasElapsed(2.5)){
-      return;
-    }
-    else{
-      if(!RobotContainer.shooter.isShooterAtSpeed()) {
-        // SmartDashboard.putString("Speed?", "No");
-        RobotContainer.snekLoader.setPause(true);
-        // RobotContainer.snekLoader.setState(State.kFillTo4);
-        // stateIndex=4;
-        return;
-        }
-        //timer.reset();
-    }
-    RobotContainer.snekLoader.setPause(false);
     // SmartDashboard.putString("Speed?", "Yes");
     if ((stateIndex == 4)) {
-      RobotContainer.snekLoader.setState(State.kShootBall4);
-      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-      timer.stop();
-      timer.reset();
-      timer.start();
-      stateIndex = 2;
+      if(timer.hasElapsed(2.0)){
+        RobotContainer.snekLoader.setState(State.kShootBall4);
+        shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+        stateIndex = 4;
+        if(timer.hasElapsed(3.0)){
+          RobotContainer.snekLoader.setState(State.kFillTo4);
+          if(timer.hasElapsed(4.0))
+            RobotContainer.snekLoader.setState(State.kOff);
+            timer.stop();
+            timer.reset();
+            timer.start();
+          }
+        }
+      
     // } else if (stateIndex == 3 && (!RobotContainer.snekLoader.getHandleSensor(4))) {
     //   if(timer.hasElapsed(2.0)&& RobotContainer.shooter.isShooterAtSpeed())
     //   {
@@ -101,13 +105,12 @@ public class ShootWithLimelight extends CommandBase {
     //   timer.start();
     //   }
     } else if (stateIndex == 2 && (!RobotContainer.snekLoader.getHandleSensor(3))) {
-      if(timer.hasElapsed(2.0))
-      {
-      RobotContainer.snekLoader.setState(State.kShootBall2);
-      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-      stateIndex = 0;
-      timer.reset();
-      timer.start();
+      if(timer.hasElapsed(2.0)){
+        RobotContainer.snekLoader.setState(State.kShootBall2);
+        shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+        stateIndex = 0;
+        timer.reset();
+        timer.start();
       }
     // } else if (stateIndex == 1 && (!RobotContainer.snekLoader.getHandleSensor(2))) {
     //   if(timer.hasElapsed(2.0)&& RobotContainer.shooter.isShooterAtSpeed())
@@ -119,13 +122,12 @@ public class ShootWithLimelight extends CommandBase {
     //   timer.start();
     //   }
     } else if (stateIndex == 0 && (!RobotContainer.snekLoader.getHandleSensor(1))) {
-      if(timer.hasElapsed(2.0))
-      {
-      RobotContainer.snekLoader.setState(State.kShootBall0);
-      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-      stateIndex = -1;
-      timer.reset();
-      timer.start();
+      if(timer.hasElapsed(2.0)){
+        RobotContainer.snekLoader.setState(State.kShootBall0);
+        shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+        stateIndex = -1;
+        timer.reset();
+        timer.start();
       }
     }
     if(shootSpeed != "") {
