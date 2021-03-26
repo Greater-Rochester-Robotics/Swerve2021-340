@@ -21,7 +21,7 @@ public class DriveVelocityPIDTune extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double output = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(2.0, 0.0);
+    double output = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(4.0, 0.0);
     RobotContainer.swerveDrive.driveFieldCentric(output,0,0,kDriveMode.percentOutput);
     System.out.println("Speed: "+RobotContainer.swerveDrive.getCurrentVelocity().getX()+" m/s");
   }

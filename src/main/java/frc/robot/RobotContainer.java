@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveArc;
@@ -87,6 +87,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
     SmartDashboard.putData(new DriveVelocityPIDTune());
+    SmartDashboard.putData(new AutoBouncePath());
   }
 
   /**
@@ -104,7 +105,7 @@ public class RobotContainer {
     // driverA.whenPressed(new DriveArc(.3,Math.toRadians(-90),.76,Math.toRadians(-45)));
     // driverY.whenPressed(new DriveArc(.3,Math.toRadians(90),.76,Math.toRadians(90)));
 
-    driverA.whenPressed(new DriveStraightTrapProfile(Math.toRadians(45),3.0,0.0,0.0));
+    driverA.whenPressed(new DriveStraightTrapProfile(Math.toRadians(-135),3.0,0.0,0.0));
     driverB.whenPressed(new DriveFindMaxAccel());
     // driverY.whenPressed(new RunPath("Straight"));
     

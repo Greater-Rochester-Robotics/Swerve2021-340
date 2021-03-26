@@ -29,7 +29,7 @@ public class DriveArc extends CommandBase {
    */
   public DriveArc(double driveSpeed, double angleToArcCenterAbs, double arcRadius, double targetAngle) {
     addRequirements(RobotContainer.swerveDrive);
-    driveSpd = Math.abs(driveSpeed);
+    driveSpd = Math.abs(RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(driveSpeed));
     driveSpd *= Math.signum(targetAngle)*-1;
     arcRad = arcRadius;
     this.angleToArcCenterAbs = angleToArcCenterAbs;

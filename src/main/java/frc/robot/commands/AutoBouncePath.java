@@ -14,6 +14,9 @@ public class AutoBouncePath extends SequentialCommandGroup {
   public AutoBouncePath() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      new DriveStraightTrapProfile(0, .46355, 0, 0)//,
+      // new DriveArc(1.9, Math.toRadians(90), .762, Math.toRadians(90))
+    );
   }
 }
