@@ -42,13 +42,14 @@ public class SnekLoader extends SubsystemBase {
   // If it is deemed necessary, uncomment all of ballsLoaded stuff
   private int ballsLoaded;
   private boolean isPaused;
+  private Timer timer = new Timer();
   // private static boolean hadBall;
   double[] speeds = new double[5];
   int smartCount = 0;
 
   public enum State {
     kFillTo4, kFillTo3, kFillTo2, kFillTo1, kFillTo0, kOff, kShootBall4, kShootBall3, kShootBall2, kShootBall1,
-    kShootBall0, kSpitBalls
+    kShootBall0,kAccFillTo4, kAccFillTo3, kAccFillTo2, kAccBackFillTo0, kAccBackFillTo2, kSpitBalls
   }
 
   private State state = State.kOff;
@@ -190,7 +191,62 @@ public class SnekLoader extends SubsystemBase {
           ballsLoaded = 4;
           break;
         }
-  
+        case kAccFillTo4:
+        enableOneLimit(4);
+        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, MOTOR_IN_SPEED4 };
+        if (getHandleSensor(4)) {
+          state = State.kAccFillTo3;
+        } else {
+          ballsLoaded = 0;
+          break;
+        }
+
+        case kAccFillTo3:
+        enableOneLimit(3);
+        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, 0 };
+        if (getHandleSensor(3)) {
+          state = State.kAccFillTo2;
+        } else {
+          ballsLoaded = 0;
+          break;
+        }
+
+        case kAccFillTo2:
+        enableOneLimit(2);
+        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, 0, 0 };
+        if (getHandleSensor(2)) {
+          state = State.kAccBackFillTo0;
+        } else {
+          if(!timer.hasElapsed(0.1))
+          {
+            timer.start();
+          }
+          if(timer.hasElapsed(1.0))
+          {
+            //state = State.kOff;
+          }
+          ballsLoaded = 0;
+          break;
+        }
+
+        case kAccBackFillTo0:
+        enableOneLimit(0);
+        speeds = new double[] { -.5, -.4, -.5, 0, 0 };
+        if (getHandleSensor(0)) {
+          state = State.kAccBackFillTo2;
+        } else {
+          ballsLoaded = 0;
+          break;
+        }
+        case kAccBackFillTo2:
+        enableOneLimit(2);
+        speeds = new double[] { 0, 0, -.5, -.6, 0 };
+        if (getHandleSensor(2)) {
+          state = State.kAccBackFillTo0;
+        } else {
+          ballsLoaded = 0;
+          break;
+        }
       case kOff:
         speeds = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
         enableOneLimit(-1);

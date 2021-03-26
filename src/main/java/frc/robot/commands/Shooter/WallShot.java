@@ -20,6 +20,6 @@ public class WallShot extends SequentialCommandGroup {
   public WallShot() {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
-    super(new LowerCobraHood(), new ShootWithLimelight(true));
+    super(new LowerCobraHood(), new FullSendsWall());
   }
 }

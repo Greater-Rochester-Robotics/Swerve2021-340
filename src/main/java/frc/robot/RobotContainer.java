@@ -46,6 +46,7 @@ import frc.robot.commands.Shooter.SpinUpShooterWheel;
 import frc.robot.commands.Shooter.StopShoot;
 import frc.robot.commands.Shooter.WallShot;
 import frc.robot.commands.SnekLoader.Load;
+import frc.robot.commands.SnekLoader.LoadAcc;
 import frc.robot.commands.SnekLoader.Regurgitate;
 import frc.robot.commands.SnekLoader.StopSnek;
 
@@ -144,13 +145,14 @@ public class RobotContainer {
     //driverY.whenPressed(new RunPath("Straight"));
     
     
-    driverA.whenPressed(new Load());
+    //driverA.whenPressed(new Load());
+    driverA.whenPressed(new LoadAcc());
     driverA.whenReleased(new GetSmol());
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new FastBallWithHintOfLime());
+    driverX.whenPressed(new SmartLimeShot());
+    //driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverRB.whileHeld(new DriveAimAndPrepHood());
     driverY.whenPressed(new WallShot());

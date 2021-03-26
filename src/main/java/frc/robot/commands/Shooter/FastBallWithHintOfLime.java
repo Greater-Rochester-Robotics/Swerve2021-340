@@ -40,7 +40,6 @@ public class FastBallWithHintOfLime extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
     if(fullSend){
       RobotContainer.snekLoader.setPause(false);
       RobotContainer.snekLoader.setState(State.kShootBall0);

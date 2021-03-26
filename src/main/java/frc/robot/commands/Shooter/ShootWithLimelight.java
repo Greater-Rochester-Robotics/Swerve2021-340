@@ -80,29 +80,53 @@ public class ShootWithLimelight extends CommandBase {
         // stateIndex=4;
         return;
         }
+        //timer.reset();
     }
     RobotContainer.snekLoader.setPause(false);
     // SmartDashboard.putString("Speed?", "Yes");
     if ((stateIndex == 4)) {
       RobotContainer.snekLoader.setState(State.kShootBall4);
       shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-      stateIndex = 3;
-    } else if (stateIndex == 3 && (!RobotContainer.snekLoader.getHandleSensor(4))) {
-      RobotContainer.snekLoader.setState(State.kShootBall3);
-      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+      timer.stop();
+      timer.reset();
+      timer.start();
       stateIndex = 2;
+    // } else if (stateIndex == 3 && (!RobotContainer.snekLoader.getHandleSensor(4))) {
+    //   if(timer.hasElapsed(2.0)&& RobotContainer.shooter.isShooterAtSpeed())
+    //   {
+    //   RobotContainer.snekLoader.setState(State.kShootBall3);
+    //   shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+    //   stateIndex = 2;
+    //   timer.reset();
+    //   timer.start();
+    //   }
     } else if (stateIndex == 2 && (!RobotContainer.snekLoader.getHandleSensor(3))) {
+      if(timer.hasElapsed(2.0))
+      {
       RobotContainer.snekLoader.setState(State.kShootBall2);
       shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
-      stateIndex = 1;
-    } else if (stateIndex == 1 && (!RobotContainer.snekLoader.getHandleSensor(2))) {
-      RobotContainer.snekLoader.setState(State.kShootBall1);
-      shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = 0;
+      timer.reset();
+      timer.start();
+      }
+    // } else if (stateIndex == 1 && (!RobotContainer.snekLoader.getHandleSensor(2))) {
+    //   if(timer.hasElapsed(2.0)&& RobotContainer.shooter.isShooterAtSpeed())
+    //   {
+    //   RobotContainer.snekLoader.setState(State.kShootBall1);
+    //   shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
+    //   stateIndex = 0;
+    //   timer.reset();
+    //   timer.start();
+    //   }
     } else if (stateIndex == 0 && (!RobotContainer.snekLoader.getHandleSensor(1))) {
+      if(timer.hasElapsed(2.0))
+      {
       RobotContainer.snekLoader.setState(State.kShootBall0);
       shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
       stateIndex = -1;
+      timer.reset();
+      timer.start();
+      }
     }
     if(shootSpeed != "") {
       SmartDashboard.putString("Ball Shot At",shootSpeed);
