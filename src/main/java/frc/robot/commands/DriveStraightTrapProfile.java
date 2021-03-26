@@ -73,9 +73,12 @@ public class DriveStraightTrapProfile extends CommandBase {
     //get current position relative to initial position
     Translation2d currentRelPostion = 
       RobotContainer.swerveDrive.getCurrentPose().getTranslation().minus(initialPosition);
+      Translation2d currentRelVelocity = 
+      RobotContainer.swerveDrive.getCurrentVelocity().getTranslation();
 
     //get the position in drive orientation, uses directionAsAngle
     Translation2d currentDrivePosition = currentRelPostion.rotateBy(directionAsAngle.unaryMinus());
+    Translation2d currentDriveVelocity = currentRelVelocity.rotateBy(directionAsAngle.unaryMinus());
 
     //use PID controller to get drive orientation outputs
     double movingDirection = /*RobotContainer.swerveDrive.awayPosPidController.calculate(

@@ -15,8 +15,23 @@ public class AutoBouncePath extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveStraightTrapProfile(0, .46355, 0, 0)//,
-      // new DriveArc(1.9, Math.toRadians(90), .762, Math.toRadians(90))
+      new DriveStraightTrapProfile(0, .46355, 0, 0),
+      new DriveArc(1.9, Math.toRadians(90), .762, Math.toRadians(90)),
+      new DriveStraightTrapProfile(Math.toRadians(90), 0.762, 1.9, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 0.762, 0, 1.9),
+      new DriveArc(1.9, Math.toRadians(0), 0.762, Math.toRadians(30)),
+      new DriveStraightTrapProfile(Math.toRadians(-60), 3, 1.9, 1.9), //distance needs to be corrected
+      new DriveArc(1.9, Math.toRadians(-150), 0.762, Math.toRadians(-30)),
+      new DriveArc(1.9, Math.toRadians(0), 0.762, Math.toRadians(180)),
+      new DriveStraightTrapProfile(Math.toRadians(90), 2.286, 1.9, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 2.286, 0, 1.9),
+      new DriveArc(1.9, Math.toRadians(0), 0.762, Math.toRadians(90)),
+      new DriveStraightTrapProfile(Math.toRadians(0), 0.762, 1.9, 1.9),
+      new DriveArc(1.9, Math.toRadians(90), 0.762, Math.toRadians(90)),
+      new DriveStraightTrapProfile(Math.toRadians(90), 2.286, 1.9, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 0.762, 0, 1.9),
+      new DriveArc(1.9, Math.toRadians(0), 0.762, Math.toRadians(90))
+
     );
   }
 }
