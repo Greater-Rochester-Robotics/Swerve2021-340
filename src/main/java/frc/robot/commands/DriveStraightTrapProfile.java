@@ -73,7 +73,7 @@ public class DriveStraightTrapProfile extends CommandBase {
     //get current position relative to initial position
     Translation2d currentRelPostion = 
       RobotContainer.swerveDrive.getCurrentPose().getTranslation().minus(initialPosition);
-      Translation2d currentRelVelocity = 
+    Translation2d currentRelVelocity = 
       RobotContainer.swerveDrive.getCurrentVelocity().getTranslation();
 
     //get the position in drive orientation, uses directionAsAngle
@@ -84,15 +84,20 @@ public class DriveStraightTrapProfile extends CommandBase {
     double movingDirection = /*RobotContainer.swerveDrive.awayPosPidController.calculate(
       currentDrivePosition.getX(), currentPoint.position) + */
       RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    
+    // double movingDirection = RobotContainer.swerveDrive.awaySpeedPIDController.calculate(
+    //   currentDriveVelocity.getX(), currentPoint.velocity) + 
+    //   RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    
     double notMovingDirection = RobotContainer.swerveDrive.lateralPosPidController.calculate(
       currentDrivePosition.getY(), 0.0);//Position PID
     // System.out.println("Current Position:" + currentDrivePosition.getX());
     
     Translation2d output = new Translation2d(movingDirection, notMovingDirection).rotateBy(directionAsAngle);
-    //convert back to field centric drive speeds
+    
     // System.out.println("output x:" + output.getX());
 
-    
+    //convert back to field centric drive speeds
     RobotContainer.swerveDrive.driveFieldCentric(output.getX(), output.getY(),
       RobotContainer.swerveDrive.getRobotRotationPIDOut(angleOfRobot), kDriveMode.percentOutput);
     
