@@ -21,6 +21,10 @@ public class DriveStraightTrapProfile extends CommandBase {
   private double angleOfRobot;
   private Rotation2d directionAsAngle;
 
+  private Translation2d currentDrivePosition;
+  private Translation2d currentDriveVelocity;
+  private double distanceOfTravel;
+
   /**
    * Drives the robot a given direction, as given by an angle 
    * in radians from the x axis of the field, a distance per 
@@ -32,8 +36,9 @@ public class DriveStraightTrapProfile extends CommandBase {
    * @param startSpeed a speed
    * @param endSpeed
    */
-  public DriveStraightTrapProfile(double directionAsAngle,double distanceOfTravel, double startSpeed, double endSpeed) {
+  public DriveStraightTrapProfile(double directionAsAngle, double distanceOfTravel, double startSpeed, double endSpeed) {
     addRequirements(RobotContainer.swerveDrive);
+    this.distanceOfTravel = distanceOfTravel;
     
     TrapezoidProfile.State start = new TrapezoidProfile.State(0,startSpeed);
     TrapezoidProfile.State target = new TrapezoidProfile.State(distanceOfTravel,endSpeed);
@@ -41,7 +46,7 @@ public class DriveStraightTrapProfile extends CommandBase {
     //generate a trapezoidal profile for driving a straight line
     profile = new TrapezoidProfile(
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(4.0, 2.0),
+            new TrapezoidProfile.Constraints(4.0*.25, 2.0),
             // Goal state
             target,
             // Initial state
@@ -58,7 +63,7 @@ public class DriveStraightTrapProfile extends CommandBase {
     initialPosition = RobotContainer.swerveDrive.getCurrentPose().getTranslation();
     timer.reset();
     timer.start();
-
+    
 
   }
 
@@ -67,8 +72,8 @@ public class DriveStraightTrapProfile extends CommandBase {
   public void execute() {
     //use profile to create a position and speed for the motors
     TrapezoidProfile.State currentPoint = profile.calculate(timer.get());
-    TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
-    double acceleration = (futurePoint.velocity - currentPoint.velocity) / 0.02;
+    // TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
+    double acceleration = 0;//(futurePoint.velocity - currentPoint.velocity) / 0.02;
     // System.out.println("position:" + currentPoint.position);
     //get current position relative to initial position
     Translation2d currentRelPostion = 
@@ -77,13 +82,13 @@ public class DriveStraightTrapProfile extends CommandBase {
       RobotContainer.swerveDrive.getCurrentVelocity().getTranslation();
 
     //get the position in drive orientation, uses directionAsAngle
-    Translation2d currentDrivePosition = currentRelPostion.rotateBy(directionAsAngle.unaryMinus());
-    Translation2d currentDriveVelocity = currentRelVelocity.rotateBy(directionAsAngle.unaryMinus());
+    currentDrivePosition = currentRelPostion.rotateBy(directionAsAngle.unaryMinus());
+    currentDriveVelocity = currentRelVelocity.rotateBy(directionAsAngle.unaryMinus());
 
     //use PID controller to get drive orientation outputs
-    double movingDirection = /*RobotContainer.swerveDrive.awayPosPidController.calculate(
-      currentDrivePosition.getX(), currentPoint.position) + */
-      RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    double movingDirection = RobotContainer.swerveDrive.awayPosPidController.calculate(
+      currentDrivePosition.getX(), currentPoint.position); //+ 
+     // RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
     
     // double movingDirection = RobotContainer.swerveDrive.awaySpeedPIDController.calculate(
     //   currentDriveVelocity.getX(), currentPoint.velocity) + 
@@ -115,7 +120,9 @@ public class DriveStraightTrapProfile extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return timer.hasElapsed(profile.totalTime());
+
+    return timer.hasElapsed(profile.totalTime());// || 
+            // distanceOfTravel <= (currentDrivePosition.getX() + (currentDriveVelocity.getX() * 0.2)));
   }
 
   public double distanceBetweenPose(Pose2d a,Pose2d b){
