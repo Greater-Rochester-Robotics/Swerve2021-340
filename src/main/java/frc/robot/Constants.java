@@ -152,7 +152,7 @@ public final class Constants {
     /* Shooter Speeds */
     public static final int INITIATION_SHOT_RPM = 13000; // Put real value here for safe keeping, rpm: 3425
     public static final int WALL_SHOT_RPM = 12750; // Old value 2550 MAX SPEED 21777
-    public static final int TEST_SHOOTER = 12600;
+    public static final int TEST_SHOOTER = 15822; // Used for testing and recording distance for shooting
     public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
     public static final int RPM_ADD_FACTOR = 0;
 
@@ -162,18 +162,18 @@ public final class Constants {
     public static TreeMap<Double,Double> SHOOTER_LOOKUP_TABLE = new TreeMap<>();
     static{
         SHOOTER_LOOKUP_TABLE.put(8.0, 16000.0);//14090
-        SHOOTER_LOOKUP_TABLE.put(9.0, 15250.0);//14140
+        SHOOTER_LOOKUP_TABLE.put(9.0, 15822.0);//14140
         SHOOTER_LOOKUP_TABLE.put(10.0, 14100.0);//14000
         SHOOTER_LOOKUP_TABLE.put(11.0, 13850.0);//13850
-        SHOOTER_LOOKUP_TABLE.put(12.0, 12500.0);//13370
-        SHOOTER_LOOKUP_TABLE.put(13.0, 13500.0);//12700
-        SHOOTER_LOOKUP_TABLE.put(14.0, 13500.0);//12400
-        SHOOTER_LOOKUP_TABLE.put(15.0, 12750.0);//12150
+        SHOOTER_LOOKUP_TABLE.put(12.0, 12850.0);//13370
+        SHOOTER_LOOKUP_TABLE.put(13.0, 13200.0);//12700
+        SHOOTER_LOOKUP_TABLE.put(14.0, 12834.0);//12400
+        SHOOTER_LOOKUP_TABLE.put(15.0, 12528.0);//12150
         SHOOTER_LOOKUP_TABLE.put(16.0, 12600.0);//12150
         SHOOTER_LOOKUP_TABLE.put(17.0, 12750.0);//12750
-        SHOOTER_LOOKUP_TABLE.put(18.0, 13000.0);//12400
-        SHOOTER_LOOKUP_TABLE.put(19.0, 12900.0);//12450
-        SHOOTER_LOOKUP_TABLE.put(20.0, 12750.0);//12600
+        SHOOTER_LOOKUP_TABLE.put(18.0, 12833.5);//12400
+        SHOOTER_LOOKUP_TABLE.put(19.0, 12700.0);//12450
+        SHOOTER_LOOKUP_TABLE.put(20.0, 12800.0);//12600
     }
     public static TreeMap<Double,Double> SHOOTER_HOOD_DOWN_LOOKUP_TABLE = new TreeMap<>();
     static{
