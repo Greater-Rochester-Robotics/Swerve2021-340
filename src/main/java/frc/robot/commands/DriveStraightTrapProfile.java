@@ -46,7 +46,7 @@ public class DriveStraightTrapProfile extends CommandBase {
     //generate a trapezoidal profile for driving a straight line
     profile = new TrapezoidProfile(
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(4.0*.25, 2.0),
+            new TrapezoidProfile.Constraints(4.0, 4.0),
             // Goal state
             target,
             // Initial state
@@ -59,7 +59,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void initialize() {
     angleOfRobot = RobotContainer.swerveDrive.getGyroInRad();
-
+    System.out.println("direction start" + this.directionAsAngle);
     initialPosition = RobotContainer.swerveDrive.getCurrentPose().getTranslation();
     timer.reset();
     timer.start();
@@ -71,7 +71,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void execute() {
     //use profile to create a position and speed for the motors
-    TrapezoidProfile.State currentPoint = profile.calculate(timer.get());
+    TrapezoidProfile.State currentPoint = profile.calculate(timer.get()+.02);
     // TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
     double acceleration = 0;//(futurePoint.velocity - currentPoint.velocity) / 0.02;
     // System.out.println("position:" + currentPoint.position);
@@ -106,13 +106,14 @@ public class DriveStraightTrapProfile extends CommandBase {
     RobotContainer.swerveDrive.driveFieldCentric(output.getX(), output.getY(),
       RobotContainer.swerveDrive.getRobotRotationPIDOut(angleOfRobot), kDriveMode.percentOutput);
     
-    System.out.println("Current Velocity:" + RobotContainer.swerveDrive.getCurrentVelocity().getX() 
-      +"  goal Velo:"+currentPoint.velocity);
+    // System.out.println("Current Velocity:" + RobotContainer.swerveDrive.getCurrentVelocity().getX() 
+    //   +"  goal Velo:"+currentPoint.velocity);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX());
     timer.stop();
     RobotContainer.swerveDrive.stopAllModules();
   }
@@ -121,8 +122,8 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return timer.hasElapsed(profile.totalTime());// || 
-            // distanceOfTravel <= (currentDrivePosition.getX() + (currentDriveVelocity.getX() * 0.2)));
+    return //timer.hasElapsed(profile.totalTime());// || 
+            distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
   }
 
   public double distanceBetweenPose(Pose2d a,Pose2d b){

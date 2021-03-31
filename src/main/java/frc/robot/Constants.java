@@ -88,7 +88,7 @@ public final class Constants {
     public static final double LATERAL_POS_I = 0;
     public static final double LATERAL_POS_D = 0;
 
-    public static final double AWAY_POS_P = 2;
+    public static final double AWAY_POS_P = .55;
     public static final double AWAY_POS_I = 0;
     public static final double AWAY_POS_D = 0;
 

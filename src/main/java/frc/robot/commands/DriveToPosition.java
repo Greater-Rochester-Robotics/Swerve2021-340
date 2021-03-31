@@ -66,11 +66,11 @@ public class DriveToPosition extends CommandBase {
   @Override
   public boolean isFinished() {
     Pose2d curPos = RobotContainer.swerveDrive.getCurrentPose();
-    if( Math.abs(target.getX()-curPos.getX()) < 0.001
-      && Math.abs(target.getY()-curPos.getY()) < 0.001
-      && Math.abs(target.getRotation().getRadians()-curPos.getRotation().getRadians()) < 0.001
+    if( Math.abs(target.getX()-curPos.getX()) < 0.05
+      && Math.abs(target.getY()-curPos.getY()) < 0.05
+      && Math.abs(target.getRotation().getRadians()-curPos.getRotation().getRadians()) < 0.01
     ){
-    return true;
+      return true;
     }
     else {
       return false;
