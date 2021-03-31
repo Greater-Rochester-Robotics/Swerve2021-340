@@ -92,7 +92,6 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
     SmartDashboard.putData(new AutoBouncePath());
-    SmartDashboard.putData(new AutoBouncePath2());
   }
 
   /**

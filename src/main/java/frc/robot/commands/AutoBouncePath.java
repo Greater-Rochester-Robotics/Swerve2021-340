@@ -32,20 +32,20 @@ public class AutoBouncePath extends SequentialCommandGroup {
       // new DriveStraightTrapProfile(Math.toRadians(90), 2.286, 1.9, 0),
       // new DriveStraightTrapProfile(Math.toRadians(-90), 0.762, 0, 1.9),
       // new DriveArc(1.9, Math.toRadians(0), 0.762, Math.toRadians(90))
-      new DriveStraightTrapProfile(Math.toRadians(0), 1.3, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.3, 0, 0),//first move
       // new DriveAllModulesTOPosition(Math.toRadians(90)),
-      new DriveStraightTrapProfile(Math.toRadians(90), 1.2, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 1.2, 0, 0),//first bounce in
       // new DriveAllModulesTOPosition(Math.toRadians(90)),
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.3, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.3, 0, 0),//then first bounce out
       // new DriveAllModulesTOPosition(Math.toRadians(0)),
-      new DriveStraightTrapProfile(0, 0.94648, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.9348, 0, 0),
+      new DriveStraightTrapProfile(0, 0.94648, 0, 0),//closer to the end
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.8348, 0, 0),// slider to the right
       new DriveStraightTrapProfile(0, 1.5348, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(90), 2.7204, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(-90), 2.7204, 0, 0),
       new DriveStraightTrapProfile(0, 1.5348, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(90), 2.6704, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.24272, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.34272, 0, 0),
       new DriveStraightTrapProfile(0, 0.64648, 0, 0)
 
 
