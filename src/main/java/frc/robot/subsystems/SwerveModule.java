@@ -86,7 +86,7 @@ public class SwerveModule {
 
         rotationMotor.setIdleMode(IdleMode.kCoast);// set rotationMotor coast mode, so it doesnt overcorrect itself
         rotationMotor.enableVoltageCompensation(12);// enable voltage compensation mode 12V for the rotation motor
-        rotationMotor.setSmartCurrentLimit(15);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
+        rotationMotor.setSmartCurrentLimit(30);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
         
         rotateRelEncoder = rotationMotor.getEncoder();
@@ -95,11 +95,16 @@ public class SwerveModule {
         rotatePID.setFeedbackDevice(rotateRelEncoder);
 
         // set the PID values for the relative, encoder controlled rotation, on the SparkMAX
-        rotatePID.setP(Constants.SWERVE_ROT_P_VALUE);
-        rotatePID.setI(Constants.SWERVE_ROT_I_VALUE);
-        rotatePID.setD(Constants.SWERVE_ROT_D_VALUE);
-        rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE);
-        rotatePID.setFF(Constants.SWERVE_ROT_NONARB_FF_VALUE);
+        rotatePID.setP(Constants.SWERVE_ROT_P_VALUE,0);
+        rotatePID.setI(Constants.SWERVE_ROT_I_VALUE,0);
+        rotatePID.setD(Constants.SWERVE_ROT_D_VALUE,0);
+        rotatePID.setIZone(Constants.SWERVE_ROT_I_ZONE_VALUE,0);
+        rotatePID.setFF(Constants.SWERVE_ROT_NONARB_FF_VALUE,0);
+        rotatePID.setP(0,1);
+        rotatePID.setI(0,1);
+        rotatePID.setD(0,1);
+        rotatePID.setIZone(0,1);
+        rotatePID.setFF(0,1);
         rotateAbsSensor = new CANCoder(canCoderID);//this sensor is angle of the module, as an absolute value
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
@@ -335,9 +340,11 @@ public class SwerveModule {
                 //the distance the other way around the circle
                 posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
             }
-        }else if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
+        }
+        if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
             //if the distance to the goal is small enough, stop rotation and return
-            rotatePID.setReference(0.0, ControlType.kDutyCycle);
+            rotatePID.setReference(0.0, ControlType.kDutyCycle,1);
+            //rotationMotor.set(0.0);
             return;
         }
 
