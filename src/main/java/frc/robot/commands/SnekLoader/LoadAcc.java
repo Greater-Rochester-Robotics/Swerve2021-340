@@ -30,7 +30,7 @@ private boolean ron;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-     RobotContainer.snekLoader.setState(State.kAccFillTo4);
+     RobotContainer.snekLoader.setState(State.kAccFillTo3);
       RobotContainer.harvester.lowerHarvester();
       RobotContainer.snekLoader.setHarvesterJammed(false);
     tm.reset();

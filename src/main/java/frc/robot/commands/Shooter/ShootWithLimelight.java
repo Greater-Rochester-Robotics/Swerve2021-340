@@ -7,6 +7,8 @@
 
 package frc.robot.commands.Shooter;
 
+import javax.naming.LimitExceededException;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -45,6 +47,9 @@ public class ShootWithLimelight extends CommandBase {
     if(wallShot){
       speedRpm = Constants.WALL_SHOT_RPM;
     }
+    else if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
+      speedRpm = 17500;
+    }
     else{
       speedRpm = Limelight.calcHoodRPM();
     }
@@ -82,12 +87,12 @@ public class ShootWithLimelight extends CommandBase {
     // SmartDashboard.putString("Speed?", "Yes");
     if ((stateIndex == 4)) {
       if(timer.hasElapsed(2.0)){
-        RobotContainer.snekLoader.setState(State.kShootBall4);
+        RobotContainer.snekLoader.setState(State.kAccShootBall4);
         shootSpeed = RobotContainer.shooter.getShooterVelocity() + "";
         stateIndex = 4;
         if(timer.hasElapsed(3.0)){
-          RobotContainer.snekLoader.setState(State.kFillTo4);
-          if(timer.hasElapsed(4.0))
+          RobotContainer.snekLoader.setState(State.kFillTo3);
+          if(timer.hasElapsed(3.5))
             RobotContainer.snekLoader.setState(State.kOff);
             timer.stop();
             timer.reset();

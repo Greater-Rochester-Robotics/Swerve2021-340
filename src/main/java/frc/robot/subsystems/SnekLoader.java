@@ -49,7 +49,7 @@ public class SnekLoader extends SubsystemBase {
 
   public enum State {
     kFillTo4, kFillTo3, kFillTo2, kFillTo1, kFillTo0, kOff, kShootBall4, kShootBall3, kShootBall2, kShootBall1,
-    kShootBall0,kAccFillTo4, kAccFillTo3, kAccFillTo2, kAccBackFillTo0, kAccBackFillTo2, kSpitBalls
+    kShootBall0,kAccFillTo4, kAccFillTo3, kAccFillTo2, kAccBackFillTo0, kAccBackFillTo2, kSpitBalls,kAccShootBall4, kAccFillTo1
   }
 
   private State state = State.kOff;
@@ -193,7 +193,7 @@ public class SnekLoader extends SubsystemBase {
         }
         case kAccFillTo4:
         enableOneLimit(4);
-        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, MOTOR_IN_SPEED4 };
+        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, 0 };
         if (getHandleSensor(4)) {
           state = State.kAccFillTo3;
         } else {
@@ -215,7 +215,7 @@ public class SnekLoader extends SubsystemBase {
         enableOneLimit(2);
         speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, 0, 0 };
         if (getHandleSensor(2)) {
-          state = State.kAccBackFillTo0;
+          state = State.kAccFillTo1;
         } else {
           if(!timer.hasElapsed(0.1))
           {
@@ -229,11 +229,11 @@ public class SnekLoader extends SubsystemBase {
           break;
         }
 
-        case kAccBackFillTo0:
-        enableOneLimit(0);
-        speeds = new double[] { -.5, -.4, -.5, 0, 0 };
-        if (getHandleSensor(0)) {
-          state = State.kAccBackFillTo2;
+        case kAccFillTo1:
+        enableOneLimit(1);
+        speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, 0, 0, 0 };
+        if (getHandleSensor(1)) {
+          state = State.kOff;
         } else {
           ballsLoaded = 0;
           break;
@@ -256,6 +256,11 @@ public class SnekLoader extends SubsystemBase {
         speeds = new double[] { 0.0, 0.0, 0.0, 0.0, 1.0 };
         enableOneLimit(-1);
         break;
+
+      case kAccShootBall4:
+      speeds = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
+      enableOneLimit(-1);
+      break;
   
       case kShootBall3:
         speeds = new double[] { 0.0, 0.0, 0.0, .9, 1.0 };

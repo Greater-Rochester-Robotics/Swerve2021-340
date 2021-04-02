@@ -71,11 +71,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public static int calcHoodRPM(){
-    double cameraHeight =  25.5;    //not final value
-    double targetHeight = 98; //final value = 98
-    double cameraAngle = 18;    //changeable 32.1
     double rpm;
-    double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-12.5;
+    double distance = getDistance();
     //Comp Bot Equation
     //Base Equation: 111226.8065 - 2100.88141025641x + 16.945294289044288x^2 - 0.06080435767935767x^3 + 0.00008149964747186968x^4
     // TODO: Translate the above equation and create a lookup table using the document on the desktop named "shootingdistances.txt"
@@ -106,12 +103,12 @@ public class Limelight extends SubsystemBase {
     double decimal = distance % 1;
     return ((highSpeed - lowSpeed) * decimal) + lowSpeed;
   }
-  public double getDistance(){
+  public static double getDistance(){
     //all distance values are in inches
-    double cameraHeight =  24.56;    //not final value
-    double targetHeight = 98.5; //final value = 98
+    double cameraHeight =  25.5;    //not final value
+    double targetHeight = 98; //final value = 98
     double cameraAngle = 18;    //changeable, need to recallibrate
-    double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-12.5; // Returns distance to target, 12.5 is distance camera is from front? of robot
+    double distance = ((targetHeight - cameraHeight) / Math.tan(Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget())))-8.5; // Returns distance to target, 12.5 is distance camera is from front? of robot
     // System.out.println("Math = " + Math.tan( Math.toRadians(cameraAngle + RobotContainer.limelight.verticalAngleToTarget()) ) +"   distance = " + Distance);
     // System.out.println(Distance);
     return distance;

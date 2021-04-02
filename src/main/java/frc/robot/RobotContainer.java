@@ -151,8 +151,8 @@ public class RobotContainer {
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    driverX.whenPressed(new SmartLimeShot());
-    //driverX.whenPressed(new FastBallWithHintOfLime());
+    //driverX.whenPressed(new SmartLimeShot());
+    driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverRB.whileHeld(new DriveAimAndPrepHood());
     driverY.whenPressed(new WallShot());
