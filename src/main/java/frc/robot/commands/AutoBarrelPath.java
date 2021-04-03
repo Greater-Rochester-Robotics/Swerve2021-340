@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /**
  * Running the barrel path using DriveStraight and DriveArc commands
  */
-public class AutoBarrelPath extends SequentialCommandGroup {
+public class AutoBarrelPath extends Auto340Command {
   /** Creates a new AutoBarrelPath. */
   public AutoBarrelPath() {
     // Add your commands in the addCommands() call, e.g.

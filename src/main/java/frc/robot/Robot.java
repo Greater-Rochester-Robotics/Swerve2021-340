@@ -10,8 +10,14 @@ package frc.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.Auto340Command;
+import frc.robot.commands.AutoBarrelPath;
+import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoSlalomPath;
 import frc.robot.subsystems.SwerveModule;
 
 /**
@@ -61,10 +67,31 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    if (null == RobotContainer.autoChooser){
+      RobotContainer.autoChooser = new SendableChooser<>();
+    }
+    RobotContainer.autoChooser.setDefaultOption("Barrel Racing 64", "Barrel Racing 64");
+    RobotContainer.autoModes.put("Barrel Racing 64", new AutoBarrelPath());
+
+    registerAutoMode(RobotContainer.autoChooser, "Barrel Racing 64", new AutoBarrelPath());
+
+    registerAutoMode(RobotContainer.autoChooser, "Bouncy Path", new AutoBouncePath());
+
+    registerAutoMode(RobotContainer.autoChooser, "Slalom Path", new AutoSlalomPath());
+
+    SmartDashboard.putData(RobotContainer.autoChooser);
+  }
+
+  private void registerAutoMode(SendableChooser<String> chooser, String auto, Auto340Command autoCmd) {
+    chooser.addOption(auto, auto);
+    RobotContainer.autoModes.put(auto, autoCmd);
   }
 
   @Override
   public void disabledPeriodic() {
+    String mode = RobotContainer.autoChooser.getSelected();
+    // SmartDashboard.putString("AutoInstrutions", RobotContainer.autoModes.get(mode6+).getAutoDescription());
+    SmartDashboard.putString("Chosen Auto Mode", mode);
   }
 
   /**
@@ -72,7 +99,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    m_autonomousCommand = robotContainer.getAutonomousCommand();
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   /**

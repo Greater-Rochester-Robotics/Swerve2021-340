@@ -7,16 +7,21 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.Auto340Command;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.AutoSlalomPath;
@@ -70,6 +75,9 @@ public class RobotContainer {
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
   public static Limelight limelight;
+
+  public static SendableChooser<String> autoChooser;
+  public static Map<String, Auto340Command> autoModes = new HashMap<>();
 
 
   /**
@@ -167,5 +175,19 @@ public class RobotContainer {
    */
   public int getDriverDPad() {
     return (driver.getPOV());
+  }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
+  public Command getAutonomousCommand() {
+    // = Shuffleboard.getTab("Competition").get
+    String mode = RobotContainer.autoChooser.getSelected();
+    SmartDashboard.putString("Chosen Auto Mode", mode);
+    return autoModes.getOrDefault(mode, new AutoBarrelPath());//new Command();
+
+    
   }
 }
