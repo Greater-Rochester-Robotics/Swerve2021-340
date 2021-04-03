@@ -94,6 +94,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
     SmartDashboard.putData(new AutoBouncePath());
     SmartDashboard.putData(new AutoSlalomPath());
+    SmartDashboard.putData(new AutoBarrelPath());
   }
 
   /**
