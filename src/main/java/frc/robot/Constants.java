@@ -62,7 +62,7 @@ public final class Constants {
                     Y_NEGATIVE_DISTANCE_FROM_CENTER / DISTANCE_TO_MODULE_3 } };
 
     /* Swerve Drive Constants */
-    public static final double MINIMUM_DRIVE_SPEED = 0.1;// the slowest the wheels can turn, in m/s
+    public static final double MINIMUM_DRIVE_SPEED = 0.01;// the slowest the wheels can turn, in m/s
     public static final double MINIMUM_DRIVE_DUTY_CYCLE = 0.05;// the slowest the wheels can turn, in duty cycle
     public static final double MAXIMUM_VELOCITY = 4.5;
     public static final double MAXIMUM_ACCELERATION = 1.0;
@@ -104,6 +104,9 @@ public final class Constants {
     public static final double LATERAL_SPEED_D = 0;
     public static final double LATERAL_FEEDFORWARD_STATIC = 0.05;
     public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
+    public static final double AWAY_FEEDFORWARD_STATIC = 0.05;
+    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
+    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0;//1/.504;// 1/4.6;
 
     /* Robot away speed PID controller & feed forward constants */
     public static final double AWAY_SPEED_P = 0;//.55;
@@ -165,7 +168,7 @@ public final class Constants {
         SHOOTER_LOOKUP_TABLE.put(14.0, 12000.0);//12400
         SHOOTER_LOOKUP_TABLE.put(15.0, 12000.0);//12150
         SHOOTER_LOOKUP_TABLE.put(16.0, 11900.0);//12150
-        SHOOTER_LOOKUP_TABLE.put(17.0, 11900.0);//12750
+        SHOOTER_LOOKUP_TABLE.put(17.0, 12000.0);//12750
         SHOOTER_LOOKUP_TABLE.put(18.0, 12150.0);//12400
         SHOOTER_LOOKUP_TABLE.put(19.0, 12350.0);//12450
         SHOOTER_LOOKUP_TABLE.put(20.0, 12500.0);//12600

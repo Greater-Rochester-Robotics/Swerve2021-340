@@ -59,7 +59,7 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
       RobotContainer.swerveDrive.driveFieldCentric(
       awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
       lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-      RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle) * 3,
+      RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle) * 1.5,
       kDriveMode.percentOutput
     );
   
