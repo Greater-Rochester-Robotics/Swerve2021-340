@@ -14,6 +14,18 @@ public class AutoSlalomPath extends SequentialCommandGroup {
   public AutoSlalomPath() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 1.524, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 4.772, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.524, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.624, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 1.524, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(180), 1.624, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.924, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(180), 4.772, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 1.424, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(180), 1.524, 0, 0)
+    );
   }
 }

@@ -14,6 +14,20 @@ public class AutoBarrelPath extends SequentialCommandGroup {
   public AutoBarrelPath() {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands();
+    addCommands(
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(0), 1.2192, 0, 0),
+    );
   }
 }

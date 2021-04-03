@@ -113,7 +113,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX());
+    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX() + " err "+(distanceOfTravel-currentDrivePosition.getX()));
     timer.stop();
     RobotContainer.swerveDrive.stopAllModules();
   }
