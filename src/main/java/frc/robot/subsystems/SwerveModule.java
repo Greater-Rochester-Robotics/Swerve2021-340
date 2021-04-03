@@ -307,6 +307,8 @@ public class SwerveModule {
      *                  forward
      */
     public void setPosInRad(double targetPos) {
+        SmartDashboard.putBoolean("Rotation Stop "+rotationMotor.getDeviceId()+":", false);
+        SmartDashboard.putBoolean("Rotation Running "+rotationMotor.getDeviceId()+":", false);
         // SmartDashboard.putNumber("target(rad)",targetPos);
         double posDiff = targetPos - getPosInRad();
         // SmartDashboard.putNumber("posDiff(rad)",posDiff);
@@ -343,8 +345,10 @@ public class SwerveModule {
         }
         if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
             //if the distance to the goal is small enough, stop rotation and return
-            rotatePID.setReference(0.0, ControlType.kDutyCycle,1);
+            // rotatePID.setReference(0.0, ControlType.kDutyCycle,1);
             //rotationMotor.set(0.0);
+            rotationMotor.stopMotor();
+            SmartDashboard.putBoolean("Rotation Stop "+rotationMotor.getDeviceId()+":", true);
             return;
         }
 
@@ -356,6 +360,7 @@ public class SwerveModule {
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
         // SmartDashboard.putNumber("curr(Enc)",rotateRelEncoder.getPosition());
         // SmartDashboard.putNumber("output(Enc)",outputEncValue);
+        SmartDashboard.putBoolean("Rotation Running "+rotationMotor.getDeviceId()+":", true);
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition, 0,
             Constants.SWERVE_ROT_ARB_FF_VOLTAGE*Math.signum(posDiff),
