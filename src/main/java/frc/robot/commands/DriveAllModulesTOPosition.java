@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveTurnToAngle extends CommandBase {
-  private double angle = 0;
-  /** Creates a new DriveTurnToAngle. Takes angle in radians */
-  public DriveTurnToAngle(double angle) {
+public class DriveAllModulesTOPosition extends CommandBase {
+  double angle;
+  boolean[] finishedArray = new boolean[4];
+  /** Creates a new DriveAllModulesTOPosition. */
+  public DriveAllModulesTOPosition(double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.angle = angle;
     addRequirements(RobotContainer.swerveDrive);
 
-    this.angle = angle;
   }
 
   // Called when the command is initially scheduled.
@@ -25,7 +26,13 @@ public class DriveTurnToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.swerveDrive.driveRobotCentric(0, 0, RobotContainer.swerveDrive.getRobotRotationPIDOut(angle), kDriveMode.percentOutput);
+    double[] angles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
+    double targetAngle = angle - RobotContainer.swerveDrive.getGyroInRad();
+    
+    for(int i=0;i<4;i++ ){
+      RobotContainer.swerveDrive.driveOneModule(i, 0, targetAngle, kDriveMode.percentOutput);
+      finishedArray[i]= .17 > (angles[i] -  Math.toDegrees(targetAngle));
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -35,6 +42,6 @@ public class DriveTurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return finishedArray[0]&&finishedArray[1]&&finishedArray[2]&&finishedArray[3];
   }
 }

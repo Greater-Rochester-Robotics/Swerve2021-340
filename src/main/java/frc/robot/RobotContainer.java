@@ -17,20 +17,26 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoBouncePath2;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
+import frc.robot.commands.DriveArc;
 import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
+import frc.robot.commands.DriveArcDriverControl;
 import frc.robot.commands.DriveFieldCentricVelocity;
+import frc.robot.commands.DriveGenerateVelocityGraph;
 import frc.robot.commands.DriveOnTargetWithLimeLight;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
+import frc.robot.commands.DriveStraightTrapProfile;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.DriveVelocityPIDTune;
 import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.GetSmol;
@@ -129,6 +135,10 @@ public class RobotContainer {
     SmartDashboard.putData("Drive Module 3", new DriveOneModule(3));
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
+    SmartDashboard.putData(new DriveVelocityPIDTune());
+    SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
+    SmartDashboard.putData(new DriveGenerateVelocityGraph());
+    SmartDashboard.putData(new AutoBouncePath());
   }
 
   /**

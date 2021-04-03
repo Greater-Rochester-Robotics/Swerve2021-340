@@ -74,19 +74,18 @@ public final class Constants {
     public static final double SWERVE_DRIVE_F_VALUE = 1023 / (MAXIMUM_VELOCITY / DRIVE_ENC_TO_METERS_FACTOR);
 
     /* Swerve Module Rotation constants */
-    public static final double SWERVE_ROT_P_VALUE = .105;// if sluggish, increase P value
+    public static final double SWERVE_ROT_P_VALUE = 0.4;// 2if sluggish, increase P value
     public static final double SWERVE_ROT_I_VALUE = 0.0;
-    public static final double SWERVE_ROT_D_VALUE = 2.5;
-    public static final double SWERVE_ROT_I_ZONE_VALUE = 0.0;
-    public static final double SWERVE_ROT_NONARB_FF_VALUE = 0.0;// .0001;//Not arbitrary, this is multiplied by
-                                                                // setpoint, must be 0 in position PID
-    public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 1.1;
+    public static final double SWERVE_ROT_D_VALUE = 0.0; // 4
+    public static final double SWERVE_ROT_I_ZONE_VALUE = 0;
+    public static final double SWERVE_ROT_NONARB_FF_VALUE = 0.0;//.0001;//Not arbitrary, this is multiplied by setpoint, must be 0 in position PID
+    public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.0;//1.1;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
-    public static final double SWERVE_MODULE_TOLERANCE = 0.0175;// this is in radians
-
+    public static final double SWERVE_MODULE_TOLERANCE = .033;//34;//this is in radians
+    
     /* Robot Motion PID controller constants */
-    public static final double ROBOT_SPIN_P = .55;
+    public static final double ROBOT_SPIN_P = 1;
     public static final double ROBOT_SPIN_I = 0;
     public static final double ROBOT_SPIN_D = 0;
 
@@ -95,7 +94,7 @@ public final class Constants {
     public static final double LATERAL_POS_I = 0;
     public static final double LATERAL_POS_D = 0;
 
-    public static final double AWAY_POS_P = 1;
+    public static final double AWAY_POS_P = .55;
     public static final double AWAY_POS_I = 0;
     public static final double AWAY_POS_D = 0;
 
@@ -107,16 +106,12 @@ public final class Constants {
     public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
 
     /* Robot away speed PID controller & feed forward constants */
-    public static final double AWAY_SPEED_P = .55;
+    public static final double AWAY_SPEED_P = 0;//.55;
     public static final double AWAY_SPEED_I = 0;
     public static final double AWAY_SPEED_D = 0;
-    public static final double AWAY_FEEDFORWARD_STATIC = 0.05;
-    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
-
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = 0.8;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
-
     // SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 41;// module 0
     public static final int REAR_LEFT_ROTATE_MOTOR = 44;// module 1

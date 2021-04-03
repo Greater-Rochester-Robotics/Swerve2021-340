@@ -8,14 +8,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveTurnToAngle extends CommandBase {
-  private double angle = 0;
-  /** Creates a new DriveTurnToAngle. Takes angle in radians */
-  public DriveTurnToAngle(double angle) {
-    // Use addRequirements() here to declare subsystem dependencies.
+public class DriveVelocityPIDTune extends CommandBase {
+  /** Creates a new DriveVelocityPIDTune. */
+  public DriveVelocityPIDTune() {
     addRequirements(RobotContainer.swerveDrive);
-
-    this.angle = angle;
   }
 
   // Called when the command is initially scheduled.
@@ -25,12 +21,16 @@ public class DriveTurnToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.swerveDrive.driveRobotCentric(0, 0, RobotContainer.swerveDrive.getRobotRotationPIDOut(angle), kDriveMode.percentOutput);
+    double output = RobotContainer.swerveDrive.getAwaySpeedPIDFFOut(4.0, 0.0);
+    RobotContainer.swerveDrive.driveFieldCentric(output,0,0,kDriveMode.percentOutput);
+    System.out.println("Speed: "+RobotContainer.swerveDrive.getCurrentVelocity().getX()+" m/s");
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.swerveDrive.stopAllModules();
+  }
 
   // Returns true when the command should end.
   @Override
