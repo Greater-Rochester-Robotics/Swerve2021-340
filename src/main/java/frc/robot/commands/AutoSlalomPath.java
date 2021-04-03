@@ -22,9 +22,9 @@ public class AutoSlalomPath extends SequentialCommandGroup {
       new DriveStraightTrapProfile(Math.toRadians(0), 1.624, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(90), 1.524, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(180), 1.624, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.924, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.774, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(180), 4.772, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(90), 1.424, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 1.574, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(180), 1.524, 0, 0)
     );
   }

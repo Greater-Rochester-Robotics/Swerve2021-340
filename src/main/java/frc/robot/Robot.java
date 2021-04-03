@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoSlalomPath;
 import frc.robot.subsystems.SwerveModule;
 
 /**
@@ -37,6 +39,7 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     LiveWindow.setEnabled(false);
     LiveWindow.disableAllTelemetry();
+    m_autonomousCommand = new AutoSlalomPath();
     // rearLeft = new SwerveModule(Constants.REAR_LEFT_MOVE_MOTOR, Constants.REAR_LEFT_ROTATE_MOTOR, Constants.REAR_LEFT_ROTATE_SENSOR);
   }
 
@@ -74,7 +77,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    m_autonomousCommand.schedule();
   }
 
   /**

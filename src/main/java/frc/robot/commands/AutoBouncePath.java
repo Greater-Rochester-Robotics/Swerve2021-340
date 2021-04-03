@@ -38,14 +38,14 @@ public class AutoBouncePath extends SequentialCommandGroup {
       // new DriveAllModulesTOPosition(Math.toRadians(90)),
       new DriveStraightTrapProfile(Math.toRadians(-90), 1.3, 0, 0),//then first bounce out
       // new DriveAllModulesTOPosition(Math.toRadians(0)),
-      new DriveStraightTrapProfile(0, 0.94648, 0, 0),//closer to the end
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.8348, 0, 0),// slider to the right
-      new DriveStraightTrapProfile(0, 1.5348, 0, 0),
+      new DriveStraightTrapProfile(0, 0.90648, 0, 0),//closer to the end
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.7348, 0, 0),// slider to the right
+      new DriveStraightTrapProfile(0, 1.5048, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(90), 2.8204, 0, 0),
       new DriveStraightTrapProfile(Math.toRadians(-90), 2.8204, 0, 0),
-      new DriveStraightTrapProfile(0, 1.9348, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(90), 2.704, 0, 0),
-      new DriveStraightTrapProfile(Math.toRadians(-90), 1.44272, 0, 0),
+      new DriveStraightTrapProfile(0, 2.0748, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(90), 2.804, 0, 0),
+      new DriveStraightTrapProfile(Math.toRadians(-90), 1.35272, 0, 0),
       new DriveStraightTrapProfile(0, 0.64648, 0, 0)
 
 
