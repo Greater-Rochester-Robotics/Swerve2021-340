@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 /**
  * Running the slalom path using DriveStraight and DriveArc commands
  */
-public class AutoSlalomPath extends SequentialCommandGroup {
+public class AutoSlalomPath extends Auto340Command {
   /** Creates a new AutoSalomPath. */
   public AutoSlalomPath() {
     // Add your commands in the addCommands() call, e.g.
