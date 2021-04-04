@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
     robotContainer = new RobotContainer();
     LiveWindow.setEnabled(false);
     LiveWindow.disableAllTelemetry();
-    m_autonomousCommand = new AutoSlalomPath();
+    m_autonomousCommand = new AutoBarrelPath();
     // rearLeft = new SwerveModule(Constants.REAR_LEFT_MOVE_MOTOR, Constants.REAR_LEFT_ROTATE_MOTOR, Constants.REAR_LEFT_ROTATE_SENSOR);
   }
 
@@ -102,11 +102,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = robotContainer.getAutonomousCommand();
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    m_autonomousCommand.schedule();
+    // m_autonomousCommand = robotContainer.getAutonomousCommand();
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null) {
+    //   m_autonomousCommand.schedule();
+    // }
   }
 
   /**
