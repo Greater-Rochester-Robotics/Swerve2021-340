@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.Auto340Command;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.AutoSlalomPath;
@@ -76,8 +76,7 @@ public class RobotContainer {
   public static SwerveDrive swerveDrive;
   public static Limelight limelight;
 
-  public static SendableChooser<String> autoChooser;
-  public static Map<String, Auto340Command> autoModes = new HashMap<>();
+  public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
 
   /**
@@ -89,6 +88,7 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
     configureButtonBindings();
+    configureAutoModes();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
     SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
@@ -100,9 +100,9 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveVelocityPIDTune());
     SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
-    SmartDashboard.putData(new AutoBouncePath());
-    SmartDashboard.putData(new AutoSlalomPath());
-    SmartDashboard.putData(new AutoBarrelPath());
+    // SmartDashboard.putData(new AutoBouncePath());
+    // SmartDashboard.putData(new AutoSlalomPath());
+    // SmartDashboard.putData(new AutoBarrelPath());
   }
 
   /**
@@ -131,6 +131,20 @@ public class RobotContainer {
     driverBack.whenPressed(new DriveRobotCentric());
   }
   
+  private void configureAutoModes() {
+    
+    autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
+
+    autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
+
+    autoChooser.addOption("Bouncy Path", new AutoBouncePath());
+
+    autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    SmartDashboard.putData(RobotContainer.autoChooser);
+
+  }
+
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
 
@@ -177,17 +191,5 @@ public class RobotContainer {
     return (driver.getPOV());
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // = Shuffleboard.getTab("Competition").get
-    String mode = RobotContainer.autoChooser.getSelected();
-    SmartDashboard.putString("Chosen Auto Mode", mode);
-    return autoModes.getOrDefault(mode, new AutoBarrelPath());//new Command();
 
-    
-  }
 }
