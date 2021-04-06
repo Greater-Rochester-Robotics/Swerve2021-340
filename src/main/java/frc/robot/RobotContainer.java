@@ -158,27 +158,26 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    // driverA.whenPressed(new DriveTurnToAngle(0));
-    // driverB.whenPressed(new DriveTurnToAngle(Math.PI/2));
-    // driverX.whenPressed(new DriveTurnToAngle(-Math.PI/2));
-
-    //driverY.whenPressed(new RunPath("Straight"));
     
+    driverX.whileHeld(new DriveArcDriverControl(.762, 999));
+    driverB.whileHeld(new DriveArcDriverControl(-.762, 999));
+    driverA.whenPressed(new SetHarvesterDown());
+    driverA.whenReleased(new PickHarvesterUp());
     
-    //driverA.whenPressed(new Load());
-    driverA.whenPressed(new LoadAcc());
-    driverA.whenReleased(new GetSmol());
-    // driverA.whenPressed(new SetHarvesterDown());
-    // driverA.whenReleased(new PickHarvesterUp());
-    driverB.whileHeld(new Regurgitate());
-    //driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new FastBallWithHintOfLime());
-    driverX.whenReleased(new GetSmol());
-    driverRB.whileHeld(new DriveAimAndPrepHood());
-    driverY.whenPressed(new WallShot());
-    driverY.whenReleased(new GetSmol());
+    // //driverA.whenPressed(new Load());
+    // driverA.whenPressed(new LoadAcc());
+    // driverA.whenReleased(new GetSmol());
+    // // driverA.whenPressed(new SetHarvesterDown());
+    // // driverA.whenReleased(new PickHarvesterUp());
+    // driverB.whileHeld(new Regurgitate());
+    // //driverX.whenPressed(new SmartLimeShot());
+    // driverX.whenPressed(new FastBallWithHintOfLime());
+    // driverX.whenReleased(new GetSmol());
+    // driverRB.whileHeld(new DriveAimAndPrepHood());
+    // driverY.whenPressed(new WallShot());
+    // driverY.whenReleased(new GetSmol());
     
-    driverDDown.whenPressed(new PrepHoodShot());
+    // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 
@@ -186,7 +185,7 @@ public class RobotContainer {
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
 
-    coDriverB.whenPressed(new SpinUpShooterWheel());
+    // coDriverB.whenPressed(new SpinUpShooterWheel());
   }
   
   public enum Axis {
