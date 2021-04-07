@@ -159,10 +159,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    driverX.whileHeld(new DriveArcDriverControl(.762, 999));
-    driverB.whileHeld(new DriveArcDriverControl(-.762, 999));
+    driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
+    driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
     driverA.whenPressed(new SetHarvesterDown());
-    driverA.whenReleased(new PickHarvesterUp());
+    driverY.whenPressed(new PickHarvesterUp());
     
     // //driverA.whenPressed(new Load());
     // driverA.whenPressed(new LoadAcc());
