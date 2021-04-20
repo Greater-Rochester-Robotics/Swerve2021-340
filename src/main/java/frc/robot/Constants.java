@@ -105,7 +105,7 @@ public final class Constants {
     public static final double AWAY_SPEED_D = 0;
     public static final double AWAY_FEEDFORWARD_STATIC = .102/5.04;//0.05;
     public static final double AWAY_FEEDFORWARD_VELOCITY = 1/5.04;//0.95/4.7;
-    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0;//1/.504;// 1/4.6;
+    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.504;//1/.504;// 1/4.6;
 
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = 0.8;
