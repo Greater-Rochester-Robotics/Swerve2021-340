@@ -7,8 +7,20 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.function.Supplier;
+
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +30,8 @@ import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.AutoSlalomPath;
 import frc.robot.subsystems.SwerveModule;
+import frc.robot.subsystems.SwerveDrive.kDriveMode;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,105 +40,232 @@ import frc.robot.subsystems.SwerveModule;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+
+  static private double ENCODER_EDGES_PER_REV = 16384 / 4.;
+  static private int PIDIDX = 0;
+  static private int ENCODER_EPR = 16384;
+  static private double GEARING = 1;
+  
+  private double encoderConstant = (1 / GEARING) * (1 / ENCODER_EDGES_PER_REV);
 
   public static RobotContainer robotContainer;
-  // public SwerveModule rearLeft;
-  // final Joystick driver = new Joystick(0);
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
+
+  Joystick stick;
+  // WPI_TalonSRX leaderMotor;
+
+
+  Supplier<Double> leftEncoderPosition;
+  Supplier<Double> leftEncoderRate;
+  Supplier<Double> rightEncoderPosition;
+  Supplier<Double> rightEncoderRate;
+  Supplier<Double> gyroAngleRadians;
+
+  NetworkTableEntry autoSpeedEntry = NetworkTableInstance.getDefault().getEntry("/robot/autospeed");
+  NetworkTableEntry telemetryEntry = NetworkTableInstance.getDefault().getEntry("/robot/telemetry");
+  NetworkTableEntry rotateEntry = NetworkTableInstance.getDefault().getEntry("/robot/rotate");
+
+  String data = "";
+  
+  int counter = 0;
+  double startTime = 0;
+  double priorAutospeed = 0;
+
+  double[] numberArray = new double[10];
+  ArrayList<Double> entries = new ArrayList<Double>();
+  public Robot() {
+    super(.005);
+    LiveWindow.disableAllTelemetry();
+  }
+
+  public enum Sides {
+    LEFT,
+    RIGHT,
+    FOLLOWER
+  }
+
+  // methods to create and setup motors (reduce redundancy)
+  public WPI_TalonSRX setupWPI_TalonSRX(int port, Sides side, boolean inverted) {
+    // create new motor and set neutral modes (if needed)
+    WPI_TalonSRX motor = new WPI_TalonSRX(port);
+    // setup talon
+    motor.configFactoryDefault();
+    motor.setNeutralMode(NeutralMode.Brake);
+    motor.setInverted(inverted);
+    
+    // setup encoder if motor isn't a follower
+    if (side != Sides.FOLLOWER) {
+    
+      
+      motor.configSelectedFeedbackSensor(
+            FeedbackDevice.QuadEncoder,
+            PIDIDX, 10
+      );    
+
+
+
+    switch (side) {
+      // setup encoder and data collecting methods
+
+      case LEFT:
+        motor.setSensorPhase(false);
+        
+        leftEncoderPosition = ()
+          -> motor.getSelectedSensorPosition(PIDIDX) * encoderConstant;
+        leftEncoderRate = ()
+          -> motor.getSelectedSensorVelocity(PIDIDX) * encoderConstant *
+               10;
+        
+
+        break;
+      default:
+        // probably do nothing
+        break;
+
+      }
+    
+    }
+    
+
+    return motor;
+
+  }
+
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
     robotContainer = new RobotContainer();
-    LiveWindow.setEnabled(false);
-    LiveWindow.disableAllTelemetry();
-    // rearLeft = new SwerveModule(Constants.REAR_LEFT_MOVE_MOTOR, Constants.REAR_LEFT_ROTATE_MOTOR, Constants.REAR_LEFT_ROTATE_SENSOR);
+
+    // stick = new Joystick(0);
+    
+    // create left motor
+    // WPI_TalonSRX leftMotor = setupWPI_TalonSRX(0, Sides.LEFT, true);
+
+
+    rightEncoderPosition = leftEncoderPosition;
+    rightEncoderRate = leftEncoderRate;
+    // leaderMotor = leftMotor;
+
+    //
+    // Configure gyro
+    //
+
+    // Note that the angle from the NavX and all implementors of WPILib Gyro
+    // must be negated because getAngle returns a clockwise positive angle
+    gyroAngleRadians = () -> 0.0;
+
+    // Set the update rate instead of using flush because of a ntcore bug
+    // -> probably don't want to do this on a robot in competition
+    NetworkTableInstance.getDefault().setUpdateRate(0.010);
   }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-  }
-
-  /**
-   * This function is called once each time the robot enters Disabled mode.
-   */
   @Override
   public void disabledInit() {
+    RobotContainer.swerveDrive.stopAllModules();
+    RobotContainer.swerveDrive.setEnableLimitedOutput(true);
+    double elapsedTime = Timer.getFPGATimestamp() - startTime;
+    System.out.println("Robot disabled");
+    // leaderMotor.set(0);
+    // data processing step
+    data = entries.toString();
+    data = data.substring(1, data.length() - 1) + ", ";
+    telemetryEntry.setString(data);
+    entries.clear();
+    System.out.println("Robot disabled");
+    System.out.println("Collected : " + counter + " in " + elapsedTime + " seconds");
+    data = "";
   }
 
   @Override
   public void disabledPeriodic() {
-    String command = RobotContainer.autoChooser.getSelected().getName();
-    // SmartDashboard.putString("AutoInstrutions", RobotContainer.autoModes.get(mode6+).getAutoDescription());
-    SmartDashboard.putString("Chosen Auto Mode", command);
   }
 
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
-   */
   @Override
-  public void autonomousInit() {
-    m_autonomousCommand = RobotContainer.autoChooser.getSelected();
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-  }
-
-  /**
-   * This function is called periodically during autonomous.
-   */
-  @Override
-  public void autonomousPeriodic() {
+  public void robotPeriodic() {
+    // feedback for users, but not used by the control program
+    SmartDashboard.putNumber("l_encoder_pos", 0.0);
+    SmartDashboard.putNumber("l_encoder_rate", 0.0);
+    SmartDashboard.putNumber("r_encoder_pos", 0.0);
+    SmartDashboard.putNumber("r_encoder_rate", 0.0);
   }
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
-    }
+    System.out.println("Robot in operator control mode");
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
   @Override
   public void teleopPeriodic() {
-    // double output = (driver.getRawButton(1)?.05:0)+(driver.getRawButton(2)?.1:0)+(driver.getRawButton(3)?1:0);
-    // rearLeft.driveRotateMotor(output);
-    // System.out.println("Output="+output);
+    // leaderMotor.set(-stick.getY());
   }
 
   @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+  public void autonomousInit() {
+    RobotContainer.swerveDrive.setEnableLimitedOutput(false);
+    RobotContainer.swerveDrive.resetAllModuleDistances();
+    System.out.println("Robot in autonomous mode");
+    startTime = Timer.getFPGATimestamp();
+    counter = 0;
   }
 
   /**
-   * This function is called periodically during test mode.
-   */
+  * If you wish to just use your own robot program to use with the data logging
+  * program, you only need to copy/paste the logic below into your code and
+  * ensure it gets called periodically in autonomous mode
+  * 
+  * Additionally, you need to set NetworkTables update rate to 10ms using the
+  * setUpdateRate call.
+  */
   @Override
-  public void testPeriodic() {
+  public void autonomousPeriodic() {
+
+    // Retrieve values to send back before telling the motors to do something
+    double now = Timer.getFPGATimestamp();
+
+    double leftPosition = 0;
+    double[] allPos = RobotContainer.swerveDrive.getAllModuleDistance();
+    for(int i=0;i<4;i++){
+      leftPosition += allPos[i];
+    }
+    leftPosition /= 4 ;
+
+    double leftRate = 0;
+    double[] allRate = RobotContainer.swerveDrive.getAllModuleVelocity();
+    for(int i=0; i <4; i++){
+      leftRate += allRate[i];
+    }
+    leftRate /= 4;
+
+    double rightPosition = 0;
+    double rightRate = 0;
+
+    double battery = RobotController.getBatteryVoltage();
+    double motorVolts = battery * Math.abs(priorAutospeed);
+
+    double leftMotorVolts = motorVolts;
+    double rightMotorVolts = motorVolts;
+
+    // Retrieve the commanded speed from NetworkTables
+    double autospeed = autoSpeedEntry.getDouble(0);
+    priorAutospeed = autospeed;
+
+    // command motors to do things
+    // leaderMotor.set(autospeed);
+    RobotContainer.swerveDrive.driveRobotCentric(autospeed, 0, 0, kDriveMode.percentOutput);
+
+    numberArray[0] = now;
+    numberArray[1] = battery;
+    numberArray[2] = autospeed;
+    numberArray[3] = leftMotorVolts;
+    numberArray[4] = rightMotorVolts;
+    numberArray[5] = leftPosition;
+    numberArray[6] = rightPosition;
+    numberArray[7] = leftRate;
+    numberArray[8] = rightRate;
+    numberArray[9] = 0.0;
+
+    // Add data to a string that is uploaded to NT
+    for (double num : numberArray) {
+      entries.add(num);
+    }
+    counter++;
   }
 }

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoPythonChar;
 import frc.robot.commands.AutoSlalomPath;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
@@ -87,7 +88,7 @@ public class RobotContainer {
     limelight = new Limelight();
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
-    configureButtonBindings();
+    // configureButtonBindings();
     configureAutoModes();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
@@ -140,6 +141,8 @@ public class RobotContainer {
     autoChooser.addOption("Bouncy Path", new AutoBouncePath());
 
     autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    autoChooser.addOption("Characterization", new AutoPythonChar());
 
     SmartDashboard.putData(RobotContainer.autoChooser);
 

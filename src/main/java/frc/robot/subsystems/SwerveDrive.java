@@ -666,6 +666,13 @@ public class SwerveDrive extends SubsystemBase {
     currentPosition = new Pose2d(0, 0, getGyroRotation2d());
   }
 
+  public void resetAllModuleDistances(){
+    for(int i =0;i<4;i++){
+      swerveModules[i].resetDriveMotorEncoder();
+    }
+    
+  }
+
   public void setCurrentPos(Pose2d target) {
     currentPosition = target;
   }
