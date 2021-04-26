@@ -7,18 +7,24 @@
 
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
-import frc.robot.commands.AutoBouncePath2;
+import frc.robot.commands.AutoSlalomPath;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveArc;
@@ -70,6 +76,8 @@ public class RobotContainer {
   public static SwerveDrive swerveDrive;
   public static Limelight limelight;
 
+  public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -80,6 +88,7 @@ public class RobotContainer {
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
     configureButtonBindings();
+    configureAutoModes();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
     SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
@@ -91,7 +100,9 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveVelocityPIDTune());
     SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
-    SmartDashboard.putData(new AutoBouncePath());
+    // SmartDashboard.putData(new AutoBouncePath());
+    // SmartDashboard.putData(new AutoSlalomPath());
+    // SmartDashboard.putData(new AutoBarrelPath());
   }
 
   /**
@@ -120,6 +131,20 @@ public class RobotContainer {
     driverBack.whenPressed(new DriveRobotCentric());
   }
   
+  private void configureAutoModes() {
+    
+    autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
+
+    autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
+
+    autoChooser.addOption("Bouncy Path", new AutoBouncePath());
+
+    autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    SmartDashboard.putData(RobotContainer.autoChooser);
+
+  }
+
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
 
@@ -165,4 +190,6 @@ public class RobotContainer {
   public int getDriverDPad() {
     return (driver.getPOV());
   }
+
+
 }

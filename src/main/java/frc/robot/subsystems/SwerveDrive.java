@@ -50,7 +50,7 @@ public class SwerveDrive extends SubsystemBase {
   public PIDController lateralPosPidController;
   public PIDController awayPosPidController;
 
-  
+  public Boolean isMinOutLimited = true;  
 
   
 
@@ -241,7 +241,7 @@ public class SwerveDrive extends SubsystemBase {
     }
 
     //change the following to a simple if, invert the logic, and within, place the next for loop
-    if(maxSpeed < (isVelocityMode?Constants.MINIMUM_DRIVE_SPEED:Constants.MINIMUM_DRIVE_DUTY_CYCLE)){
+    if(isMinOutLimited && maxSpeed < (isVelocityMode?Constants.MINIMUM_DRIVE_SPEED:Constants.MINIMUM_DRIVE_DUTY_CYCLE)){
       //if the maxSpeed is below the minimum movement speed, stop all the motors.
       for(int i=0 ; i<4 ; i++){
         swerveModules[i].setDriveMotor(0.0);
@@ -647,6 +647,9 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+  public void setEnableLimitedOutput(boolean value){
+    isMinOutLimited = value;
+  }
   /**  
    *method to configure all modules DriveMotor PIDF
    */

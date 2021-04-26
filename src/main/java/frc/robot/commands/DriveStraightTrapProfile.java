@@ -58,6 +58,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.swerveDrive.setEnableLimitedOutput(false);
     angleOfRobot = RobotContainer.swerveDrive.getGyroInRad();
     System.out.println("direction start" + this.directionAsAngle);
     initialPosition = RobotContainer.swerveDrive.getCurrentPose().getTranslation();
@@ -71,9 +72,9 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void execute() {
     //use profile to create a position and speed for the motors
-    TrapezoidProfile.State currentPoint = profile.calculate(timer.get()+.02);
-    // TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
-    double acceleration = 0;//(futurePoint.velocity - currentPoint.velocity) / 0.02;
+    TrapezoidProfile.State currentPoint = profile.calculate(timer.get());
+    TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
+    double acceleration = (futurePoint.velocity - currentPoint.velocity) / 0.02;
     // System.out.println("position:" + currentPoint.position);
     //get current position relative to initial position
     Translation2d currentRelPostion = 
@@ -86,9 +87,9 @@ public class DriveStraightTrapProfile extends CommandBase {
     currentDriveVelocity = currentRelVelocity.rotateBy(directionAsAngle.unaryMinus());
 
     //use PID controller to get drive orientation outputs
-    double movingDirection = RobotContainer.swerveDrive.awayPosPidController.calculate(
-      currentDrivePosition.getX(), currentPoint.position); //+ 
-     // RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    double movingDirection = //RobotContainer.swerveDrive.awayPosPidController.calculate(
+      // currentDrivePosition.getX(), currentPoint.position) + 
+      RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
     
     // double movingDirection = RobotContainer.swerveDrive.awaySpeedPIDController.calculate(
     //   currentDriveVelocity.getX(), currentPoint.velocity) + 
@@ -113,7 +114,8 @@ public class DriveStraightTrapProfile extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX());
+    RobotContainer.swerveDrive.setEnableLimitedOutput(true);
+    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX() + " err "+(distanceOfTravel-currentDrivePosition.getX()));
     timer.stop();
     RobotContainer.swerveDrive.stopAllModules();
   }
@@ -122,8 +124,8 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return //timer.hasElapsed(profile.totalTime());// || 
-            distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
+    return timer.hasElapsed(profile.totalTime());// || 
+            // distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
   }
 
   public double distanceBetweenPose(Pose2d a,Pose2d b){
