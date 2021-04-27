@@ -124,11 +124,8 @@ public class DriveStraightTrapProfile2 extends CommandBase {
   @Override
   public boolean isFinished() {
 
-    return //timer.hasElapsed(profile.totalTime());// || 
-            distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
+    return timer.hasElapsed(profile.totalTime());// || 
+           // distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
   }
 
-  public double distanceBetweenPose(Pose2d a,Pose2d b){
-    return Math.sqrt( Math.pow(a.getX()+b.getX(),2) + Math.pow(a.getY()+b.getY(),2) );
-  }
 }

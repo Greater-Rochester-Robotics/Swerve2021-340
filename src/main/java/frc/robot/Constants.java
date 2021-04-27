@@ -100,12 +100,12 @@ public final class Constants {
     public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.95/4.5;
 
     /* Robot away speed PID controller & feed forward constants */
-    public static final double AWAY_SPEED_P = .0235;//.55;
+    public static final double AWAY_SPEED_P = .0705;//.55;
     public static final double AWAY_SPEED_I = 0;
     public static final double AWAY_SPEED_D = 0;
     public static final double AWAY_FEEDFORWARD_STATIC = 0.02875;//.102/5.04;//0.05;
     public static final double AWAY_FEEDFORWARD_VELOCITY = 0.203;//1/5.04;//0.95/4.7;
-    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.00204;//1/.504;// 1/4.6;
+    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.00408;//1/.504;// 1/4.6;
 
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = 0.8;

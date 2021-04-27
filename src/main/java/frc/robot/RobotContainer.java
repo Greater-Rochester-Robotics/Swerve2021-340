@@ -40,6 +40,7 @@ import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveStraightTrapProfile;
+import frc.robot.commands.DriveStraightTrapProfile2;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveVelocityPIDTune;
@@ -87,7 +88,7 @@ public class RobotContainer {
     limelight = new Limelight();
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
     // Configure the button bindings
-    configureButtonBindings();
+    // configureButtonBindings();
     configureAutoModes();
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
@@ -98,7 +99,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
     SmartDashboard.putData(new DriveVelocityPIDTune());
-    SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
+    SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.46355, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
