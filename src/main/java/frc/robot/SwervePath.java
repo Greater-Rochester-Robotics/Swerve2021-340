@@ -1,13 +1,12 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.Trajectory.State;;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.util.Units;
 
@@ -71,34 +70,37 @@ public class SwervePath {
     }
 
     /**
-     * Create a SwervePath object from a CSV file
+     * Create a SwervePath object from a JSON file
      * Expected format is xPos, yPos, velocity, acceleration, heading (direction robot is moving), rotation
      *
      * @param filename The path file to load
      * @return The SwervePath object
      */
-    public static SwervePath fromCSV(String fileName) {
-        SwervePath traj = new SwervePath();
+    public static SwervePath fromJson(String fileName) {
+        SwervePath outputTrajectory = new SwervePath();
 
         String trajectoryJSON = "output/output/" + fileName + ".wpilib.json";
         robotPath = new Trajectory();
         try {
             Path filePath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
             robotPath = TrajectoryUtil.fromPathweaverJson(filePath);
-            String line = "";
+            Pose2d prevPos =  robotPath.getInitialPose();
+            double prevDist = 0;
             for(State state: robotPath.getStates()){
-                double pos = (state.poseMeters.getTranslation().getNorm());
+                double pos = state.poseMeters.minus(prevPos).getTranslation().getNorm() + prevDist;//(state.poseMeters.getTranslation().getNorm());
                 double vel = (state.velocityMetersPerSecond);
                 double acc = (state.accelerationMetersPerSecondSq);
                 Rotation2d heading = state.poseMeters.getRotation();
                 double rotation = 0.0;
                 double time = state.timeSeconds;
-                traj.states.add(new States(pos, heading, vel, acc, Rotation2d.fromDegrees(rotation), time));
+                outputTrajectory.states.add(new States(pos, heading, vel, acc, new Rotation2d(rotation), time));
+                prevDist = pos;
+                prevPos = state.poseMeters;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception err) {
+            DriverStation.reportError("Unable to open trajectory file: " + trajectoryJSON, err.getStackTrace());
         }
-        return traj;
+        return outputTrajectory;
     }
 
     private static double lerp(double startVal, double endVal, double t) {
@@ -161,7 +163,7 @@ public class SwervePath {
         /**
          * Construct a State
          *
-         * @param pos          Translation2d holding the robot's position on the field
+         * @param pos          the robot's distance of travel on the path
          * @param heading      Rotation2d representing the direction of robot motion
          * @param velocity     Velocity of the robot
          * @param acceleration Acceleration of the robot

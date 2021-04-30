@@ -84,9 +84,9 @@ public final class Constants {
     public static final double ROBOT_SPIN_D = 0;
 
     /* Robot lateral and away pos PID controller constants */
-    public static final double LATERAL_POS_P = .55;
+    public static final double LATERAL_POS_P = 1;
     public static final double LATERAL_POS_I = 0;
-    public static final double LATERAL_POS_D = 0;
+    public static final double LATERAL_POS_D = .004;
 
     public static final double AWAY_POS_P = .55;
     public static final double AWAY_POS_I = 0;

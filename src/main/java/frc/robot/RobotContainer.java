@@ -33,6 +33,7 @@ import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveArcDriverControl;
 import frc.robot.commands.DriveFieldCentricVelocity;
 import frc.robot.commands.DriveFindMaxAccel;
+import frc.robot.commands.DriveFollowPath;
 import frc.robot.commands.DriveGenerateVelocityGraph;
 import frc.robot.commands.DriveOneModule;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
@@ -101,6 +102,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveVelocityPIDTune());
     SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.46355, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
+    SmartDashboard.putData(new DriveFollowPath("Straight"));
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
     // SmartDashboard.putData(new AutoBarrelPath());

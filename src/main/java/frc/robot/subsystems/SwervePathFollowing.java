@@ -26,9 +26,9 @@ public class SwervePathFollowing {
     public SwervePathFollowing(PIDController posErrorController, PIDController headingController, ProfiledPIDController rotationController) {
         this.posErrorController = posErrorController;
         this.headingErrorController = headingController;
-        this.headingErrorController.enableContinuousInput(-180, 180);
+        this.headingErrorController.enableContinuousInput(-Math.PI, Math.PI);
         this.rotController = rotationController;
-        this.rotController.enableContinuousInput(-180, 180);
+        this.rotController.enableContinuousInput(-Math.PI, Math.PI);
         this.lastPosition = new Translation2d();
         this.currentHeading = new Rotation2d(0);
     }
@@ -36,7 +36,7 @@ public class SwervePathFollowing {
     public SwervePathFollowing(PIDController posErrorController, PIDController headingController) {
         this.posErrorController = posErrorController;
         this.headingErrorController = headingController;
-        this.headingErrorController.enableContinuousInput(-180, 180);
+        this.headingErrorController.enableContinuousInput(-Math.PI, Math.PI);
         this.rotController = null;
         this.lastPosition = new Translation2d();
         this.currentHeading = new Rotation2d(0);
@@ -75,14 +75,12 @@ public class SwervePathFollowing {
      * @param goalState       Goal state of the robot
      * @return The calculated speeds and rotation
      */
-    public double[] calculate(Pose2d currentPose, SwervePath.States goalState, double deltaTime, boolean doHeading) {
+    public double[] calculate(Pose2d currentPose, Pose2d velocity, SwervePath.States goalState, double deltaTime, boolean doHeading) {
         Translation2d currentPos = currentPose.getTranslation();
         Rotation2d currentRotation = currentPose.getRotation();
 
         totalDistance += lastPosition.getDistance(currentPos);
-        double xV = (currentPos.getX() - lastPosition.getX()) / deltaTime;
-        double yV = (currentPos.getY() - lastPosition.getY()) / deltaTime;
-        this.currentHeading = new Rotation2d(Math.atan2(yV, xV));
+        this.currentHeading = velocity.getRotation();
 
         double vel = goalState.getVelocity();
         Rotation2d heading = goalState.getHeading();
@@ -90,7 +88,7 @@ public class SwervePathFollowing {
 
         vel += posErrorController.calculate(totalDistance, goalState.getPos());
         if(doHeading) {
-            heading = heading.plus(Rotation2d.fromDegrees(headingErrorController.calculate(this.currentHeading.getRadians(), goalState.getHeading().getRadians())));
+            heading = heading.plus(new Rotation2d(headingErrorController.calculate(this.currentHeading.getRadians(), goalState.getHeading().getRadians())));
         }
 
         double xVelocity = vel * heading.getCos();
