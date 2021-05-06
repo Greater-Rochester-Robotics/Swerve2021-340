@@ -82,7 +82,7 @@ public final class Constants {
     public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.0;//1.1;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
-    public static final double SWERVE_MODULE_TOLERANCE = .033;//34;//this is in radians
+    public static final double SWERVE_MODULE_TOLERANCE = .051;//34;//this is in radians
     
     /* Robot Motion PID controller constants */
     public static final double ROBOT_SPIN_P = 1;
@@ -92,7 +92,7 @@ public final class Constants {
     /* Robot lateral and away pos PID controller constants */
     public static final double LATERAL_POS_P = 1;
     public static final double LATERAL_POS_I = 0;
-    public static final double LATERAL_POS_D = 0;
+    public static final double LATERAL_POS_D = .004;
 
     public static final double AWAY_POS_P = .55;
     public static final double AWAY_POS_I = 0;
@@ -104,14 +104,15 @@ public final class Constants {
     public static final double LATERAL_SPEED_D = 0;
     public static final double LATERAL_FEEDFORWARD_STATIC = 0.05;
     public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
-    public static final double AWAY_FEEDFORWARD_STATIC = 0.05;
-    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
-    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0;//1/.504;// 1/4.6;
 
     /* Robot away speed PID controller & feed forward constants */
-    public static final double AWAY_SPEED_P = 0;//.55;
+    public static final double AWAY_SPEED_P = .0705;//.55;
     public static final double AWAY_SPEED_I = 0;
     public static final double AWAY_SPEED_D = 0;
+    public static final double AWAY_FEEDFORWARD_STATIC = 0.02875;//.102/5.04;//0.05;
+    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.203;//1/5.04;//0.95/4.7;
+    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.00408;//1/.504;// 1/4.6;
+
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = 0.90;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;

@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
@@ -14,7 +13,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveStraightTrapProfile extends CommandBase {
+public class DriveStraightTrapProfile2 extends CommandBase {
   private TrapezoidProfile profile;
   private Timer timer = new Timer();
   private Translation2d initialPosition;
@@ -36,7 +35,7 @@ public class DriveStraightTrapProfile extends CommandBase {
    * @param startSpeed a speed
    * @param endSpeed
    */
-  public DriveStraightTrapProfile(double directionAsAngle, double distanceOfTravel, double startSpeed, double endSpeed) {
+  public DriveStraightTrapProfile2(double directionAsAngle, double distanceOfTravel, double startSpeed, double endSpeed) {
     addRequirements(RobotContainer.swerveDrive);
     this.distanceOfTravel = distanceOfTravel;
     
@@ -58,7 +57,6 @@ public class DriveStraightTrapProfile extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    RobotContainer.swerveDrive.setEnableLimitedOutput(false);
     angleOfRobot = RobotContainer.swerveDrive.getGyroInRad();
     System.out.println("direction start" + this.directionAsAngle);
     initialPosition = RobotContainer.swerveDrive.getCurrentPose().getTranslation();
@@ -72,10 +70,10 @@ public class DriveStraightTrapProfile extends CommandBase {
   @Override
   public void execute() {
     //use profile to create a position and speed for the motors
-    TrapezoidProfile.State currentPoint = profile.calculate(timer.get());
-    TrapezoidProfile.State futurePoint = profile.calculate(timer.get() + 0.02);
-    double acceleration = (futurePoint.velocity - currentPoint.velocity) / 0.02;
-    // System.out.println("position:" + currentPoint.position);
+    TrapezoidProfile.State targetPoint = profile.calculate(timer.get()+.02);
+    double acceleration = (profile.calculate(timer.get()+.01).velocity
+      - profile.calculate(timer.get()-.01).velocity)/.02;
+    
     //get current position relative to initial position
     Translation2d currentRelPostion = 
       RobotContainer.swerveDrive.getCurrentPose().getTranslation().minus(initialPosition);
@@ -87,13 +85,15 @@ public class DriveStraightTrapProfile extends CommandBase {
     currentDriveVelocity = currentRelVelocity.rotateBy(directionAsAngle.unaryMinus());
 
     //use PID controller to get drive orientation outputs
-    double movingDirection = //RobotContainer.swerveDrive.awayPosPidController.calculate(
-      // currentDrivePosition.getX(), currentPoint.position) + 
-      RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    // double movingDirection = //RobotContainer.swerveDrive.awayPosPidController.calculate(
+      // currentDrivePosition.getX(), targetPoint.position); //+ 
+    //  RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(targetPoint.velocity, acceleration);//position or velocity pid
     
-    // double movingDirection = RobotContainer.swerveDrive.awaySpeedPIDController.calculate(
-    //   currentDriveVelocity.getX(), currentPoint.velocity) + 
-    //   RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(currentPoint.velocity, acceleration);//position or velocity pid
+    double movingDirection = RobotContainer.swerveDrive.awayPosPidController.calculate(
+      currentDrivePosition.getX(), targetPoint.position)+
+      RobotContainer.swerveDrive.awaySpeedPIDController.calculate(
+      currentDriveVelocity.getX(), targetPoint.velocity) + 
+      RobotContainer.swerveDrive.awaySpeedFeedforward.calculate(targetPoint.velocity, acceleration);//position or velocity pid
     
     double notMovingDirection = RobotContainer.swerveDrive.lateralPosPidController.calculate(
       currentDrivePosition.getY(), 0.0);//Position PID
@@ -107,15 +107,14 @@ public class DriveStraightTrapProfile extends CommandBase {
     RobotContainer.swerveDrive.driveFieldCentric(output.getX(), output.getY(),
       RobotContainer.swerveDrive.getRobotRotationPIDOut(angleOfRobot), kDriveMode.percentOutput);
     
-    // System.out.println("Current Velocity:" + RobotContainer.swerveDrive.getCurrentVelocity().getX() 
-    //   +"  goal Velo:"+currentPoint.velocity);
+    System.out.println("CV:," + currentDriveVelocity.getX() 
+      +",GV:,"+targetPoint.velocity+",dV:,"+(currentDriveVelocity.getX()-targetPoint.velocity));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.swerveDrive.setEnableLimitedOutput(true);
-    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX() + " err "+(distanceOfTravel-currentDrivePosition.getX()));
+    System.out.println("distance stop "+distanceOfTravel+" at "+currentDrivePosition.getX());
     timer.stop();
     RobotContainer.swerveDrive.stopAllModules();
   }
@@ -125,10 +124,7 @@ public class DriveStraightTrapProfile extends CommandBase {
   public boolean isFinished() {
 
     return timer.hasElapsed(profile.totalTime());// || 
-            // distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
+           // distanceOfTravel <= (currentDrivePosition.getX()+.05);//(currentDriveVelocity.getX() * 0.2)));
   }
 
-  public double distanceBetweenPose(Pose2d a,Pose2d b){
-    return Math.sqrt( Math.pow(a.getX()+b.getX(),2) + Math.pow(a.getY()+b.getY(),2) );
-  }
 }

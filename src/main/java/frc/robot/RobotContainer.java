@@ -19,9 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.Auto340Command;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.AutoSlalomPath;
@@ -32,14 +32,18 @@ import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveArcDriverControl;
 import frc.robot.commands.DriveFieldCentricVelocity;
+import frc.robot.commands.DriveFindMaxAccel;
+import frc.robot.commands.DriveFollowPath;
 import frc.robot.commands.DriveGenerateVelocityGraph;
 import frc.robot.commands.DriveOnTargetWithLimeLight;
 import frc.robot.commands.DriveOneModule;
+import frc.robot.commands.DrivePathWeaverProfile;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveStraightTrapProfile;
+import frc.robot.commands.DriveStraightTrapProfile2;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveVelocityPIDTune;
@@ -115,8 +119,7 @@ public class RobotContainer {
   public static Shooter shooter;
   
 
-  public static SendableChooser<String> autoChooser;
-  public static Map<String, Auto340Command> autoModes = new HashMap<>();
+  public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
 
   /**
@@ -124,6 +127,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     
+    //create subsystems
     shooter = new Shooter();
     harvester = new Harvester();
     snekLoader = new SnekLoader();
@@ -133,8 +137,14 @@ public class RobotContainer {
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
+
     // Configure the button bindings
     configureButtonBindings();
+
+    //Add all autos to the auto selector
+    configureAutoModes();
+
+    //add some cmmands to dashboard for testing
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
     SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
@@ -144,11 +154,12 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
     SmartDashboard.putData(new DriveVelocityPIDTune());
-    SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
+    SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.0, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
-    SmartDashboard.putData(new AutoBouncePath());
-    SmartDashboard.putData(new AutoSlalomPath());
-    SmartDashboard.putData(new AutoBarrelPath());
+    SmartDashboard.putData(new DrivePathWeaverProfile("TestArc"));
+    // SmartDashboard.putData(new AutoBouncePath());
+    // SmartDashboard.putData(new AutoSlalomPath());
+    // SmartDashboard.putData(new AutoBarrelPath());
   }
 
   /**
@@ -159,35 +170,50 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-    driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-    driverA.whenPressed(new SetHarvesterDown());
-    driverY.whenPressed(new PickHarvesterUp());
+    //==========  DRIVER  ==========
+    // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
+    // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
+    // driverA.whenPressed(new SetHarvesterDown());
+    // driverY.whenPressed(new PickHarvesterUp());
     
-    // //driverA.whenPressed(new Load());
-    // driverA.whenPressed(new LoadAcc());
-    // driverA.whenReleased(new GetSmol());
-    // // driverA.whenPressed(new SetHarvesterDown());
-    // // driverA.whenReleased(new PickHarvesterUp());
-    // driverB.whileHeld(new Regurgitate());
-    // //driverX.whenPressed(new SmartLimeShot());
-    // driverX.whenPressed(new FastBallWithHintOfLime());
-    // driverX.whenReleased(new GetSmol());
-    // driverRB.whileHeld(new DriveAimAndPrepHood());
-    // driverY.whenPressed(new WallShot());
-    // driverY.whenReleased(new GetSmol());
+    //driverA.whenPressed(new Load());
+    driverA.whenPressed(new LoadAcc());
+    driverA.whenReleased(new GetSmol());
+    // driverA.whenPressed(new SetHarvesterDown());
+    // driverA.whenReleased(new PickHarvesterUp());
+    driverB.whileHeld(new Regurgitate());
+    //driverX.whenPressed(new SmartLimeShot());
+    driverX.whenPressed(new FastBallWithHintOfLime());
+    driverX.whenReleased(new GetSmol());
+    driverRB.whileHeld(new DriveAimAndPrepHood());
+    driverY.whenPressed(new WallShot());
+    driverY.whenReleased(new GetSmol());
     
     // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
 
-
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
 
-    // coDriverB.whenPressed(new SpinUpShooterWheel());
+    //========== CODRIVER ==========
+    coDriverB.whenPressed(new SpinUpShooterWheel());
   }
   
+  private void configureAutoModes() {
+    
+    autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
+
+    autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
+
+    autoChooser.addOption("Bouncy Path", new AutoBouncePath());
+
+    autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    SmartDashboard.putData(RobotContainer.autoChooser);
+
+  }
+
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
 
@@ -234,17 +260,5 @@ public class RobotContainer {
     return (driver.getPOV());
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // = Shuffleboard.getTab("Competition").get
-    String mode = RobotContainer.autoChooser.getSelected();
-    SmartDashboard.putString("Chosen Auto Mode", mode);
-    return autoModes.getOrDefault(mode, new AutoBarrelPath());//new Command();
 
-    
-  }
 }
