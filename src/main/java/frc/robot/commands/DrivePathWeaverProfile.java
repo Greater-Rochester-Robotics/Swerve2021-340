@@ -26,7 +26,8 @@ public class DrivePathWeaverProfile extends CommandBase {
   private Timer timer = new Timer();
   Trajectory trajectory = new Trajectory();
   private Translation2d initialPosition;
-  private double angleOfRobot;
+  private double targetAngle;
+  private boolean angleTargeted;
   // private Translation2d currentDrivePosition;
   // private Translation2d currentDriveVelocity;
   
@@ -50,14 +51,30 @@ public class DrivePathWeaverProfile extends CommandBase {
     } catch (IOException ex) {
       DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
     }
+    angleTargeted=false;
     
-    
+  }
+
+  public DrivePathWeaverProfile(String fileName, double targetAngle) {
+    addRequirements(RobotContainer.swerveDrive);
+
+    String trajectoryJSON = "output/"+ fileName + ".wpilib.json";
+    try {
+      Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+      trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+    } catch (IOException ex) {
+      DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+    }
+    angleTargeted = true;
+    this.targetAngle = targetAngle;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    angleOfRobot = RobotContainer.swerveDrive.getGyroInRad();
+    if(!angleTargeted){
+      targetAngle = RobotContainer.swerveDrive.getGyroInRad();
+    }
     initialPosition = RobotContainer.swerveDrive.getCurrentPose().getTranslation();
     RobotContainer.swerveDrive.setCurrentPos(trajectory.getInitialPose());
     timer.reset();
@@ -93,11 +110,10 @@ public class DrivePathWeaverProfile extends CommandBase {
       lateralSpeedPIDController.calculate(currentRelVelocity.getY(), targetVelY) + 
       lateralSpeedFeedforward.calculate(targetVelY, targetAccY);
     
-    // System.out.println("output x:" + output.getX());
 
     //convert back to field centric drive speeds
     RobotContainer.swerveDrive.driveFieldCentric(awayOutput, lateralOutput,
-      RobotContainer.swerveDrive.getRobotRotationPIDOut(angleOfRobot), kDriveMode.percentOutput);
+      RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle), kDriveMode.percentOutput);
     
     System.out.println("CV:," + currentRelVelocity.getX() 
       +",GV:,"+targetVelX+",dV:,"+(currentRelVelocity.getX()-targetVelX));
