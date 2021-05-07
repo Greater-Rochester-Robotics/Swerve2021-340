@@ -56,6 +56,7 @@ import frc.robot.commands.Shooter.DriveAimAndPrepHood;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
+import frc.robot.commands.Shooter.PrepWallShot;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -156,7 +157,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveVelocityPIDTune());
     SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.0, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
-    SmartDashboard.putData(new DrivePathWeaverProfile("TestArc"));
+    SmartDashboard.putData(new DrivePathWeaverProfile("Straight"));//,Math.PI/2));
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
     // SmartDashboard.putData(new AutoBarrelPath());
@@ -197,7 +198,11 @@ public class RobotContainer {
     driverBack.whenPressed(new DriveRobotCentric());
 
     //========== CODRIVER ==========
+    coDriverA.whenReleased(new GetSmol());
     coDriverB.whenPressed(new SpinUpShooterWheel());
+    coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
+    coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    coDriverBack.whenPressed(new StopShoot());
   }
   
   private void configureAutoModes() {
