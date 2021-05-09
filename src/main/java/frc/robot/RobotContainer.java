@@ -178,7 +178,7 @@ public class RobotContainer {
     // driverY.whenPressed(new PickHarvesterUp());
     
     //driverA.whenPressed(new Load());
-    driverA.whenPressed(new LoadAcc());
+    driverA.whenPressed(new Load());
     driverA.whenReleased(new GetSmol());
     // driverA.whenPressed(new SetHarvesterDown());
     // driverA.whenReleased(new PickHarvesterUp());

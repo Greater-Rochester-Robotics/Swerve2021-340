@@ -31,6 +31,7 @@ public class PrepHoodShot extends CommandBase {
   public void initialize() {
     //TODO: Update the below constant to use a new value of 10000 for warmup. Recommend creating new constant value
     RobotContainer.shooter.setShooterWheel(Constants.INITIATION_SHOT_RPM);
+    RobotContainer.shooter.raiseHood();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
