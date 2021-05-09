@@ -114,7 +114,7 @@ public final class Constants {
     public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.00408;//1/.504;// 1/4.6;
 
     /* Driver scaling constants to slow robot */
-    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.90;
+    public static final double DRIVER_SPEED_SCALE_LATERAL = -0.90;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
     // SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 41;// module 0

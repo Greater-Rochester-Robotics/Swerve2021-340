@@ -191,7 +191,7 @@ public class SnekLoader extends SubsystemBase {
           ballsLoaded = 4;
           break;
         }
-        case kAccFillTo4:
+      case kAccFillTo4:
         enableOneLimit(4);
         speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, 0 };
         if (getHandleSensor(4)) {
@@ -201,7 +201,7 @@ public class SnekLoader extends SubsystemBase {
           break;
         }
 
-        case kAccFillTo3:
+      case kAccFillTo3:
         enableOneLimit(3);
         speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, MOTOR_IN_SPEED3, 0 };
         if (getHandleSensor(3)) {
@@ -211,7 +211,7 @@ public class SnekLoader extends SubsystemBase {
           break;
         }
 
-        case kAccFillTo2:
+      case kAccFillTo2:
         enableOneLimit(2);
         speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, MOTOR_IN_SPEED2, 0, 0 };
         if (getHandleSensor(2)) {
@@ -229,7 +229,7 @@ public class SnekLoader extends SubsystemBase {
           break;
         }
 
-        case kAccFillTo1:
+      case kAccFillTo1:
         enableOneLimit(1);
         speeds = new double[] { MOTOR_IN_SPEED0, MOTOR_IN_SPEED1, 0, 0, 0 };
         if (getHandleSensor(1)) {
@@ -238,7 +238,7 @@ public class SnekLoader extends SubsystemBase {
           ballsLoaded = 0;
           break;
         }
-        case kAccBackFillTo2:
+      case kAccBackFillTo2:
         enableOneLimit(2);
         speeds = new double[] { 0, 0, -.5, -.6, 0 };
         if (getHandleSensor(2)) {

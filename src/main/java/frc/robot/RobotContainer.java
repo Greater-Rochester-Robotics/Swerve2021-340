@@ -186,13 +186,13 @@ public class RobotContainer {
     //driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    driverRB.whileHeld(new DriveAimAndPrepHood());
     driverY.whenPressed(new WallShot());
     driverY.whenReleased(new GetSmol());
     
     // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
+    driverRB.whileHeld(new DriveAimAndPrepHood());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
