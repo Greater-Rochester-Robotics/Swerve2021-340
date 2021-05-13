@@ -19,11 +19,12 @@ public class AutoShootThenOurTrenchThenShoot extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands( 
-    new ResetBallsShot(),
-    new PrepHoodShot(),
-    new DriveOnTargetWithLimeLight(),
-    new FastBallWithHintOfLime().withTimeout(2.5),
-    new LoadAcc()
+      new ResetBallsShot(),
+      new PrepHoodShot(),
+      new DriveTurnToTarget(),
+      new FastBallWithHintOfLime().withTimeout(2.5),
+      new DriveTurnToAngle(0),
+      new Load()
     );
   }
 }
