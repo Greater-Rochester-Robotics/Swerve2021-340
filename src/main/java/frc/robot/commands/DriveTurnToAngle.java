@@ -10,7 +10,13 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveTurnToAngle extends CommandBase {
   private double angle = 0;
-  /** Creates a new DriveTurnToAngle. Takes angle in radians */
+
+  /** Creates a new DriveTurnToAngle. This command 
+   * is used in tuning PID for rotation and in 
+   * autonomous to make a specific turn. 
+   * 
+   * @param angle angle in radians 
+   */
   public DriveTurnToAngle(double angle) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
@@ -30,11 +36,13 @@ public class DriveTurnToAngle extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.swerveDrive.stopAllModules();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03;
   }
 }
