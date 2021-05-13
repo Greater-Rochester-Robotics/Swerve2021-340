@@ -5,17 +5,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.RobotContainer.Axis;
-import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveOnTargetWithLimeLight extends CommandBase {
-  /** Creates a new DriveOnTargetWithLimeLight. */
-  public DriveOnTargetWithLimeLight() {
+public class DriveTurnToTarget extends CommandBase {
+
+  /** 
+   * Creates a new DriveTurnToTarget. This command 
+   * turns the robot to the goal target, and is 
+   * meant for use in autonomous. It ends when the 
+   * robot is on target.
+   * 
+   */
+  public DriveTurnToTarget() {
     addRequirements(RobotContainer.swerveDrive);
   }
 
@@ -28,18 +30,9 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double  awaySpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
-    double lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
-    if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
-      Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X))>.1){
-      awaySpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y)*.5;
-      lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*.5;
-    }
-    
     double targetAngle = RobotContainer.swerveDrive.getGyroInRad();
 
-    if(RobotContainer.limelight.haveTarget())
-    {
+    if(RobotContainer.limelight.haveTarget()){
       targetAngle -= Math.toRadians(RobotContainer.limelight.angleToTarget());
     }
     // else{
@@ -53,13 +46,10 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
     //   targetAngle *= Math.PI;
     // }
   
-    RobotContainer.swerveDrive.driveFieldCentric(
-      awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
-      lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
+    RobotContainer.swerveDrive.driveFieldCentric( 0.0, 0.0,
       RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle) * 1.5,
       kDriveMode.percentOutput
     );
-  
   }
 
   // Called once the command ends or is interrupted.
@@ -72,6 +62,6 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(RobotContainer.limelight.angleToTarget()) < .5;
   }
 }
