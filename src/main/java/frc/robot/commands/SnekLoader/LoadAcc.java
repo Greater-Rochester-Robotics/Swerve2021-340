@@ -14,25 +14,42 @@ import frc.robot.subsystems.SnekLoader.State;
 
 public class LoadAcc extends CommandBase {
   Timer tm = new Timer();
-private boolean ron;
+  private boolean raiseOnEnd;
+
   /**
-   * Creates a new Load.
+   * Creates a new LoadAcc command. This command lowers 
+   * the harvester, and sets the snek to intake for 3 
+   * balls. This is for the Interstellar Accuracy Challenge.
+   * It will raise the harvester on the commands termination.
+   * 
+   * @requires SnekLoader, Harvester
    */
   public LoadAcc(){
     this(true);
   }
-  public LoadAcc(boolean raise) {
+  
+  /**
+   * Creates a new LoadAcc command. This command lowers 
+   * the harvester, and sets the snek to intake for 3 
+   * balls. This is for the Interstellar Accuracy Challenge.
+   * Harester is raised when command ends if raiseOnEnd 
+   * is true.
+   * 
+   * @requires SnekLoader, Harvester
+   * @param raiseOnEnd true if the harvester raised by command when ended
+   */
+  public LoadAcc(boolean raiseOnEnd) {
     // Use addRequirements() here to declare subsystem dependencies.
-    ron = raise;
+    this.raiseOnEnd = raiseOnEnd;
     addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-     RobotContainer.snekLoader.setState(State.kAccFillTo3);
-      RobotContainer.harvester.lowerHarvester();
-      RobotContainer.snekLoader.setHarvesterJammed(false);
+    RobotContainer.snekLoader.setState(State.kAccFillTo3);
+    RobotContainer.harvester.lowerHarvester();
+    RobotContainer.snekLoader.setHarvesterJammed(false);
     tm.reset();
     tm.start();
   }
@@ -47,10 +64,10 @@ private boolean ron;
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(ron){
+    if(raiseOnEnd){
       RobotContainer.harvester.raiseHarvester();
     }
-   RobotContainer.snekLoader.setState(State.kOff);
+    RobotContainer.snekLoader.setState(State.kOff);
   }
 
   // Returns true when the command should end.

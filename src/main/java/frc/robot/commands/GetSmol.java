@@ -13,24 +13,28 @@ import frc.robot.subsystems.SnekLoader;
 
 public class GetSmol extends CommandBase {
   /**
-   * Creates a new GetSmall.
+   * This command causes the robot to stop all 
+   * subsystems but drive, and return to the 
+   * robot to its smallest state.
+   * 
+   * @requires SnekLoader, Harvester, Shooter
    */
   public GetSmol() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
+    addRequirements(RobotContainer.snekLoader, RobotContainer.harvester, RobotContainer.shooter, RobotContainer.limelight);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     RobotContainer.harvester.raiseHarvester();
-    RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
+    RobotContainer.snekLoader.setState(SnekLoader.State.kOff);//turn off the snekloader
     RobotContainer.shooter.stop();
     RobotContainer.shooter.lowerHood();
     // RobotContainer.shooter.raiseHardStop();
     RobotContainer.limelight.setLightState(1);
-   RobotContainer.snekLoader.setPause(false);
-    //colour wheel down
+   RobotContainer.snekLoader.setPause(false);//since the loader is off, turn off the pause
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.

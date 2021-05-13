@@ -47,8 +47,8 @@ import frc.robot.commands.DriveStraightTrapProfile2;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveVelocityPIDTune;
-import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
+import frc.robot.commands.RunPath;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
@@ -192,7 +192,7 @@ public class RobotContainer {
     // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
-    driverRB.whileHeld(new DriveAimAndPrepHood());
+    driverRB.whileHeld(new DriveOnTargetWithLimeLight());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());

@@ -13,7 +13,12 @@ import frc.robot.subsystems.SnekLoader.State;
 
 public class Regurgitate extends CommandBase {
   /**
-   * Creates a new Regurgitate.
+   * Creates a new Regurgitate. This command 
+   * causes all balls to move backwards out 
+   * of the shooter and the snek. this is 
+   * good to eliminate jams and what not.
+   * 
+   * @requires SnekLoader, Shooter
    */
   public Regurgitate() {
     // Use addRequirements() here to declare subsystem dependencies.
