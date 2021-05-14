@@ -282,7 +282,7 @@ public class SnekLoader extends SubsystemBase {
         break;
       default:
           speeds = new double[] {0.0,0.0,0.0,0.0,0.0};
-      }
+    }
     if(isPaused){
       speeds = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
     }

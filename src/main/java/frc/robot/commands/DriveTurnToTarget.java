@@ -62,6 +62,6 @@ public class DriveTurnToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(RobotContainer.limelight.angleToTarget()) < .5;
+    return RobotContainer.limelight.haveTarget() && Math.abs(RobotContainer.limelight.angleToTarget()) < 1;
   }
 }

@@ -24,6 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoColorWheelStealThenShoot;
+import frc.robot.commands.AutoShootAndMove;
+import frc.robot.commands.AutoShootThen3TrenchThenShoot;
 import frc.robot.commands.AutoSlalomPath;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
@@ -52,7 +55,6 @@ import frc.robot.commands.RunPath;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
-import frc.robot.commands.Shooter.DriveAimAndPrepHood;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
@@ -214,6 +216,12 @@ public class RobotContainer {
     autoChooser.addOption("Bouncy Path", new AutoBouncePath());
 
     autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    autoChooser.addOption("Shoot and Move", new AutoShootAndMove());
+
+    autoChooser.addOption("Color Wheel Steal", new AutoColorWheelStealThenShoot());
+
+    autoChooser.addOption("3 Balls Then Trench Run", new AutoShootThen3TrenchThenShoot());
 
     SmartDashboard.putData(RobotContainer.autoChooser);
 

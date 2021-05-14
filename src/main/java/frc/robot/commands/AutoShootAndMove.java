@@ -20,8 +20,8 @@ public class AutoShootAndMove extends SequentialCommandGroup {
     addCommands(
       new ResetBallsShot(),
       new PrepHoodShot(),
-      new DriveOnTargetWithLimeLight(),
-      new FastBallWithHintOfLime().withTimeout(2.5),
+      new DriveTurnToTarget(),
+      new FastBallWithHintOfLime().withTimeout(3),
       new GetSmol(),
       new DrivePathWeaverProfile("Straight")
     );
