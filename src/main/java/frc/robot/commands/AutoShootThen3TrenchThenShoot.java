@@ -44,10 +44,10 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
         )
       ),
       new GetSmol(),
-      new DrivePathWeaverProfile("TrenchRunpt5")// drive forward enough to shoot
-    //   new PrepHoodShot(),// once we're clear of color wheel, start the shooter, hood up
-    //   new DriveTurnToTarget(),//target the goal
-    //   new FastBallWithHintOfLime().withTimeout(2.5)
+      new DrivePathWeaverProfile("TrenchRunpt5"),// drive forward enough to shoot
+      new PrepHoodShot(),// once we're clear of color wheel, start the shooter, hood up
+      new DriveTurnToTarget(),//target the goal
+      new FastBallWithHintOfLime().withTimeout(2.5)
     );
   }
 }

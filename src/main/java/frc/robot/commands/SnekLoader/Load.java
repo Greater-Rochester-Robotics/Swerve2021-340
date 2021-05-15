@@ -72,7 +72,7 @@ public class Load extends CommandBase {
   @Override
   public boolean isFinished() {
     
-  //  return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.snekLoader.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
-   return false;
+    return RobotContainer.snekLoader.getState() == State.kOff; //|| (tm.get() > 0.25 &&RobotContainer.snekLoader.stopIntakeQ()));
+  //  return false;
   }
 }
