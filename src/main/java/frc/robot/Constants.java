@@ -116,6 +116,7 @@ public final class Constants {
     /* Driver scaling constants to slow robot */
     public static final double DRIVER_SPEED_SCALE_LATERAL = -0.90;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
+
     // SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 41;// module 0
     public static final int REAR_LEFT_ROTATE_MOTOR = 44;// module 1
@@ -131,6 +132,7 @@ public final class Constants {
     public static final int REAR_RIGHT_ROTATE_SENSOR = 48;// module 2
     public static final int FRONT_RIGHT_MOVE_MOTOR = 49;// module 3
     public static final int FRONT_RIGHT_ROTATE_SENSOR = 51;// module 3
+    public static final int CLIMBER = 25;
 
     /* Spark MAXes */
     public static final int SHOOTER_WHEEL = 35; // launching wheel for the prototype
@@ -154,6 +156,10 @@ public final class Constants {
     public static final int TEST_SHOOTER = 12500; // Used for testing and recording distance for shooting
     public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
     public static final int RPM_ADD_FACTOR = 0;
+
+    /*	Climber Speeds	*/
+    public static final double CLIMBER_CONTRACT_SPEED = -.75;
+    public static final double CLIMBER_EXTEND_SPEED = .6;
 
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;

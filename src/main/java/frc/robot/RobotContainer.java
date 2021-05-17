@@ -13,6 +13,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -52,6 +53,7 @@ import frc.robot.commands.DriveTurnToAngle;
 import frc.robot.commands.DriveVelocityPIDTune;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.RunPath;
+import frc.robot.commands.Climber.ClimberCoDriverFunction;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
@@ -71,6 +73,7 @@ import frc.robot.commands.SnekLoader.StopSnek;
 
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -113,9 +116,11 @@ public class RobotContainer {
   final Button coDriverStart = new JoystickButton(coDriver, 8);
   final Button coDriverLS = new JoystickButton(coDriver, 9);
   final Button coDriverRS = new JoystickButton(coDriver, 10);
+  final Button coDriverDDown = new DPad(coDriver, DPad.Direction.DOWN);
   
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
+  public static Climber climber;
   public static Limelight limelight;
   public static SnekLoader snekLoader;
   public static Harvester harvester;
@@ -137,6 +142,7 @@ public class RobotContainer {
     limelight = new Limelight();
     limelight.setStreamMode(0);
     limelight.setLightState(1);
+    climber = new Climber();
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
@@ -205,6 +211,8 @@ public class RobotContainer {
     coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
     coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
     coDriverBack.whenPressed(new StopShoot());
+
+    coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
   }
   
   private void configureAutoModes() {
@@ -273,5 +281,36 @@ public class RobotContainer {
     return (driver.getPOV());
   }
 
+    /**
+   * 
+   * @param axis
+   * @return
+   */
+  public double getCoDriverAxis(Axis axis) {
+    return (coDriver.getRawAxis(axis.getAxisNumber()) < -.1 || coDriver.getRawAxis(axis.getAxisNumber()) > .1)
+        ? coDriver.getRawAxis(axis.getAxisNumber())
+        : 0;
+  }
+
+  /**
+   * Accessor method to set codriver rumble function
+   * 
+   * @param leftRumble
+   * @param rightRumble
+   */
+  public void setCoDriverRumble(double leftRumble, double rightRumble) {
+    coDriver.setRumble(RumbleType.kLeftRumble, leftRumble);
+    coDriver.setRumble(RumbleType.kRightRumble, rightRumble);
+  }
+
+  /**
+   * accessor to get the true/false of the buttonNum 
+   * on the codriver control
+   * @param buttonNum
+   * @return the value of the button
+   */
+  public boolean getCoDriverButton(int buttonNum) {
+    return coDriver.getRawButton(buttonNum);
+  }
 
 }
