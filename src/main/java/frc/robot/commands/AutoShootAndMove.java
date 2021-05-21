@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.PrepHoodShot;
@@ -18,9 +19,11 @@ public class AutoShootAndMove extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new ResetBallsShot(),
-      new PrepHoodShot(),
-      new DriveTurnToTarget(),
+      new ParallelCommandGroup(  
+        new ResetBallsShot(),
+        new PrepHoodShot(),
+        new DriveTurnToTarget()
+      ),
       new FastBallWithHintOfLime().withTimeout(3),
       new GetSmol(),
       new DrivePathWeaverProfile("Straight")

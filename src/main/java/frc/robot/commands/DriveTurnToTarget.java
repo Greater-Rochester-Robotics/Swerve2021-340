@@ -9,7 +9,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveTurnToTarget extends CommandBase {
-
+  int onTargetCount = 0;
   /** 
    * Creates a new DriveTurnToTarget. This command 
    * turns the robot to the goal target, and is 
@@ -25,16 +25,18 @@ public class DriveTurnToTarget extends CommandBase {
   @Override
   public void initialize() {
     RobotContainer.limelight.setLightState(3);
+    onTargetCount = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double targetAngle = RobotContainer.swerveDrive.getGyroInRad();
-
+    System.out.print("current angle: "+ targetAngle);
     if(RobotContainer.limelight.haveTarget()){
       targetAngle -= Math.toRadians(RobotContainer.limelight.angleToTarget());
     }
+    
     // else{
     //   targetAngle /= (Math.PI);
     //   if(Math.floor(targetAngle)%2 != 0)
@@ -45,23 +47,31 @@ public class DriveTurnToTarget extends CommandBase {
     //   }
     //   targetAngle *= Math.PI;
     // }
-  
+    System.out.print("   hasTarget: "+ RobotContainer.limelight.haveTarget());
+
+      System.out.println("   targetAngle: "+ targetAngle);
     RobotContainer.swerveDrive.driveFieldCentric( 0.0, 0.0,
       RobotContainer.swerveDrive.getRobotRotationPIDOut(targetAngle) * 1.5,
       kDriveMode.percentOutput
     );
+    if(RobotContainer.limelight.haveTarget() && Math.abs(RobotContainer.limelight.angleToTarget()) < 1.5){
+      onTargetCount++;
+    }else{
+      onTargetCount = 0;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.limelight.setLightState(1);
+    // RobotContainer.limelight.setLightState(1);
     RobotContainer.swerveDrive.stopAllModules();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.limelight.haveTarget() && Math.abs(RobotContainer.limelight.angleToTarget()) < 1;
+    return onTargetCount >= 4;
+    // return RobotContainer.limelight.haveTarget() && Math.abs(RobotContainer.limelight.angleToTarget()) < .25;
   }
 }

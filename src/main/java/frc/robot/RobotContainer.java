@@ -29,6 +29,7 @@ import frc.robot.commands.AutoColorWheelStealThenShoot;
 import frc.robot.commands.AutoShootAndMove;
 import frc.robot.commands.AutoShootThen3TrenchThenShoot;
 import frc.robot.commands.AutoSlalomPath;
+import frc.robot.commands.AutoTrench2BallShoot3TrenchShoot;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveArc;
@@ -50,10 +51,11 @@ import frc.robot.commands.DriveStraightTrapProfile;
 import frc.robot.commands.DriveStraightTrapProfile2;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.DriveTurnToTarget;
 import frc.robot.commands.DriveVelocityPIDTune;
 import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.RunPath;
-import frc.robot.commands.Climber.ClimberCoDriverFunction;
+import frc.robot.commands.ClimberCoDriverFunction;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
@@ -166,6 +168,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.0, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
     SmartDashboard.putData(new DrivePathWeaverProfile("Straight"));//,Math.PI/2));
+    SmartDashboard.putData(new DriveTurnToTarget());
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
     // SmartDashboard.putData(new AutoBarrelPath());
@@ -206,13 +209,13 @@ public class RobotContainer {
     driverBack.whenPressed(new DriveRobotCentric());
 
     //========== CODRIVER ==========
-    coDriverA.whenReleased(new GetSmol());
-    coDriverB.whenPressed(new SpinUpShooterWheel());
-    coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
-    coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
-    coDriverBack.whenPressed(new StopShoot());
+    // coDriverA.whenReleased(new GetSmol());
+    // coDriverB.whenPressed(new SpinUpShooterWheel());
+    // coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
+    // coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    // coDriverBack.whenPressed(new StopShoot());
 
-    coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
+    // coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
   }
   
   private void configureAutoModes() {
@@ -230,6 +233,8 @@ public class RobotContainer {
     autoChooser.addOption("Color Wheel Steal", new AutoColorWheelStealThenShoot());
 
     autoChooser.addOption("3 Balls Then Trench Run", new AutoShootThen3TrenchThenShoot());
+
+    autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
 
     SmartDashboard.putData(RobotContainer.autoChooser);
 

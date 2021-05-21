@@ -26,7 +26,7 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
       new ResetBallsShot(),
       new ParallelCommandGroup(
         new PrepHoodShot(),//start the wheel, get the hood up
-        sequence(
+        new SequentialCommandGroup(
           new DriveTurnToAngle(.25),
           new DriveTurnToTarget()//rotate to the target
         )

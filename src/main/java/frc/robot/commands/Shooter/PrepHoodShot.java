@@ -20,7 +20,7 @@ public class PrepHoodShot extends CommandBase {
    * (warmup speed) speed and sets the hood to the 
    * proper position(up).
    * 
-   * @requires Snekloader, Shooter
+   * @requires Shooter
    */
   public PrepHoodShot() {
     // Use addRequirements() here to declare subsystem dependencies.
