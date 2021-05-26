@@ -56,6 +56,7 @@ public class DriveOnTargetWithLimeLight extends CommandBase {
     //}
     SmartDashboard.putNumber("angle to target", RobotContainer.limelight.angleToTarget());
     SmartDashboard.putNumber("target angle", targetAngle);
+    SmartDashboard.putNumber("distance to target", RobotContainer.limelight.getDistance());
     RobotContainer.swerveDrive.driveFieldCentric(
       awaySpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,
       lateralSpeed*-Constants.DRIVER_SPEED_SCALE_LATERAL,

@@ -58,7 +58,7 @@ public class FastBallWithHintOfLime extends CommandBase {
       timer.start();
     }
 
-    if(fullSend){
+    if(fullSend && timer.hasElapsed(1.5)){
       RobotContainer.snekLoader.setPause(false);
       RobotContainer.snekLoader.setState(State.kShootBall0);
     } else{

@@ -209,13 +209,13 @@ public class RobotContainer {
     driverBack.whenPressed(new DriveRobotCentric());
 
     //========== CODRIVER ==========
-    // coDriverA.whenReleased(new GetSmol());
-    // coDriverB.whenPressed(new SpinUpShooterWheel());
-    // coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
-    // coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
-    // coDriverBack.whenPressed(new StopShoot());
+    coDriverA.whenReleased(new GetSmol());
+    coDriverB.whenPressed(new SpinUpShooterWheel());
+    coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
+    coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    coDriverBack.whenPressed(new StopShoot());
 
-    // coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
+    coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
   }
   
   private void configureAutoModes() {

@@ -34,7 +34,7 @@ public class AutoTrench2BallShoot3TrenchShoot extends SequentialCommandGroup {
         new PrepHoodShot(),
         new DriveTurnToTarget()
       ),
-      new FastBallWithHintOfLime().withTimeout(2),
+      new FastBallWithHintOfLime().withTimeout(4),
       new GetSmol(),
       new DriveTurnToAngle(0.0),
       new ParallelRaceGroup(

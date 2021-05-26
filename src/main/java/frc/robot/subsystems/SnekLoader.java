@@ -249,6 +249,7 @@ public class SnekLoader extends SubsystemBase {
         }
       case kOff:
         speeds = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+        state= State.kOff;
         enableOneLimit(-1);
         break;
   

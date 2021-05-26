@@ -92,14 +92,23 @@ public class Limelight extends SubsystemBase {
   // Calculate the speed
   public static double calcSpeed(double distance){
     TreeMap<Double,Double> lookUp;
+    //adding .5 to account for the distance between the front wall and 3 point hole
+    distance += .5;
     if(distance < 8){
       lookUp = Constants.SHOOTER_HOOD_DOWN_LOOKUP_TABLE;
     }
     else{
       lookUp = Constants.SHOOTER_LOOKUP_TABLE;
     }
-    double lowSpeed = lookUp.get(Math.floor(distance));
-    double highSpeed =  lookUp.get(Math.ceil(distance));
+    double lowSpeed;
+    double highSpeed;
+    try{
+      lowSpeed = lookUp.get(Math.floor(distance));
+      highSpeed =  lookUp.get(Math.ceil(distance));
+    }
+    catch(Exception ex){
+      return 17500;
+    }
     double decimal = distance % 1;
     return ((highSpeed - lowSpeed) * decimal) + lowSpeed;
   }
