@@ -259,9 +259,9 @@ public class SnekLoader extends SubsystemBase {
         break;
 
       case kAccShootBall4:
-      speeds = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
-      enableOneLimit(-1);
-      break;
+        speeds = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
+        enableOneLimit(-1);
+        break;
   
       case kShootBall3:
         speeds = new double[] { 0.0, 0.0, 0.0, .9, 1.0 };
