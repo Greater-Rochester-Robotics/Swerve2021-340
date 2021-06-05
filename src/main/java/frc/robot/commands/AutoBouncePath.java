@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 /**
  * Running the bounce path using DriveStraight and DriveArc commands
  */
-public class AutoBouncePath extends Auto340Command {
+public class AutoBouncePath extends SequentialCommandGroup {
   /** Creates a new AutoBouncePath. */
   public AutoBouncePath() {
     // Add your commands in the addCommands() call, e.g.

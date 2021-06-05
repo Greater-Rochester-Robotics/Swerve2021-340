@@ -14,13 +14,19 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SnekLoader.State;
 
 public class FastBallWithHintOfLime extends CommandBase {
-  /**
-   * Creates a new FastBallWithAddedLime.
-   */
   private int speedRpm;
   private boolean fullSend;
   private int ballsToShoot;
   private Timer timer = new Timer();
+  
+  /**
+   * Creates a new FastBallWithHintOfLime. This command 
+   * is for shooting the balls with the hood up. The 
+   * robot should be close to on target and hood up from 
+   * command PrepHoodShot.
+   * 
+   * @requires Shooter, SnekLoader, Limelight
+   */
   public FastBallWithHintOfLime() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter, RobotContainer.snekLoader,RobotContainer.limelight);
@@ -33,12 +39,22 @@ public class FastBallWithHintOfLime extends CommandBase {
     ballsToShoot = RobotContainer.snekLoader.getBallsLoaded();
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
+
     // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
       speedRpm = 19000;
     // }
     // else{
     //   speedRpm = Limelight.calcHoodRPM();
     // }
+
+
+    // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
+    //   speedRpm = 17500;
+    // }
+    // else{
+    //   speedRpm = Limelight.calcHoodRPM();
+    // }
+
     
     fullSend = false;
     RobotContainer.shooter.setShooterWheel(speedRpm);
@@ -50,14 +66,13 @@ public class FastBallWithHintOfLime extends CommandBase {
     if(!timer.hasElapsed(0.1)){
       timer.start();
     }
-    if(fullSend){
+
+    if(fullSend && timer.hasElapsed(1.5)){
       RobotContainer.snekLoader.setPause(false);
       RobotContainer.snekLoader.setState(State.kShootBall0);
     } else{
-      //if(timer.hasElapsed(2.0)){
-        fullSend = (RobotContainer.shooter.isShooterAtSpeed());
+      fullSend = (RobotContainer.shooter.isShooterAtSpeed());
       RobotContainer.snekLoader.setPause(true);  
-      //}
     }
   }
 

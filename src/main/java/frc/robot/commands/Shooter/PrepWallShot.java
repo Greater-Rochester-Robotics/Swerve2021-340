@@ -13,10 +13,14 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SnekLoader;
 
 public class PrepWallShot extends CommandBase {
+  
   /**
-   * Creates a new PrepWallShot.
+   * Creates a new PrepWallShot. This starts the 
+   * shooter wheel spinning at wall speed and sets 
+   * the hood to the proper position(down).
+   * 
+   * @requires Snekloader, Shooter
    */
-
   public PrepWallShot() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter,RobotContainer.snekLoader);

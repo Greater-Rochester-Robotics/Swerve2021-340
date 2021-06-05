@@ -5,43 +5,57 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.SnekLoader;
+package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Joystick.AxisType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.SnekLoader.State;
+import frc.robot.RobotContainer.Axis;
 
-public class Regurgitate extends CommandBase {
+public class ClimberCoDriverFunction extends CommandBase {
   /**
-   * Creates a new Regurgitate. This command 
-   * causes all balls to move backwards out 
-   * of the shooter and the snek. this is 
-   * good to eliminate jams and what not.
-   * 
-   * @requires SnekLoader, Shooter
+   * Creates a new ClimberCoDriverFunction.
    */
-  public Regurgitate() {
+  public ClimberCoDriverFunction() {
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(RobotContainer.snekLoader, RobotContainer.shooter);
+    addRequirements(RobotContainer.climber);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   RobotContainer.snekLoader.setState(State.kSpitBalls);
-    RobotContainer.shooter.setShooterWheel(-100);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    Robot.robotContainer.setCoDriverRumble(.5, .5);
+
+    if(Robot.robotContainer.getCoDriverAxis(Axis.RIGHT_TRIGGER)>.3){
+      RobotContainer.climber.contract();
+    }else if(Robot.robotContainer.getCoDriverButton(6)){
+      RobotContainer.climber.extend();
+    }else{
+      RobotContainer.climber.stop();
+    }
+
+    // if(Robot.robotContainer.getCoDriverAxis(Axis.LEFT_TRIGGER)>.3){
+    //   RobotContainer.climber.rightArmContract();
+    // }else if(Robot.robotContainer.getCoDriverButton(5)){
+    //   RobotContainer.climber.rightArmExtend();
+    // }else{
+    //   RobotContainer.climber.rightStop();
+    // }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.snekLoader.setState(State.kOff);
-    RobotContainer.shooter.setShooterWheel(0.0);
+    Robot.robotContainer.setCoDriverRumble(0, 0);
+    RobotContainer.climber.stop();
   }
 
   // Returns true when the command should end.

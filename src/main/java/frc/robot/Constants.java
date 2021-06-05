@@ -82,7 +82,7 @@ public final class Constants {
     public static final double SWERVE_ROT_ARB_FF_VOLTAGE = 0.0;//1.1;
     public static final double SWERVE_ROT_PID_VOLTAGE_MINIMUM = -12.0;
     public static final double SWERVE_ROT_PID_VOLTAGE_MAXIMUM = 12.0;
-    public static final double SWERVE_MODULE_TOLERANCE = .033;//34;//this is in radians
+    public static final double SWERVE_MODULE_TOLERANCE = .051;//34;//this is in radians
     
     /* Robot Motion PID controller constants */
     public static final double ROBOT_SPIN_P = 1;
@@ -92,7 +92,7 @@ public final class Constants {
     /* Robot lateral and away pos PID controller constants */
     public static final double LATERAL_POS_P = 1;
     public static final double LATERAL_POS_I = 0;
-    public static final double LATERAL_POS_D = 0;
+    public static final double LATERAL_POS_D = .004;
 
     public static final double AWAY_POS_P = .55;
     public static final double AWAY_POS_I = 0;
@@ -104,17 +104,19 @@ public final class Constants {
     public static final double LATERAL_SPEED_D = 0;
     public static final double LATERAL_FEEDFORWARD_STATIC = 0.05;
     public static final double LATERAL_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
-    public static final double AWAY_FEEDFORWARD_STATIC = 0.05;
-    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.95 / 4.5;
-    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0;//1/.504;// 1/4.6;
 
     /* Robot away speed PID controller & feed forward constants */
-    public static final double AWAY_SPEED_P = 0;//.55;
+    public static final double AWAY_SPEED_P = .0705;//.55;
     public static final double AWAY_SPEED_I = 0;
     public static final double AWAY_SPEED_D = 0;
+    public static final double AWAY_FEEDFORWARD_STATIC = 0.02875;//.102/5.04;//0.05;
+    public static final double AWAY_FEEDFORWARD_VELOCITY = 0.203;//1/5.04;//0.95/4.7;
+    public static final double AWAY_FEEDFORWARD_ACCELERATION = 0.00408;//1/.504;// 1/4.6;
+
     /* Driver scaling constants to slow robot */
-    public static final double DRIVER_SPEED_SCALE_LATERAL = 0.90;
+    public static final double DRIVER_SPEED_SCALE_LATERAL = -0.90;
     public static final double DRIVER_ROTATIONAL_SCALE = 0.6;
+
     // SparkMAX motor controllers
     public static final int FRONT_LEFT_ROTATE_MOTOR = 41;// module 0
     public static final int REAR_LEFT_ROTATE_MOTOR = 44;// module 1
@@ -130,6 +132,7 @@ public final class Constants {
     public static final int REAR_RIGHT_ROTATE_SENSOR = 48;// module 2
     public static final int FRONT_RIGHT_MOVE_MOTOR = 49;// module 3
     public static final int FRONT_RIGHT_ROTATE_SENSOR = 51;// module 3
+    public static final int CLIMBER = 25;
 
     /* Spark MAXes */
     public static final int SHOOTER_WHEEL = 35; // launching wheel for the prototype
@@ -148,30 +151,40 @@ public final class Constants {
     public static final int SECONDARY_PCM_ID = 11;// does not exist
 
     /* Shooter Speeds */
-    public static final int INITIATION_SHOT_RPM = 13000; // Put real value here for safe keeping, rpm: 3425
-    public static final int WALL_SHOT_RPM = 12750; // Old value 2550 MAX SPEED 21777
+    public static final int INITIATION_SHOT_RPM = 10000; // Put real value here for safe keeping, rpm: 3425
+    public static final int WALL_SHOT_RPM = 10000; // Old value 2550 MAX SPEED 21777
     public static final int TEST_SHOOTER = 12500; // Used for testing and recording distance for shooting
     public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
     public static final int RPM_ADD_FACTOR = 0;
+
+    /*	Climber Speeds	*/
+    public static final double CLIMBER_CONTRACT_SPEED = -.75;
+    public static final double CLIMBER_EXTEND_SPEED = .6;
 
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;
 
     public static TreeMap<Double,Double> SHOOTER_LOOKUP_TABLE = new TreeMap<>();
     static{
-        SHOOTER_LOOKUP_TABLE.put(8.0, 16000.0);//14090
-        SHOOTER_LOOKUP_TABLE.put(9.0, 15822.0);//14140
-        SHOOTER_LOOKUP_TABLE.put(10.0, 14100.0);//14000
-        SHOOTER_LOOKUP_TABLE.put(11.0, 13750.0);//13850
-        SHOOTER_LOOKUP_TABLE.put(12.0, 11900.0);//13370
-        SHOOTER_LOOKUP_TABLE.put(13.0, 11900.0);//12700
-        SHOOTER_LOOKUP_TABLE.put(14.0, 12000.0);//12400
-        SHOOTER_LOOKUP_TABLE.put(15.0, 12000.0);//12150
-        SHOOTER_LOOKUP_TABLE.put(16.0, 11900.0);//12150
-        SHOOTER_LOOKUP_TABLE.put(17.0, 12000.0);//12750
-        SHOOTER_LOOKUP_TABLE.put(18.0, 12150.0);//12400
-        SHOOTER_LOOKUP_TABLE.put(19.0, 12350.0);//12450
-        SHOOTER_LOOKUP_TABLE.put(20.0, 12500.0);//12600
+        SHOOTER_LOOKUP_TABLE.put(5.0, 16000.0);//16000
+        SHOOTER_LOOKUP_TABLE.put(6.0, 15822.0);//15822
+        SHOOTER_LOOKUP_TABLE.put(7.0, 14100.0);//14100
+        SHOOTER_LOOKUP_TABLE.put(8.0, 13750.0);//13750
+        SHOOTER_LOOKUP_TABLE.put(9.0, 11900.0);//11900
+        SHOOTER_LOOKUP_TABLE.put(10.0, 11900.0);//11900
+        SHOOTER_LOOKUP_TABLE.put(11.0, 12000.0);//12000
+        SHOOTER_LOOKUP_TABLE.put(12.0, 12000.0);//12000
+        SHOOTER_LOOKUP_TABLE.put(13.0, 11900.0);//11900
+        SHOOTER_LOOKUP_TABLE.put(14.0, 12000.0);//12000
+        SHOOTER_LOOKUP_TABLE.put(15.0, 12150.0);//12150
+        SHOOTER_LOOKUP_TABLE.put(16.0, 12350.0);//12350
+        SHOOTER_LOOKUP_TABLE.put(17.0, 12500.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(18.0, 13500.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(19.0, 13750.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(20.0, 14000.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(21.0, 14250.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(22.0, 14500.0);//12500
+        SHOOTER_LOOKUP_TABLE.put(23.0, 14750.0);//12500
     }
     public static TreeMap<Double,Double> SHOOTER_HOOD_DOWN_LOOKUP_TABLE = new TreeMap<>();
     static{

@@ -15,22 +15,24 @@ import frc.robot.subsystems.SnekLoader;
 public class PrepHoodShot extends CommandBase {
 
   /**
-   * Creates a new PrepHoodShot.
+   * Creates a new PrepHoodShot. This starts the 
+   * shooter wheel spinning at an intial starting 
+   * (warmup speed) speed and sets the hood to the 
+   * proper position(up).
+   * 
+   * @requires Shooter
    */
-
-
   public PrepHoodShot() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter);
   }
-
-  
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     //TODO: Update the below constant to use a new value of 10000 for warmup. Recommend creating new constant value
     RobotContainer.shooter.setShooterWheel(Constants.INITIATION_SHOT_RPM);
+    RobotContainer.shooter.raiseHood();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

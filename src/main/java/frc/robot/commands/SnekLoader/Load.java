@@ -14,25 +14,40 @@ import frc.robot.subsystems.SnekLoader.State;
 
 public class Load extends CommandBase {
   Timer tm = new Timer();
-private boolean ron;
+  private boolean raiseOnEnd;
+
   /**
-   * Creates a new Load.
+   * Creates a new Load command. This command lowers the
+   * harvester, and sets the snek to intake for 5 balls. 
+   * It will raise the harvester on the commands termination.
+   * 
+   * @requires SnekLoader, Harvester
    */
   public Load(){
     this(true);
   }
-  public Load(boolean raise) {
+  
+  /**
+   * Creates a new Load command. This command lowers the
+   * harvester, and sets the snek to intake for 5 balls. 
+   * Harester is raised when command ends if raiseOnEnd 
+   * is true.
+   * 
+   * @requires SnekLoader, Harvester
+   * @param raiseOnEnd true if the harvester raised by command when ended
+   */
+  public Load(boolean raiseOnEnd) {
     // Use addRequirements() here to declare subsystem dependencies.
-    ron = raise;
+    this.raiseOnEnd = raiseOnEnd;
     addRequirements(RobotContainer.snekLoader, RobotContainer.harvester);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-     RobotContainer.snekLoader.setState(State.kFillTo4);
-      RobotContainer.harvester.lowerHarvester();
-      RobotContainer.snekLoader.setHarvesterJammed(false);
+    RobotContainer.snekLoader.setState(State.kFillTo4);
+    RobotContainer.harvester.lowerHarvester();
+    RobotContainer.snekLoader.setHarvesterJammed(false);
     tm.reset();
     tm.start();
   }
@@ -47,17 +62,17 @@ private boolean ron;
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if(ron){
+    if(raiseOnEnd){
       RobotContainer.harvester.raiseHarvester();
     }
-   RobotContainer.snekLoader.setState(State.kOff);
+    RobotContainer.snekLoader.setState(State.kOff);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     
-  //  return (RobotContainer.snekLoader.getState() == State.kOff || (tm.get() > 0.25 &&RobotContainer.snekLoader.stopIntakeQ()));//|| RobotContainer.harvester.stopIntakeQ()
-   return false;
+    return RobotContainer.snekLoader.getState() == State.kOff; //|| (tm.get() > 0.25 &&RobotContainer.snekLoader.stopIntakeQ()));
+  //  return false;
   }
 }

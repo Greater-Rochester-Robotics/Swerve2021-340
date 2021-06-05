@@ -13,18 +13,23 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.Auto340Command;
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
+import frc.robot.commands.AutoColorWheelStealThenShoot;
+import frc.robot.commands.AutoShootAndMove;
+import frc.robot.commands.AutoShootThen3TrenchThenShoot;
 import frc.robot.commands.AutoSlalomPath;
+import frc.robot.commands.AutoTrench2BallShoot3TrenchShoot;
 import frc.robot.commands.DriveAdjustModuleZeroPoint;
 import frc.robot.commands.DriveAllModulesPositionOnly;
 import frc.robot.commands.DriveArc;
@@ -32,26 +37,32 @@ import frc.robot.commands.DriveFieldCentric;
 import frc.robot.commands.DriveFieldCentricAdvanced;
 import frc.robot.commands.DriveArcDriverControl;
 import frc.robot.commands.DriveFieldCentricVelocity;
+import frc.robot.commands.DriveFindMaxAccel;
+import frc.robot.commands.DriveFollowPath;
 import frc.robot.commands.DriveGenerateVelocityGraph;
 import frc.robot.commands.DriveOnTargetWithLimeLight;
 import frc.robot.commands.DriveOneModule;
+import frc.robot.commands.DrivePathWeaverProfile;
 import frc.robot.commands.DriveResetAllModulePositionsToZero;
 import frc.robot.commands.DriveRobotCentric;
 import frc.robot.commands.DriveStopAllModules;
 import frc.robot.commands.DriveStraightAtSpeed;
 import frc.robot.commands.DriveStraightTrapProfile;
+import frc.robot.commands.DriveStraightTrapProfile2;
 import frc.robot.commands.DriveToPosition;
 import frc.robot.commands.DriveTurnToAngle;
+import frc.robot.commands.DriveTurnToTarget;
 import frc.robot.commands.DriveVelocityPIDTune;
-import frc.robot.commands.RunPath;
 import frc.robot.commands.DriveResetGyroToZero;
+import frc.robot.commands.RunPath;
+import frc.robot.commands.ClimberCoDriverFunction;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Harvester.PickHarvesterUp;
 import frc.robot.commands.Harvester.SetHarvesterDown;
-import frc.robot.commands.Shooter.DriveAimAndPrepHood;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
+import frc.robot.commands.Shooter.PrepWallShot;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -64,6 +75,7 @@ import frc.robot.commands.SnekLoader.StopSnek;
 
 import frc.robot.subsystems.SwerveDrive;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Harvester;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.Shooter;
@@ -106,17 +118,18 @@ public class RobotContainer {
   final Button coDriverStart = new JoystickButton(coDriver, 8);
   final Button coDriverLS = new JoystickButton(coDriver, 9);
   final Button coDriverRS = new JoystickButton(coDriver, 10);
+  final Button coDriverDDown = new DPad(coDriver, DPad.Direction.DOWN);
   
   //The robot's subsystems are instantiated here
   public static SwerveDrive swerveDrive;
+  public static Climber climber;
   public static Limelight limelight;
   public static SnekLoader snekLoader;
   public static Harvester harvester;
   public static Shooter shooter;
   
 
-  public static SendableChooser<String> autoChooser;
-  public static Map<String, Auto340Command> autoModes = new HashMap<>();
+  public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
 
   /**
@@ -124,17 +137,25 @@ public class RobotContainer {
    */
   public RobotContainer() {
     
+    //create subsystems
     shooter = new Shooter();
     harvester = new Harvester();
     snekLoader = new SnekLoader();
     limelight = new Limelight();
     limelight.setStreamMode(0);
     limelight.setLightState(1);
+    climber = new Climber();
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
     swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
+
     // Configure the button bindings
     configureButtonBindings();
+
+    //Add all autos to the auto selector
+    configureAutoModes();
+
+    //add some cmmands to dashboard for testing
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
     SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
@@ -144,11 +165,13 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveStopAllModules());
     SmartDashboard.putData(new DriveAllModulesPositionOnly());
     SmartDashboard.putData(new DriveVelocityPIDTune());
-    SmartDashboard.putData(new DriveStraightTrapProfile(0, .46355, 0, 0));
+    SmartDashboard.putData(new DriveStraightTrapProfile2(0, 1.0, 0, 0));
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
-    SmartDashboard.putData(new AutoBouncePath());
-    SmartDashboard.putData(new AutoSlalomPath());
-    SmartDashboard.putData(new AutoBarrelPath());
+    SmartDashboard.putData(new DrivePathWeaverProfile("Straight"));//,Math.PI/2));
+    SmartDashboard.putData(new DriveTurnToTarget());
+    // SmartDashboard.putData(new AutoBouncePath());
+    // SmartDashboard.putData(new AutoSlalomPath());
+    // SmartDashboard.putData(new AutoBarrelPath());
   }
 
   /**
@@ -159,11 +182,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-    // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-    // driverA.whenPressed(new SetHarvesterDown());
-    // driverY.whenPressed(new PickHarvesterUp());
+
+
+//     //==========  DRIVER  ==========
+// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
+//     // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
+//     // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
+//     // driverA.whenPressed(new SetHarvesterDown());
+//     // driverY.whenPressed(new PickHarvesterUp());
     
+
     driverA.whenPressed(new Load());
     // driverA.whenPressed(new LoadAcc());
     driverA.whenReleased(new GetSmol());
@@ -173,21 +201,63 @@ public class RobotContainer {
     // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    driverRB.whileHeld(new DriveAimAndPrepHood());
+    // driverRB.whileHeld(new DriveAimAndPrepHood());
     // driverY.whenPressed(new WallShot());
     // driverY.whenReleased(new GetSmol());
+// =======
+//     //driverA.whenPressed(new Load());
+//     driverA.whenPressed(new Load());
+//     driverA.whenReleased(new GetSmol());
+//     // driverA.whenPressed(new SetHarvesterDown());
+//     // driverA.whenReleased(new PickHarvesterUp());
+//     driverB.whileHeld(new Regurgitate());
+//     //driverX.whenPressed(new SmartLimeShot());
+//     driverX.whenPressed(new FastBallWithHintOfLime());
+//     driverX.whenReleased(new GetSmol());
+//     driverY.whenPressed(new WallShot());
+//     driverY.whenReleased(new GetSmol());
+// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
     
     // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
-
+    driverRB.whileHeld(new DriveOnTargetWithLimeLight());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
 
-    // coDriverB.whenPressed(new SpinUpShooterWheel());
+    //========== CODRIVER ==========
+    coDriverA.whenReleased(new GetSmol());
+    coDriverB.whenPressed(new SpinUpShooterWheel());
+    coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
+    coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    coDriverBack.whenPressed(new StopShoot());
+
+    coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
   }
   
+  private void configureAutoModes() {
+    
+    autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
+
+    autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
+
+    autoChooser.addOption("Bouncy Path", new AutoBouncePath());
+
+    autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+
+    autoChooser.addOption("Shoot and Move", new AutoShootAndMove());
+
+    autoChooser.addOption("Color Wheel Steal", new AutoColorWheelStealThenShoot());
+
+    autoChooser.addOption("3 Balls Then Trench Run", new AutoShootThen3TrenchThenShoot());
+
+    autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
+
+    SmartDashboard.putData(RobotContainer.autoChooser);
+
+  }
+
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
 
@@ -234,17 +304,36 @@ public class RobotContainer {
     return (driver.getPOV());
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
+    /**
+   * 
+   * @param axis
+   * @return
    */
-  public Command getAutonomousCommand() {
-    // = Shuffleboard.getTab("Competition").get
-    String mode = RobotContainer.autoChooser.getSelected();
-    SmartDashboard.putString("Chosen Auto Mode", mode);
-    return autoModes.getOrDefault(mode, new AutoBarrelPath());//new Command();
-
-    
+  public double getCoDriverAxis(Axis axis) {
+    return (coDriver.getRawAxis(axis.getAxisNumber()) < -.1 || coDriver.getRawAxis(axis.getAxisNumber()) > .1)
+        ? coDriver.getRawAxis(axis.getAxisNumber())
+        : 0;
   }
+
+  /**
+   * Accessor method to set codriver rumble function
+   * 
+   * @param leftRumble
+   * @param rightRumble
+   */
+  public void setCoDriverRumble(double leftRumble, double rightRumble) {
+    coDriver.setRumble(RumbleType.kLeftRumble, leftRumble);
+    coDriver.setRumble(RumbleType.kRightRumble, rightRumble);
+  }
+
+  /**
+   * accessor to get the true/false of the buttonNum 
+   * on the codriver control
+   * @param buttonNum
+   * @return the value of the button
+   */
+  public boolean getCoDriverButton(int buttonNum) {
+    return coDriver.getRawButton(buttonNum);
+  }
+
 }
