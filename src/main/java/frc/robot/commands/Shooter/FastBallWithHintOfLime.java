@@ -33,12 +33,12 @@ public class FastBallWithHintOfLime extends CommandBase {
     ballsToShoot = RobotContainer.snekLoader.getBallsLoaded();
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
-    if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
-      speedRpm = 17500;
-    }
-    else{
-      speedRpm = Limelight.calcHoodRPM();
-    }
+    // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
+      speedRpm = 19000;
+    // }
+    // else{
+    //   speedRpm = Limelight.calcHoodRPM();
+    // }
     
     fullSend = false;
     RobotContainer.shooter.setShooterWheel(speedRpm);

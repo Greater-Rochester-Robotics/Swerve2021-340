@@ -159,21 +159,21 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-    driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-    driverA.whenPressed(new SetHarvesterDown());
-    driverY.whenPressed(new PickHarvesterUp());
+    // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
+    // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
+    // driverA.whenPressed(new SetHarvesterDown());
+    // driverY.whenPressed(new PickHarvesterUp());
     
-    // //driverA.whenPressed(new Load());
+    driverA.whenPressed(new Load());
     // driverA.whenPressed(new LoadAcc());
-    // driverA.whenReleased(new GetSmol());
+    driverA.whenReleased(new GetSmol());
     // // driverA.whenPressed(new SetHarvesterDown());
     // // driverA.whenReleased(new PickHarvesterUp());
-    // driverB.whileHeld(new Regurgitate());
-    // //driverX.whenPressed(new SmartLimeShot());
-    // driverX.whenPressed(new FastBallWithHintOfLime());
-    // driverX.whenReleased(new GetSmol());
-    // driverRB.whileHeld(new DriveAimAndPrepHood());
+    driverB.whileHeld(new Regurgitate());
+    // driverX.whenPressed(new SmartLimeShot());
+    driverX.whenPressed(new FastBallWithHintOfLime());
+    driverX.whenReleased(new GetSmol());
+    driverRB.whileHeld(new DriveAimAndPrepHood());
     // driverY.whenPressed(new WallShot());
     // driverY.whenReleased(new GetSmol());
     
