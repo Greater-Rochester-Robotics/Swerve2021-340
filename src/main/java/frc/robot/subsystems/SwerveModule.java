@@ -28,8 +28,12 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import frc.robot.Constants;
 
 /**
- * This is the class containing both motor controllers, the CANCodder and all
- * functions needed to run one swerve module. 
+ * This is the class containing both motor controllers, 
+ * the CANCodder and all functions needed to run one swerve 
+ * module. This class handles all access to these objects.
+ * 
+ * This class hanndles the inverting the drive motor, in 
+ * order to change wheel direction faster.
  */
 public class SwerveModule {
     private TalonFX driveMotor;
@@ -45,8 +49,9 @@ public class SwerveModule {
     // discontinuity from -180 to 180, it can't be used for motion. We use the 
     // rotateRelEncoder for that.
     private CANCoder rotateAbsSensor;
-    private boolean isInverted = false;// this is for a future function
-    // these are for the periodic call for odometry update
+    private boolean isInverted = false;
+
+    // the following are for the periodic call for odometry update
     private double currentDegAngle = 0.0;
     private double prevAngle = 0.0;//storing the previous module angle for odometry
     private double currentPosition = 0.0;
@@ -56,8 +61,8 @@ public class SwerveModule {
     /**
      * Creates a new SwerveModule object
      * 
-     * @param driveMotorID    The CAN ID of the SparkMax connected to the drive
-     *                        motor(expecting NEO)
+     * @param driveMotorID    The CAN ID of the TalonFX connected to the drive
+     *                        motor(expecting Falon 500)
      * @param rotationMotorID The CAN ID of the SparkMax connected to the module
      *                        rotation motor(expecting NEO 550)
      * @param canCoderID      The CAN ID of the rotation sensor
@@ -68,9 +73,9 @@ public class SwerveModule {
         // use the integrated sensor with the primary closed loop and timeout is 0.
         driveMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
         driveMotor.configSelectedFeedbackCoefficient(Constants.DRIVE_ENC_TO_METERS_FACTOR);
-        driveMotor.setNeutralMode(NeutralMode.Brake);
         // above uses configSelectedFeedbackCoefficient(), to scale the
         // driveMotor to real distance, DRIVE_ENC_TO_METERS_FACTOR
+        driveMotor.setNeutralMode(NeutralMode.Brake);
         driveMotor.setInverted(false);// Set motor inverted(set to false)
         driveMotor.enableVoltageCompensation(true);
         driveMotor.configVoltageCompSaturation(Constants.MAXIMUM_VOLTAGE);
@@ -89,6 +94,7 @@ public class SwerveModule {
         rotationMotor.setSmartCurrentLimit(30);// Set smartCurrentLimit for the rotationMotor, so not to burn the NEO550
         rotationMotor.setInverted(true);//Motor rotation is nomally positive clockwise, invert this, we want clockwise negtive rotation
         
+        //The following is the relative encoder, which is the one in the NEO550
         rotateRelEncoder = rotationMotor.getEncoder();
         rotateRelEncoder.setPosition(0);//reset the encoder on boot
         rotatePID = rotationMotor.getPIDController();
@@ -105,19 +111,21 @@ public class SwerveModule {
         rotatePID.setD(0,1);
         rotatePID.setIZone(0,1);
         rotatePID.setFF(0,1);
-        rotateAbsSensor = new CANCoder(canCoderID);//this sensor is angle of the module, as an absolute value
+
+        //the following sensor is angle of the module, as an absolute value
+        rotateAbsSensor = new CANCoder(canCoderID);
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
 
-        // use setOutput on the rotatePID(this will make sure we don't stall the motor, or give too much power)
-        // rotatePID.setOutputRange(Constants.SWERVE_ROT_PID_VOLTAGE_MINIMUM, Constants.SWERVE_ROT_PID_VOLTAGE_MAXIMUM);
     }
 
     /**
-     * This method is used to pull and compute the currentAngle so the sensor is
-     * called once, additionally position of the module is computed here.
-     * Currently, currentAngle is called independently by other function
+     * Positional change of the module on the field is computed here.
+     * Currently, currentAngle is called independently by other function.
+     * note: This might be broken
      * 
      * Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
+     * 
+     * @return doubles as listed above
      */
     public double[] periodic() {
 
@@ -130,7 +138,6 @@ public class SwerveModule {
         // pull the current position from the absolute rotation sesnors
         this.currentDegAngle = rotateAbsSensor.getAbsolutePosition();
         this.currentRotPos = new Rotation2d(Math.toRadians(this.currentDegAngle));
-        // this.currentAngle = Math.toRadians(rotateAbsSensor.getAbsolutePosition());
 
         // average the angle between this cycle and the previous
         double averAngle = (this.currentRotPos.getRadians() + this.prevAngle) / 2;
@@ -178,7 +185,7 @@ public class SwerveModule {
     }
 
    /**
-     * Sets when it is in neutral, it will brake or coast
+     * Sets drive motor to brake or coast
      * 
      * @param neutral whether to brake or coast   
      */
@@ -190,12 +197,11 @@ public class SwerveModule {
      * @return the distance the drive wheel has traveled
      */
     public double getDriveDistance() {
-        // return this.currentPosition;//if we use the periodic call thread/method use
-        // this instead(might change to volatile)
         return driveMotor.getSensorCollection().getIntegratedSensorPosition()*Constants.DRIVE_ENC_TO_METERS_FACTOR;
     }
 
     /**
+     * Returns the speed of the drive wheel in Meters per second
      * 
      * @return speed of the drive wheel
      */
@@ -212,7 +218,7 @@ public class SwerveModule {
     }
 
     /**
-     * sets the drive motor's PIDF
+     * sets the drive motor's PIDF for the PIDF controller on the TalonFX
      * 
      * @param P value of the P constant
      * @param I value of the I constant
@@ -227,20 +233,22 @@ public class SwerveModule {
     }
 
     /**
-     * The CANCoder has a mechanical zero point, this is hard to move, so this
-     * method is used to set the offset of the CANCoder so we can dictate the zero
-     * position. 
+     * The CANCoder has a mechanical zero point, this is hard 
+     * to move, so this method is used to set the offset of the 
+     * CANCoder so we can dictate the zero position. 
+     * INPUTS MUST BE IN DEGREES. 
      * 
      * @param value a number between -180 and 180, where 0 is straight ahead
      */
-    public void setRotateAbsSensor(double value) {
+    private void setRotateAbsSensor(double value) {
         rotateAbsSensor.configMagnetOffset(value, 0);
     }
 
     /**
-     * The CANCoder has a mechanical zero point, this is hard to move, so this
-     * method is used to change the offset of the CANCoder so we dictate the zero
-     * position as the current position of the module.
+     * The CANCoder has a mechanical zero point, this is hard 
+     * to move, so this method is used to change the offset of 
+     * the CANCoder so we dictate the zero position as the 
+     * current position of the module.
      */
     public void zeroAbsPositionSensor() {
         //find the current offset, subtract the current position, and makes this number the new offset.
