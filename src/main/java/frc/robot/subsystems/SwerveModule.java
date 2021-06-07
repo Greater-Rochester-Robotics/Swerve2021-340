@@ -251,6 +251,7 @@ public class SwerveModule {
      * The CANCoder reads the absolute rotational position
      * of the module. This method returns that positon in 
      * degrees.
+     * note: NOT Inverted module safe (use getPosInRad())
      * 
      * @return the position of the module in degrees, should limit from -180 to 180
      */
@@ -259,29 +260,37 @@ public class SwerveModule {
     }
 
     /**
-     * If this is too resource intensive, switch to a periodic call, and replace
-     * with a poll of said variable
+     * This method gets the current position in radians and 
+     * is used for actual running of the swerve drive. There 
+     * is code that supports drive motor invertion within, this 
+     * "reverses" the module's zero to the robot's rear while 
+     * isInverted is true. Normally the zero is at the front of 
+     * the robot.
+     * 
+     * note: Inverted module safe
      * 
      * @return the position of the module in radians, should limit from -PI to PI
      */
     public double getPosInRad() {
-        double absPosInRad = Math.toRadians(getAbsPosInDeg());// (isInverted?0:Math.PI));
-       //the following is an if statement set used with invertible drive
-       if(isInverted){
-           if(absPosInRad <= 0.0){
-               return absPosInRad + Math.PI;
-           }else{
-               return absPosInRad - Math.PI;
-           }
-       }else{
-           return absPosInRad;
-       }
+        //get the current position and convert it to radians.
+        double absPosInRad = Math.toRadians(getAbsPosInDeg());
+        //the following is an if statement set used with invertible drive
+        if(isInverted){
+            if(absPosInRad <= 0.0){
+                return absPosInRad + Math.PI;
+            }else{
+                return absPosInRad - Math.PI;
+            }
+        }else{
+            return absPosInRad;
+        }
    }
 
     /**
-     * this is a function meant for testing by getting the count from the rotational
-     * encoder which is internal to the NEO550. This encoder is relative, and does 
-     * not easily translate to a specific rotational position of the swerve module.
+     * This is a method meant for testing by getting the count from the 
+     * rotational encoder which is internal to the NEO550. This encoder 
+     * is relative, and does not easily translate to a specific rotational 
+     * position of the swerve module.
      * 
      * @return the encoder count(no units, naturally just the count)
      */
@@ -290,7 +299,9 @@ public class SwerveModule {
     }
     
     /**
-     * 
+     * A method that pushes several NEO550 stats to the 
+     * SmartDashboard in order to monitor stalling, 
+     * overheating, etc
      */
     public void rotationHealthCheckup(){
         //run checks on motor based on speed, current use and Temperature
@@ -301,7 +312,15 @@ public class SwerveModule {
     }
 
     /**
-     * Set the setpoint for the module rotation
+     * This method should be the regularly called function
+     * to rotate the swerve module. It handles the invertion 
+     * of drive motor to optimize rotation. It handles the 
+     * discontinuity of the CANcoder, and passes target 
+     * direction to the PID loop on the SparkMAX and it's 
+     * encoder(the relative).
+     * 
+     * Position should represent the direction the wheel will 
+     * be moving the robot
      * 
      * @param targetPos a value between -PI and PI, PI is counter-clockwise, 0.0 is
      *                  forward
@@ -309,12 +328,13 @@ public class SwerveModule {
     public void setPosInRad(double targetPos) {
         SmartDashboard.putBoolean("Rotation Stop "+rotationMotor.getDeviceId()+":", false);
         SmartDashboard.putBoolean("Rotation Running "+rotationMotor.getDeviceId()+":", false);
-        // SmartDashboard.putNumber("target(rad)",targetPos);
+  
+        //find the difference between the target and current position
         double posDiff = targetPos - getPosInRad();
-        // SmartDashboard.putNumber("posDiff(rad)",posDiff);
+
         double absDiff = Math.abs(posDiff);
-        // System.out.print("   absdiff="+absDiff);
-        //The following is for non-inverting 
+
+        //The following is for non-inverting, commented out as we are inverting
         // if the distance is more than a half circle,we going the wrong way, fix
         // if (absDiff > Math.PI) {
         //     // the distance the other way around the circle
@@ -326,6 +346,7 @@ public class SwerveModule {
         //     return;
         // }
 
+        //the following is for inverting the drive when values are 90 to 270 (to be faster)
         //if the distance is larger than 270, this is the wrong way round the circle
         if(absDiff >= Constants.THREE_PI_OVER_TWO){
             //the distance the other way around the circle
@@ -335,7 +356,7 @@ public class SwerveModule {
             Constants.PI_OVER_TWO){
             //switch the motor inversion
             isInverted = !isInverted;
-            //Since inverted, recompute everything
+            //Since inverted, pull position again and recompute everything
             posDiff = targetPos - getPosInRad();
             absDiff = Math.abs(posDiff);
             if(absDiff > Constants.THREE_PI_OVER_TWO){
@@ -343,24 +364,23 @@ public class SwerveModule {
                 posDiff = posDiff - (Constants.TWO_PI*Math.signum(posDiff));
             }
         }
+
+        //Since SparkMAX's don't have PID tolerance
         if (absDiff < Constants.SWERVE_MODULE_TOLERANCE){
             //if the distance to the goal is small enough, stop rotation and return
-            // rotatePID.setReference(0.0, ControlType.kDutyCycle,1);
-            //rotationMotor.set(0.0);
             rotationMotor.stopMotor();
             SmartDashboard.putBoolean("Rotation Stop "+rotationMotor.getDeviceId()+":", true);
-            return;
+            return;//return to SwerveDrive
         }
 
-        // System.out.print("   posdiff2 =" + posDiff);
-        // Convert the shortest distance to encoder value(use convertion factor)
+
+        // Convert the shortest distance of rotation to relative encoder value(use convertion factor)
         double targetEncDistance = posDiff * Constants.RAD_TO_ENC_CONV_FACTOR;
-        // SmartDashboard.putNumber("TarDist(EncCount)",targetEncDistance);
+
         // add the encoder distance to the current encoder count
         double outputEncValue = targetEncDistance + rotateRelEncoder.getPosition();
-        // SmartDashboard.putNumber("curr(Enc)",rotateRelEncoder.getPosition());
-        // SmartDashboard.putNumber("output(Enc)",outputEncValue);
         SmartDashboard.putBoolean("Rotation Running "+rotationMotor.getDeviceId()+":", true);
+
         // Set the setpoint using setReference on the PIDController
         rotatePID.setReference(outputEncValue, ControlType.kPosition, 0,
             Constants.SWERVE_ROT_ARB_FF_VOLTAGE*Math.signum(posDiff),
@@ -369,9 +389,10 @@ public class SwerveModule {
 
     /**
      * This is a testing method, used to drive the module's rotation.
-     * it takes pure motor duty cycle(percent output). Positive input 
+     * It takes pure motor duty cycle(percent output). Positive input 
      * should result in counter-clockwise rotation. If not, the motor
      * output must be inverted.
+     * 
      * @param speed a percent output from -1.0 to 1.0, where 0.0 is stopped
      */
     public void driveRotateMotor(double speed) {
@@ -379,10 +400,10 @@ public class SwerveModule {
     }
 
     /**
-     * This method is used to stop the module completely. The drive motor is
-     * switched to percent voltage and and output of 0.0 percent volts. The rotation
-     * motor's PIDController is set to DutyCyclevoltage control mode, and output of
-     * 0.0% output
+     * This method is used to stop the module completely. The drive 
+     * motor is switched to percent voltage and and output of 0.0 
+     * percent volts. The rotation motor's PIDController is set to 
+     * DutyCyclevoltage control mode, and output of 0.0% output.
      */
     public void stopAll() {
         driveMotor.set(TalonFXControlMode.PercentOutput, 0.0);
