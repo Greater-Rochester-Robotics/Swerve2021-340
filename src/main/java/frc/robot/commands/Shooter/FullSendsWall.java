@@ -60,6 +60,6 @@ public class FullSendsWall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((RobotContainer.shooter.getBallsShot() >= ballsToShoot) && ballsToShoot > 0);
+    return false;//((RobotContainer.shooter.getBallsShot() >= ballsToShoot) && ballsToShoot > 0);
   }
 }
