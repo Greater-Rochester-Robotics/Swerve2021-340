@@ -182,23 +182,41 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-    //==========  DRIVER  ==========
-    // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-    // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-    // driverA.whenPressed(new SetHarvesterDown());
-    // driverY.whenPressed(new PickHarvesterUp());
+
+
+//     //==========  DRIVER  ==========
+// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
+//     // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
+//     // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
+//     // driverA.whenPressed(new SetHarvesterDown());
+//     // driverY.whenPressed(new PickHarvesterUp());
     
-    //driverA.whenPressed(new Load());
+
     driverA.whenPressed(new Load());
+    // driverA.whenPressed(new LoadAcc());
     driverA.whenReleased(new GetSmol());
-    // driverA.whenPressed(new SetHarvesterDown());
-    // driverA.whenReleased(new PickHarvesterUp());
+    // // driverA.whenPressed(new SetHarvesterDown());
+    // // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
-    //driverX.whenPressed(new SmartLimeShot());
+    // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    driverY.whenPressed(new WallShot());
-    driverY.whenReleased(new GetSmol());
+    // driverRB.whileHeld(new DriveAimAndPrepHood());
+    // driverY.whenPressed(new WallShot());
+    // driverY.whenReleased(new GetSmol());
+// =======
+//     //driverA.whenPressed(new Load());
+//     driverA.whenPressed(new Load());
+//     driverA.whenReleased(new GetSmol());
+//     // driverA.whenPressed(new SetHarvesterDown());
+//     // driverA.whenReleased(new PickHarvesterUp());
+//     driverB.whileHeld(new Regurgitate());
+//     //driverX.whenPressed(new SmartLimeShot());
+//     driverX.whenPressed(new FastBallWithHintOfLime());
+//     driverX.whenReleased(new GetSmol());
+//     driverY.whenPressed(new WallShot());
+//     driverY.whenReleased(new GetSmol());
+// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
     
     // driverDDown.whenPressed(new PrepHoodShot());
     
