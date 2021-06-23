@@ -54,7 +54,7 @@ public class SnekLoader extends SubsystemBase {
 
   private State state = State.kOff;
 
-  static final double MOTOR_IN_SPEED0 = 0.5;
+  static final double MOTOR_IN_SPEED0 = 0.6;
   static final double MOTOR_IN_SPEED1 = 0.4;
   static final double MOTOR_IN_SPEED2 = 0.5;
   static final double MOTOR_IN_SPEED3 = 0.6;
@@ -83,7 +83,7 @@ public class SnekLoader extends SubsystemBase {
     for (int i = 0; i <= 4; i++) {
       handleMotors[i].restoreFactoryDefaults();
       handleMotors[i].setIdleMode(IdleMode.kBrake);// set brake mode, so motors stop on a dime
-      handleMotors[i].enableVoltageCompensation(12.0);// enable volatge compensation mode 12V
+      handleMotors[i].enableVoltageCompensation(10.50);// enable volatge compensation mode 12V
       handleMotors[i].setInverted(false);//Reverses the direction of the wheels
       // handleMotors[i].setSmartCurrentLimit(40, 40);
       handleSensors[i] = handleMotors[i].getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
@@ -278,12 +278,13 @@ public class SnekLoader extends SubsystemBase {
         enableOneLimit(-1);
         break;
       case kShootBall0:
-        speeds = new double[] { .40, .65, .85, 1.0, 1.0 }; //.3,.5,.75,1.0,1.0
+        speeds = new double[] { .3, .55, .85, 1.0, 1.0 }; //.3,.5,.75,1.0,1.0
         enableOneLimit(-1);
         break;
       default:
           speeds = new double[] {0.0,0.0,0.0,0.0,0.0};
     }
+
     if(isPaused){
       speeds = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
     }
@@ -309,10 +310,6 @@ public class SnekLoader extends SubsystemBase {
         }
       }
       SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
-      // SmartDashboard.putBoolean("Ball 1", handleSensors[1].get());
-      // SmartDashboard.putBoolean("Ball 2", handleSensors[2].get());
-      // SmartDashboard.putBoolean("Ball 3", handleSensors[3].get());
-      // SmartDashboard.putBoolean("Ball 4", handleSensors[4].get());
       SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
     }
     smartCount++;
@@ -325,6 +322,12 @@ public class SnekLoader extends SubsystemBase {
     //   }
     // }
 
+    //outputs for testing the motor speeds
+    SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
+    SmartDashboard.putNumber("Motor1", handleEncoders[1].getVelocity());
+    SmartDashboard.putNumber("Motor2", handleEncoders[2].getVelocity());
+    SmartDashboard.putNumber("Motor3", handleEncoders[3].getVelocity());
+    SmartDashboard.putNumber("Motor4", handleEncoders[4].getVelocity());
   }
 
   /**

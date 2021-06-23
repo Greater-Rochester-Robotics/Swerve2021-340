@@ -147,7 +147,7 @@ public class RobotContainer {
     climber = new Climber();
     swerveDrive = new SwerveDrive();
     SmartDashboard.putData("Harvester", snekLoader);
-    swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
+    // swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
 
     // Configure the button bindings
     configureButtonBindings();
