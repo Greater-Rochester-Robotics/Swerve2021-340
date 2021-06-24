@@ -31,21 +31,19 @@ import frc.robot.RobotContainer;
  * switches plugged into the SparkMax
  */
 public class SnekLoader extends SubsystemBase {
-  // private CANSparkMax axleWheels;
-  // private CANEncoder axleEncoder;
-  private boolean harvesterJammed = false; 
-  
-
   private static CANSparkMax[] handleMotors;
   private static CANDigitalInput[] handleSensors = new CANDigitalInput[5];
   private static CANEncoder[] handleEncoders = new CANEncoder[5];
   // If it is deemed necessary, uncomment all of ballsLoaded stuff
-  private int ballsLoaded;
-  private boolean isPaused;
   private Timer timer = new Timer();
+
+
   // private static boolean hadBall;
   double[] speeds = new double[5];
   int smartCount = 0;
+  private boolean harvesterJammed = false; 
+  private int ballsLoaded;
+  private boolean isPaused;
 
   public enum State {
     kFillTo4, kFillTo3, kFillTo2, kFillTo1, kFillTo0, kOff, kShootBall4, kShootBall3, kShootBall2, kShootBall1,
@@ -61,9 +59,6 @@ public class SnekLoader extends SubsystemBase {
   static final double MOTOR_IN_SPEED4 = 0.35;
 
   public SnekLoader() {
-    // axleWheels = new CANSparkMax(Constants.BALL_HANDLER_MOTOR_0, MotorType.kBrushless);
-    // axleWheels.setSmartCurrentLimit(45, 60);
-    // axleEncoder = axleWheels.getEncoder();
 
     // ballSensors = axleWheels.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
 
@@ -78,7 +73,7 @@ public class SnekLoader extends SubsystemBase {
         new CANSparkMax(Constants.BALL_HANDLER_MOTOR_3, MotorType.kBrushless),
         new CANSparkMax(Constants.BALL_HANDLER_MOTOR_4, MotorType.kBrushless) };
 
-    // handleSensors
+    
     // sets default setup for motors
     for (int i = 0; i <= 4; i++) {
       handleMotors[i].restoreFactoryDefaults();
@@ -94,10 +89,6 @@ public class SnekLoader extends SubsystemBase {
     handleMotors[4].setInverted(false);
   }
 
-  // public void setAxleWheels(double volts) {
-  //   axleWheels.setVoltage(volts*-1); //inverted for new robot
-  // }
-
   public boolean isHarvesterJammed() {
     boolean isJammed = false;
     //   isJammed =
@@ -109,6 +100,7 @@ public class SnekLoader extends SubsystemBase {
   public void setHarvesterJammed(boolean jam){
     harvesterJammed = jam;
   }
+
   public boolean stopIntakeQ(){
       return harvesterJammed;
   }
@@ -130,11 +122,8 @@ public class SnekLoader extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    
-  
     // if (!hadBall && handleSensors[0].get()) {
-    // ballsLoaded++;
+    //    ballsLoaded++;
     // }
 
 
