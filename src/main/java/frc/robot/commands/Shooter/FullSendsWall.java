@@ -15,12 +15,12 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.SnekLoader.State;
 
 public class FullSendsWall extends CommandBase {
-  /**
-   * Creates a new FullSendsWall.
-   */
   private boolean fullSend;
   private int ballsToShoot;
   private Timer timer;
+  /**
+   * Creates a new FullSendsWall.
+   */
   public FullSendsWall() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.shooter, RobotContainer.snekLoader);

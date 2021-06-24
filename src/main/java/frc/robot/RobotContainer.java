@@ -182,60 +182,41 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     
-
-
-//     //==========  DRIVER  ==========
-// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
-//     // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-//     // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-//     // driverA.whenPressed(new SetHarvesterDown());
-//     // driverY.whenPressed(new PickHarvesterUp());
-    
-
+    //==========  DRIVER  ==========
     driverA.whenPressed(new Load());
     // driverA.whenPressed(new LoadAcc());
     driverA.whenReleased(new GetSmol());
-    // // driverA.whenPressed(new SetHarvesterDown());
-    // // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new FastBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    // driverRB.whileHeld(new DriveAimAndPrepHood());
-    // driverY.whenPressed(new WallShot());
-    // driverY.whenReleased(new GetSmol());
-// =======
-//     //driverA.whenPressed(new Load());
-//     driverA.whenPressed(new Load());
-//     driverA.whenReleased(new GetSmol());
-//     // driverA.whenPressed(new SetHarvesterDown());
-//     // driverA.whenReleased(new PickHarvesterUp());
-//     driverB.whileHeld(new Regurgitate());
-//     //driverX.whenPressed(new SmartLimeShot());
-//     driverX.whenPressed(new FastBallWithHintOfLime());
-//     driverX.whenReleased(new GetSmol());
-//     driverY.whenPressed(new WallShot());
-//     driverY.whenReleased(new GetSmol());
-// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
-    
+    driverY.whenPressed(new WallShot());
+    driverY.whenReleased(new GetSmol());
     // driverDDown.whenPressed(new PrepHoodShot());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
     driverRB.whileHeld(new DriveOnTargetWithLimeLight());
+    // driverRB.whileHeld(new DriveAimAndPrepHood());
 
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
 
+
     //========== CODRIVER ==========
     coDriverA.whenReleased(new GetSmol());
     coDriverB.whenPressed(new SpinUpShooterWheel());
-    coDriverX.whenPressed(new PrepWallShot().withTimeout(1.5));
-    coDriverY.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    coDriverX.whenPressed(new PrepHoodShot().withTimeout(1.5));
+    coDriverY.whenPressed(new PrepWallShot().withTimeout(1.5));
+    
     coDriverBack.whenPressed(new StopShoot());
 
     coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
   }
   
+  /**
+   * Define all autonomous modes here to have them 
+   * appear in the autonomous select drop down menu.
+   */
   private void configureAutoModes() {
     
     autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
@@ -258,6 +239,9 @@ public class RobotContainer {
 
   }
 
+  /**
+   * Define the axis of the Xbox gamepad.
+   */
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
 
@@ -304,7 +288,7 @@ public class RobotContainer {
     return (driver.getPOV());
   }
 
-    /**
+  /**
    * 
    * @param axis
    * @return

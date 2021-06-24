@@ -52,15 +52,13 @@ public class SnekLoader extends SubsystemBase {
 
   private State state = State.kOff;
 
-  static final double MOTOR_IN_SPEED0 = 0.6;
+  static final double MOTOR_IN_SPEED0 = 0.5;
   static final double MOTOR_IN_SPEED1 = 0.4;
   static final double MOTOR_IN_SPEED2 = 0.5;
   static final double MOTOR_IN_SPEED3 = 0.6;
   static final double MOTOR_IN_SPEED4 = 0.35;
 
   public SnekLoader() {
-
-    // ballSensors = axleWheels.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
 
     isPaused = false;
     ballsLoaded = 0;
@@ -273,50 +271,42 @@ public class SnekLoader extends SubsystemBase {
       default:
           speeds = new double[] {0.0,0.0,0.0,0.0,0.0};
     }
-
     if(isPaused){
       speeds = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
     }
     setAllHandleMotors(speeds);
 
     //SmartDashboard Pushes
-    if(smartCount == smartCount){
-      smartCount = smartCount == 5 ? 0 : smartCount;
-      if (isJammed() && getState() != State.kSpitBalls) {
-        SmartDashboard.putBoolean("isJammed", true);
-      } else {
-        SmartDashboard.putBoolean("isJammed", false);
-      }
-      harvesterJammed = false;
-      if(this.getCurrentCommand() != null){
-        // SmartDashboard.putString("harvester speed", "" + handleEncoders[0].getVelocity());
-        if (isHarvesterJammed() ) {//&& (this.getCurrentCommand().getName().equals("Load"))
-          SmartDashboard.putBoolean("isHarvesterJammed", true);
-          harvesterJammed = true;
-        } else {
-          SmartDashboard.putBoolean("isHarvesterJammed", false);
-          harvesterJammed = false;
-        }
-      }
-      SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
-      SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
+    if (isJammed() && getState() != State.kSpitBalls) {
+      SmartDashboard.putBoolean("isJammed", true);
+    } else {
+      SmartDashboard.putBoolean("isJammed", false);
     }
-    smartCount++;
-    // if(DriverStation.getInstance().isTest()){
-    //   SmartDashboard.putString("State", state.name());
-    //   if(this.getCurrentCommand() != null){
-    //     SmartDashboard.putString("snek command", this.getCurrentCommand().getName());
-    //   } else {
-    //     SmartDashboard.putString("snek command", "none");
-    //   }
-    // }
+    harvesterJammed = false;
+    if(this.getCurrentCommand() != null){
+      // SmartDashboard.putString("harvester speed", "" + handleEncoders[0].getVelocity());
+      if (isHarvesterJammed()) {//&& (this.getCurrentCommand().getName().equals("Load"))
+        SmartDashboard.putBoolean("isHarvesterJammed", true);
+        harvesterJammed = true;
+      } else {
+        SmartDashboard.putBoolean("isHarvesterJammed", false);
+        harvesterJammed = false;
+      }
+    }
 
-    //outputs for testing the motor speeds
+    
+    smartCount = smartCount == 5 ? 0 : smartCount;
+    SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
+    SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
+    
+    smartCount++;
+    //   SmartDashboard.putString("State", state.name());
     SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
     SmartDashboard.putNumber("Motor1", handleEncoders[1].getVelocity());
     SmartDashboard.putNumber("Motor2", handleEncoders[2].getVelocity());
     SmartDashboard.putNumber("Motor3", handleEncoders[3].getVelocity());
     SmartDashboard.putNumber("Motor4", handleEncoders[4].getVelocity());
+
   }
 
   /**
@@ -329,7 +319,7 @@ public class SnekLoader extends SubsystemBase {
   }
 
   /**
-   * returns current state
+   * returns current state of the ballHandler periodic function
    * 
    * @return current state
    */
@@ -340,22 +330,10 @@ public class SnekLoader extends SubsystemBase {
   /**
    * returns boolean of limit switch
    * 
-   * @param sensor
+   * @param sensor The number of the limit switch returned 0-4
    * @return boolean
    */
   public boolean getHandleSensor(int sensor) {
-    // PrintWriter writer;
-    // try {
-    //   writer = new PrintWriter("output.txt", "UTF-8");
-    //   writer.println(handleSensors[sensor].get());
-    //   writer.close();
-    // } catch (FileNotFoundException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // } catch (UnsupportedEncodingException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // }
     return handleSensors[sensor].get();
   }
 
