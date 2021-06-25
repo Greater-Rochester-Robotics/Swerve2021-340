@@ -63,6 +63,7 @@ import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
+import frc.robot.commands.Shooter.ProgBallWithHintOfLime;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -188,16 +189,15 @@ public class RobotContainer {
     driverA.whenReleased(new GetSmol());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new FastBallWithHintOfLime());
+    driverX.whenPressed(new ProgBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverY.whenPressed(new WallShot());
     driverY.whenReleased(new GetSmol());
+
     // driverDDown.whenPressed(new PrepHoodShot());
-    
     driverLB.whenPressed(new DriveResetGyroToZero());
     driverRB.whileHeld(new DriveOnTargetWithLimeLight());
     // driverRB.whileHeld(new DriveAimAndPrepHood());
-
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
     driverBack.whenPressed(new DriveRobotCentric());
 
