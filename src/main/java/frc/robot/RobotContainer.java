@@ -63,6 +63,7 @@ import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
+import frc.robot.commands.Shooter.ProgBallWithHintOfLime;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -184,14 +185,7 @@ public class RobotContainer {
     
 
 
-//     //==========  DRIVER  ==========
-// >>>>>>> cce10acd812d04636fdad2e061588f32e9f27bd0
-//     // driverX.whenPressed(new DriveArcDriverControl(.822,Math.toRadians(270)));
-//     // driverB.whenPressed(new DriveArcDriverControl(-.822, Math.toRadians(360)));
-//     // driverA.whenPressed(new SetHarvesterDown());
-//     // driverY.whenPressed(new PickHarvesterUp());
-    
-
+   //==========  DRIVER  ==========
     driverA.whenPressed(new Load());
     // driverA.whenPressed(new LoadAcc());
     driverA.whenReleased(new GetSmol());
@@ -199,11 +193,11 @@ public class RobotContainer {
     // // driverA.whenReleased(new PickHarvesterUp());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new FastBallWithHintOfLime());
+    driverX.whenPressed(new ProgBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     // driverRB.whileHeld(new DriveAimAndPrepHood());
-    // driverY.whenPressed(new WallShot());
-    // driverY.whenReleased(new GetSmol());
+    driverY.whenPressed(new WallShot());
+    driverY.whenReleased(new GetSmol());
 // =======
 //     //driverA.whenPressed(new Load());
 //     driverA.whenPressed(new Load());

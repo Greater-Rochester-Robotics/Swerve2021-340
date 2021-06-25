@@ -70,6 +70,10 @@ public class Limelight extends SubsystemBase {
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0); //returns the vertical angle offset
   }
 
+  /**
+   * 
+   * @return
+   */
   public static int calcHoodRPM(){
     double rpm;
     double distance = getDistance();
@@ -89,7 +93,11 @@ public class Limelight extends SubsystemBase {
     SmartDashboard.putString("LimeLight RPM", rpm + "");
     return (int) rpm;
   }
-  // Calculate the speed
+
+  /**
+   * Calculate the speed
+   *  
+   */ 
   public static double calcSpeed(double distance){
     TreeMap<Double,Double> lookUp;
     //adding .5 to account for the distance between the front wall and 3 point hole
@@ -112,6 +120,8 @@ public class Limelight extends SubsystemBase {
     double decimal = distance % 1;
     return ((highSpeed - lowSpeed) * decimal) + lowSpeed;
   }
+
+
   public static double getDistance(){
     //all distance values are in inches
     double cameraHeight =  25.5;    //not final value
