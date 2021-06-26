@@ -45,6 +45,12 @@ public class SnekLoader extends SubsystemBase {
   private int ballsLoaded;
   private boolean isPaused;
 
+  /**
+   * These states control the five motors of 
+   * the snek, and what action they are 
+   * taking at any given moment.
+   * ACC refers to @home chalenges
+   */
   public enum State {
     kFillTo4, kFillTo3, kFillTo2, kFillTo1, kFillTo0, kOff, kShootBall4, kShootBall3, kShootBall2, kShootBall1,
     kShootBall0,kAccFillTo4, kAccFillTo3, kAccFillTo2, kAccBackFillTo0, kAccBackFillTo2, kSpitBalls,kAccShootBall4, kAccFillTo1

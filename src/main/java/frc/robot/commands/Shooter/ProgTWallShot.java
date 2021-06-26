@@ -50,7 +50,7 @@ public class ProgTWallShot extends CommandBase {
     RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM);
     initTimer.reset();
     initTimer.start();
-    shootingBall = 1;
+    shootingBall = 1;//in this command balls are counted up from the shooter
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -71,7 +71,9 @@ public class ProgTWallShot extends CommandBase {
       }
       
       if(ballTimer.hasElapsed(timeBetweenBalls)){
+        //if time since the last ball was send to the shooter is big enough, allow next
         shootingBall++;
+        //and then reset the timer, so we can judge for the next ball in sequence
         ballTimer.reset();
         ballTimer.start();
       }

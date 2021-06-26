@@ -91,7 +91,9 @@ public class ProgTBallWithHintOfLime extends CommandBase {
       }
       
       if(ballTimer.hasElapsed(timeBetweenBalls)){
+        //if time since the last ball was send to the shooter is big enough, allow next
         shootingBall++;
+        //and then reset the timer, so we can judge for the next ball in sequence
         ballTimer.reset();
         ballTimer.start();
       }
