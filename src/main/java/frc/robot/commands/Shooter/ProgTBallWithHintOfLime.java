@@ -11,17 +11,36 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.SnekLoader.State;
 
-public class ProgBallWithHintOfLime extends CommandBase {
+public class ProgTBallWithHintOfLime extends CommandBase {
   private int speedRpm;
   private Timer initTimer = new Timer();
   private Timer ballTimer = new Timer();
-
-  private boolean prevShootSensor = false;
+  private double timeBetweenBalls = .5;
   private int shootingBall = 1;
   
-  /** Creates a new ProgBallWithHintOfLime. */
-  public ProgBallWithHintOfLime() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  /** 
+   * This command shoots all the balls, but 
+   * starts with one ball and then starts moving 
+   * each progessive ball forward delayed by 0.5 
+   * seconds after that previous ball.
+   * 
+   * @requires SnekLoader, Shooter 
+   */
+  public ProgTBallWithHintOfLime() { 
+    this(0.5);
+  }
+
+  /** 
+   * This command shoots all the balls, but 
+   * starts with one ball and then starts moving 
+   * each progessive ball forward delayed by 
+   * timeBetweenBalls seconds after that previous ball. 
+   * 
+   * @param timeBetweenBalls time between when oone ball starts moving and the next
+   * @requires SnekLoader, Shooter 
+   */
+  public ProgTBallWithHintOfLime(double timeBetweenBalls) { 
+    this.timeBetweenBalls = timeBetweenBalls;
     addRequirements(RobotContainer.shooter, RobotContainer.snekLoader);
   }
 
@@ -31,6 +50,7 @@ public class ProgBallWithHintOfLime extends CommandBase {
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
 
+    //TODO:one of these needs to be commented back in(Nate)
     // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
     //   speedRpm = 19000;
     // }
@@ -50,7 +70,7 @@ public class ProgBallWithHintOfLime extends CommandBase {
     RobotContainer.shooter.setShooterWheel(speedRpm);
     initTimer.reset();
     initTimer.start();
-    shootingBall = 1;
+    shootingBall = 1;//in this command balls are counted up from the shooter
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -70,12 +90,11 @@ public class ProgBallWithHintOfLime extends CommandBase {
         RobotContainer.snekLoader.setState(State.kShootBall0);
       }
       
-      if((RobotContainer.shooter.getShooterSensor() && !prevShootSensor) || ballTimer.hasElapsed(.5)){
+      if(ballTimer.hasElapsed(timeBetweenBalls)){
         shootingBall++;
         ballTimer.reset();
         ballTimer.start();
       }
-      prevShootSensor = RobotContainer.shooter.getShooterSensor();
 
     } else{
       RobotContainer.snekLoader.setPause(true);

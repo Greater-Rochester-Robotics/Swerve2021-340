@@ -7,15 +7,10 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
 import frc.robot.commands.AutoBarrelPath;
 import frc.robot.commands.AutoBouncePath;
 import frc.robot.commands.AutoColorWheelStealThenShoot;
@@ -57,13 +53,11 @@ import frc.robot.commands.DriveResetGyroToZero;
 import frc.robot.commands.RunPath;
 import frc.robot.commands.ClimberCoDriverFunction;
 import frc.robot.commands.GetSmol;
-import frc.robot.commands.Harvester.PickHarvesterUp;
-import frc.robot.commands.Harvester.SetHarvesterDown;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
-import frc.robot.commands.Shooter.ProgBallWithHintOfLime;
+import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -129,7 +123,7 @@ public class RobotContainer {
   public static Harvester harvester;
   public static Shooter shooter;
   
-
+  //The sendable choser form autonomous is constructed here
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
 
@@ -138,7 +132,7 @@ public class RobotContainer {
    */
   public RobotContainer() {
     
-    //create subsystems
+    //create(construct) subsystems
     shooter = new Shooter();
     harvester = new Harvester();
     snekLoader = new SnekLoader();
@@ -147,7 +141,7 @@ public class RobotContainer {
     limelight.setLightState(1);
     climber = new Climber();
     swerveDrive = new SwerveDrive();
-    SmartDashboard.putData("Harvester", snekLoader);
+    // SmartDashboard.putData("Harvester", snekLoader);
     // swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
 
     // Configure the button bindings
@@ -156,7 +150,7 @@ public class RobotContainer {
     //Add all autos to the auto selector
     configureAutoModes();
 
-    //add some cmmands to dashboard for testing
+    //add some commands to dashboard for testing/configuring
     SmartDashboard.putData(new DriveResetAllModulePositionsToZero());
     SmartDashboard.putData(new DriveAdjustModuleZeroPoint());
     SmartDashboard.putData("Drive Module 0", new DriveOneModule(0));
@@ -189,11 +183,10 @@ public class RobotContainer {
     driverA.whenReleased(new GetSmol());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new ProgBallWithHintOfLime());
+    driverX.whenPressed(new ProgTBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
     driverY.whenPressed(new WallShot());
     driverY.whenReleased(new GetSmol());
-
     // driverDDown.whenPressed(new PrepHoodShot());
     driverLB.whenPressed(new DriveResetGyroToZero());
     driverRB.whileHeld(new DriveOnTargetWithLimeLight());
@@ -207,10 +200,9 @@ public class RobotContainer {
     coDriverB.whenPressed(new SpinUpShooterWheel());
     coDriverX.whenPressed(new PrepHoodShot().withTimeout(1.5));
     coDriverY.whenPressed(new PrepWallShot().withTimeout(1.5));
-    
     coDriverBack.whenPressed(new StopShoot());
-
     coDriverDDown.toggleWhenPressed(new ClimberCoDriverFunction());
+    
   }
   
   /**
@@ -240,7 +232,7 @@ public class RobotContainer {
   }
 
   /**
-   * Define the axis of the Xbox gamepad.
+   * Defines the axis of the Xbox gamepad.
    */
   public enum Axis {
     LEFT_X(0), LEFT_Y(1), LEFT_TRIGGER(2), RIGHT_TRIGGER(3), RIGHT_X(4), RIGHT_Y(5);
@@ -257,9 +249,10 @@ public class RobotContainer {
   }
 
   /**
-   * A method to return the value of a joystick axis, which
-   * runs from -1.0 to 1.0, with a .1 dead zone(a 0 value 
-   * returned if the joystick value is between -.1 and .1)
+   * A method to return the value of a driver joystick axis,
+   * which runs from -1.0 to 1.0, with a .1 dead zone(a 0 
+   * value returned if the joystick value is between -.1 and 
+   * .1)
    * @param axis
    * @return value of the joystick, from -1.0 to 1.0 where 0.0 is centered
    */
@@ -289,7 +282,10 @@ public class RobotContainer {
   }
 
   /**
-   * 
+   * A method to return the value of a codriver joystick axis,
+   * which runs from -1.0 to 1.0, with a .1 dead zone(a 0 
+   * value returned if the joystick value is between -.1 and 
+   * .1) 
    * @param axis
    * @return
    */
@@ -312,7 +308,7 @@ public class RobotContainer {
 
   /**
    * accessor to get the true/false of the buttonNum 
-   * on the codriver control
+   * on the coDriver control
    * @param buttonNum
    * @return the value of the button
    */

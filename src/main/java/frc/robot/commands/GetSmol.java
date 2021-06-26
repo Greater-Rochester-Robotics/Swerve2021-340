@@ -31,10 +31,8 @@ public class GetSmol extends CommandBase {
     RobotContainer.snekLoader.setState(SnekLoader.State.kOff);//turn off the snekloader
     RobotContainer.shooter.stop();
     RobotContainer.shooter.lowerHood();
-    // RobotContainer.shooter.raiseHardStop();
     RobotContainer.limelight.setLightState(1);
-   RobotContainer.snekLoader.setPause(false);//since the loader is off, turn off the pause
-
+    RobotContainer.snekLoader.setPause(false);//since the loader is off, turn off the pause
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -15,7 +15,8 @@ import frc.robot.Constants;
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
 public class WallShot extends SequentialCommandGroup {
   /**
-   * Creates a new WallShot.
+   * This Command Group lowers the hood, 
+   * and then runs FullSendsWall.
    */
   public WallShot() {
     // Add your commands in the super() call, e.g.

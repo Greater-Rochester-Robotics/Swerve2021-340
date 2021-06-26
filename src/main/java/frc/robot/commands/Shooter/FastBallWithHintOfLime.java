@@ -17,13 +17,14 @@ public class FastBallWithHintOfLime extends CommandBase {
   private int speedRpm;
   private boolean fullSend;
   private int ballsToShoot;
-  private Timer timer = new Timer();
+  private Timer initTimer = new Timer();
   
   /**
    * Creates a new FastBallWithHintOfLime. This command 
    * is for shooting the balls with the hood up. The 
    * robot should be close to on target and hood up from 
-   * command PrepHoodShot.
+   * command PrepHoodShot. All balls move toward the 
+   * shooter at once, though at different speeds.
    * 
    * @requires Shooter, SnekLoader, Limelight
    */
@@ -40,6 +41,7 @@ public class FastBallWithHintOfLime extends CommandBase {
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
 
+    //TODO:one of these needs to be commented back in(Nate)
     // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
       speedRpm = 19000;
     // }
@@ -58,16 +60,15 @@ public class FastBallWithHintOfLime extends CommandBase {
     
     fullSend = false;
     RobotContainer.shooter.setShooterWheel(speedRpm);
+    initTimer.reset();
+    initTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(!timer.hasElapsed(0.1)){
-      timer.start();
-    }
 
-    if(fullSend && timer.hasElapsed(1.5)){
+    if(fullSend && initTimer.hasElapsed(1.5)){
       RobotContainer.snekLoader.setPause(false);
       RobotContainer.snekLoader.setState(State.kShootBall0);
     } else{
@@ -86,6 +87,6 @@ public class FastBallWithHintOfLime extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (((RobotContainer.shooter.getBallsShot() >= ballsToShoot) && ballsToShoot > 0));
+    return false;//(((RobotContainer.shooter.getBallsShot() >= ballsToShoot) && ballsToShoot > 0));
   }
 }
