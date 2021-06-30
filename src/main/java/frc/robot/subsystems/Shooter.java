@@ -21,32 +21,26 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.ControlType;
-import com.revrobotics.EncoderType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
 
   private TalonFX shooterWheel;
-  // private CANEncoder shooterEncoder;
   private double targetVelocity;
-  private DigitalInput ballCounter;
+  private DigitalInput ballCountSensor;
+  private Counter ballCounter;
   private Solenoid hoodMoverUp, hoodMoverDown;
 
-  private int ballsShot = 0;
   private int totalBallsShot = 0;
-  private boolean ballWasPresent;
   int smartCount = 0;
 
   /**
@@ -68,15 +62,23 @@ public class Shooter extends SubsystemBase {
     currLimitCfg.currentLimit = 60;
     currLimitCfg.enable = true; 
     shooterWheel.configSupplyCurrentLimit(currLimitCfg);
-    // practice bot PIDF values
-    // shooterWheel.getPIDController().setP(0.001);
-    // shooterWheel.getPIDController().setI(0.0);
-    // shooterWheel.getPIDController().setD(1);
-    // shooterWheel.getPIDController().setFF(0.000187);
     shooterWheel.setInverted(true);
-    //shooterEncoder = shooterWheel.getEncoder();
-    ballCounter = new DigitalInput(Constants.BALL_COUNTER_SENSOR);
-    ballWasPresent = false;
+    
+    /**
+     * The following creates a counter(like an encoder). The 
+     * sensor in the shooter is still accessable, and for a 
+     * direction control, we use a channel in the MXP that is 
+     * unused.(as we only need to count up) With this we hope 
+     * to overcome the failures in reading the sensor in the 
+     * periodic loop, as this counter works on the FPGA level.
+     */
+    ballCountSensor = new DigitalInput(Constants.BALL_COUNTER_SENSOR);
+    ballCounter = new Counter(Counter.Mode.kExternalDirection);
+    ballCounter.setUpSource(ballCountSensor);
+    ballCounter.setDownSource(15);//this is an unused channel, we need to say something, so we say an unconnected channel
+    ballCounter.setDownSourceEdge(false,true);
+    
+    
     hoodMoverUp = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL_UP);
     hoodMoverDown = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL_DOWN);
     // shooterWheel.enableVoltageCompensation(12.0);
@@ -90,16 +92,10 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if ballCounter sensor is false and ball sensor was true previously, add one
-    if (!getShooterSensor() && ballWasPresent) {
-      ballsShot++;
-      totalBallsShot++;
-    }
-    ballWasPresent = getShooterSensor();
 
-    if (smartCount == 1) {
+    if (smartCount == 5) {
       smartCount = 0;
-      SmartDashboard.putString("Balls Shot", "" + ballsShot);
+      SmartDashboard.putString("Balls Shot", "" + ballCounter.get());
       SmartDashboard.putBoolean("Shooter Sensor", getShooterSensor());
       SmartDashboard.putString("Flywheel Speed", "" + Math.round(shooterWheel.getSelectedSensorVelocity()));
       SmartDashboard.putString("Total Balls Shot", "" + totalBallsShot);
@@ -114,30 +110,27 @@ public class Shooter extends SubsystemBase {
     // // SmartDashboard.putString("Max Speed", "" + ((targetVelocity * 1) + 25));
     // SmartDashboard.putString("Target Speed", "" + targetVelocity);
     // // SmartDashboard.putString("Min Speed", "" + ((targetVelocity * 1) - 25));
-    // if (this.getCurrentCommand() != null) {
-    // SmartDashboard.putString("shooter command",
-    // this.getCurrentCommand().getName());
-    // } else {
-    // SmartDashboard.putString("shooter command", "none");
-    // }
     // }
   }
 
+  /**
+   * stops the shooterWheel, this is motor is no 
+   * in brake modde, so the wheel will coast for 
+   * a little while.
+   */
   public void stop() {
     shooterWheel.set(ControlMode.PercentOutput,0);
   }
 
-  // Returns RPM of shooterWheel
+  /**
+   * Returns RPM of shooterWheel in natural units (ticks per ms)
+   * @return 
+   */ 
   public double getShooterVelocity() {
     return shooterWheel.getSelectedSensorVelocity();
   }
 
   public void setShooterWheel(double speed) {
-    // if (speed < -1) {
-    // speed = -1;
-    // } else if (speed > 1) {
-    // speed = 1;
-    // }
     
     if (speed < 1 && speed > -1) {
       shooterWheel.set(ControlMode.PercentOutput,0);
@@ -148,11 +141,18 @@ public class Shooter extends SubsystemBase {
       }
       
       targetVelocity = speed;
-      shooterWheel.set(ControlMode.Velocity, targetVelocity);//.setReference(speed, ControlType.kVelocity);
-      // shooterWheel.set(speed);
+      shooterWheel.set(ControlMode.Velocity, targetVelocity);
+
     }
   }
 
+  /**
+   * checks to see if the shooterWheel has reached 
+   * the demanded speed within a window of +/- 500 
+   * natural units
+   * 
+   * @return true if wheel is at speed
+   */
   public boolean isShooterAtSpeed() {
     SmartDashboard.putString("ShooterWheelSpeed", targetVelocity + "");
     return ((shooterWheel.getSelectedSensorVelocity() >= (targetVelocity * 1) - 500)
@@ -160,38 +160,50 @@ public class Shooter extends SubsystemBase {
 
   }
 
+  /**
+   * raises the hood by changing the 
+   * solenoids' states
+   */
   public void raiseHood() {
     hoodMoverDown.set(false);
     hoodMoverUp.set(true);
   }
 
+  /**
+   * lowers the hood by changing the 
+   * solenoids' states
+   */
   public void lowerHood() {
     hoodMoverDown.set(true);
     hoodMoverUp.set(false);
   }
 
+  /**
+   * resets the number of balls shot
+   */
   public void resetBallsShot() {
-    ballsShot = -0;// UwU H2O(aq) constnagt Mitasu
+    ballCounter.reset();//resets the ball counter, as one would an encoder
+    // UwU H2O(aq) constnagt Mitasu <-What is this? Explain!(ROB)
   }
 
-  public int getBallsShot() {
-    return ballsShot;
-  }
-
+  /**
+   * The current state of the sensor in the shooter. 
+   * This is good for seeing if a ball is stuck in 
+   * the shooter.
+   * 
+   * @return is a ball in the shooter
+   */
   public boolean getShooterSensor() {
-    // PrintWriter writer;
-    // try {
-    //   writer = new PrintWriter("output.txt", "UTF-8");
-    //   writer.println(ballCounter.get());
-    //   writer.close();
-    // } catch (FileNotFoundException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // } catch (UnsupportedEncodingException e) {
-    //   // TODO Auto-generated catch block
-    //   e.printStackTrace();
-    // }
-    return (!ballCounter.get());
+    return (!ballCountSensor.get());
+  }
+
+  /**
+   * The current count of balls that have gone 
+   * through the shooter.
+   * @return
+   */
+  public int getBallsShot() {
+    return ballCounter.get();
   }
 
   public int getTotalBallsShot() {
