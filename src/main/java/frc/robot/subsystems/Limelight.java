@@ -20,25 +20,22 @@ import java.util.TreeMap;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Solenoid;
 
 public class Limelight extends SubsystemBase {
   PCM_LED led;
   /**
-   * Creates a new Limelight.
+   * Creates a new Limelight. A subsystem that handles 
+   * limelight interface and controls the extra LED 
+   * from the PCM.
    */
   public Limelight() {
     led = new PCM_LED(0, 5);
-    setLightState(1);
+    setLightState(1);//turn the Light off on construction
     //y = -0.104167 for crosshair positioning
   }
 
   public void periodic(){
     SmartDashboard.putString("Distance", ""+ getDistance());
-    // if(DriverStation.getInstance().isTest()){
-    //   SmartDashboard.putString("AngleToTarget", ""+angleToTarget());
-    // }
   }
 
   public void setStreamMode(int Stream){
@@ -53,15 +50,29 @@ public class Limelight extends SubsystemBase {
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("camMode").setNumber(Cammode);
   }
 
+  /**
+   * Set the LED light on or off, this 
+   * includes the LED from the PCM
+   * @param LightState 1 for off, 3 for On
+   */
   public void setLightState(int LightState){
     NetworkTableInstance.getDefault().getTable("limelight").getEntry("ledMode").setNumber(LightState);  //controls if limelight is on or not // 3 is on, 1 is off
     led.set(3 == LightState);
   }
 
+  /**
+   * True if the limelight sees a target
+   * @return
+   */
   public boolean haveTarget(){
     return (NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1); //returns true if it detects a target
   }
 
+  /**
+   * horizontal angle to the target.
+   * (+ is left of target, - is right of target)
+   * @return
+   */
   public double angleToTarget(){
     return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0); //returns the angle offset (+ is left of target, - is right of target)
   }
@@ -71,8 +82,10 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
+   * Get the speed needed for the distance 
+   * that the robot is from the target.
    * 
-   * @return
+   * @return speed in units per 100ms
    */
   public static int calcHoodRPM(){
     double rpm;

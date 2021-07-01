@@ -96,10 +96,10 @@ public class Shooter extends SubsystemBase {
 
     if (smartCount == 5) {
       smartCount = 0;
-      SmartDashboard.putString("Balls Shot", "" + ballCounter.get());
+      SmartDashboard.putString("Balls Shot", "" + getBallsShot());
       SmartDashboard.putBoolean("Shooter Sensor", getShooterSensor());
-      SmartDashboard.putString("Flywheel Speed", "" + Math.round(shooterWheel.getSelectedSensorVelocity()));
-      SmartDashboard.putString("Total Balls Shot", "" + totalBallsShot);
+      SmartDashboard.putString("Flywheel Speed", "" + Math.round(getShooterVelocity()));
+      SmartDashboard.putString("Total Balls Shot", "" + getTotalBallsShot() );
       if (DriverStation.getInstance().isFMSAttached()) {
         SmartDashboard.setPersistent("Total Balls Shot");
       } else {
@@ -131,6 +131,14 @@ public class Shooter extends SubsystemBase {
     return shooterWheel.getSelectedSensorVelocity();
   }
 
+  /**
+   * Demands wheel to go to a set velocity. If value 
+   * is between -1 and 1 the speed will be set in 
+   * PercentOutput mode, otherwise it is in Velocity 
+   * mode.
+   * 
+   * @param speed speed in units per 100 ms
+   */
   public void setShooterWheel(double speed) {
     
     if (speed < 1 && speed > -1) {
@@ -180,14 +188,6 @@ public class Shooter extends SubsystemBase {
   }
 
   /**
-   * resets the number of balls shot
-   */
-  public void resetBallsShot() {
-    ballCounter.reset();//resets the ball counter, as one would an encoder
-    // UwU H2O(aq) constnagt Mitasu <-What is this? Explain!(ROB)
-  }
-
-  /**
    * The current state of the sensor in the shooter. 
    * This is good for seeing if a ball is stuck in 
    * the shooter.
@@ -201,13 +201,31 @@ public class Shooter extends SubsystemBase {
   /**
    * The current count of balls that have gone 
    * through the shooter.
+   * 
    * @return
    */
   public int getBallsShot() {
     return ballCounter.get();
   }
 
+  /**
+   * resets the number of balls shot, stores 
+   * number of balls shot in totalBalls shot 
+   * before hand.
+   */
+  public void resetBallsShot() {
+    totalBallsShot+=ballCounter.get();
+    ballCounter.reset();//resets the ball counter, as one would an encoder
+    // UwU H2O(aq) constnagt Mitasu <-What is this? Explain!(ROB)
+  }
+
+  /**
+   * gets the total number of balls fired 
+   * since the robot has booted.
+   * 
+   * @return
+   */
   public int getTotalBallsShot() {
-    return totalBallsShot;
+    return totalBallsShot + ballCounter.get();
   }
 }
