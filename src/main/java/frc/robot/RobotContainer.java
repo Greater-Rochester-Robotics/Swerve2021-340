@@ -58,6 +58,8 @@ import frc.robot.commands.Shooter.FullSendsWall;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
 import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
+import frc.robot.commands.Shooter.ProgTWallShot;
+import frc.robot.commands.Shooter.ResetBallsShot;
 import frc.robot.commands.Shooter.ShootWithLimelight;
 import frc.robot.commands.Shooter.SmartLimeShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
@@ -164,6 +166,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DriveGenerateVelocityGraph());
     SmartDashboard.putData(new DrivePathWeaverProfile("Straight"));//,Math.PI/2));
     SmartDashboard.putData(new DriveTurnToTarget());
+    SmartDashboard.putData(new ResetBallsShot());
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
     // SmartDashboard.putData(new AutoBarrelPath());
@@ -185,7 +188,7 @@ public class RobotContainer {
     // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new ProgTBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    driverY.whenPressed(new WallShot());
+    driverY.whenPressed(new ProgTWallShot(0.0));
     driverY.whenReleased(new GetSmol());
     // driverDDown.whenPressed(new PrepHoodShot());
     driverLB.whenPressed(new DriveResetGyroToZero());

@@ -76,7 +76,8 @@ public class Shooter extends SubsystemBase {
     ballCounter = new Counter(Counter.Mode.kExternalDirection);
     ballCounter.setUpSource(ballCountSensor);
     ballCounter.setDownSource(15);//this is an unused channel, we need to say something, so we say an unconnected channel
-    ballCounter.setDownSourceEdge(false,true);
+    ballCounter.setDownSourceEdge(true,false);
+    ballCounter.setUpSourceEdge(false, true);
     
     
     hoodMoverUp = new Solenoid(Constants.SHOOTER_HOOD_SOLENOID_CHANNEL_UP);

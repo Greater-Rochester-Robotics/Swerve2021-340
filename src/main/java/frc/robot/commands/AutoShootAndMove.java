@@ -19,8 +19,8 @@ public class AutoShootAndMove extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
+      new ResetBallsShot(),
       new ParallelCommandGroup(  
-        new ResetBallsShot(),
         new PrepHoodShot(),
         new DriveTurnToTarget()
       ),

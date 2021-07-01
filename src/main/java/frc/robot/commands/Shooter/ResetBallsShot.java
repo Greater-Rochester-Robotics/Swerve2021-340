@@ -16,12 +16,14 @@ public class ResetBallsShot extends CommandBase {
    */
   public ResetBallsShot() {
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(RobotContainer.shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     RobotContainer.shooter.resetBallsShot();
+    System.out.println("I tried to reset the balls shot");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,6 +39,10 @@ public class ResetBallsShot extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    return true;
+  }
+
+  public boolean runsWhenDisabled(){
     return true;
   }
 }
