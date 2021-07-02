@@ -95,7 +95,13 @@ public class Limelight extends SubsystemBase {
     // TODO: Translate the above equation and create a lookup table using the document on the desktop named "shootingdistances.txt"
     // rpm = 111226.8065 - (2100.88141025641 * distance) + (16.945294289044288 * Math.pow(distance,2)) - 
     // (0.06080435767935767 * Math.pow(distance,3)) + (0.00008149964747186968 * Math.pow(distance, 4)); 
-    rpm = calcSpeed(distance/12);
+    if(distance > 96 && distance < 120){
+        rpm = 17500;
+      }
+      else{
+        rpm = calcSpeed(distance/12);
+      }
+  
     rpm *= Constants.RPM_MUL_FACTOR;
     rpm += Constants.RPM_ADD_FACTOR; 
     SmartDashboard.putString("LimeLight pre-min RPM", rpm + "");

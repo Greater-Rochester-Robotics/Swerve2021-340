@@ -55,6 +55,7 @@ import frc.robot.commands.ClimberCoDriverFunction;
 import frc.robot.commands.GetSmol;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.FullSendsWall;
+import frc.robot.commands.Shooter.FullWallShot;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
 import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
@@ -188,7 +189,7 @@ public class RobotContainer {
     // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new ProgTBallWithHintOfLime());
     driverX.whenReleased(new GetSmol());
-    driverY.whenPressed(new ProgTWallShot(0.0));
+    driverY.whenPressed(new FullWallShot());
     driverY.whenReleased(new GetSmol());
     // driverDDown.whenPressed(new PrepHoodShot());
     driverLB.whenPressed(new DriveResetGyroToZero());

@@ -50,23 +50,8 @@ public class ProgTBallWithHintOfLime extends CommandBase {
     RobotContainer.shooter.raiseHood();
     RobotContainer.limelight.setLightState(3);
 
-    //TODO:one of these needs to be commented back in(Nate)
-    // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
-    //   speedRpm = 19000;
-    // }
-    // else{
-    //   speedRpm = Limelight.calcHoodRPM();
-    // }
+    speedRpm = Limelight.calcHoodRPM();
 
-
-    // if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
-      speedRpm = 17500;
-    // }
-    // else{
-    //   speedRpm = Limelight.calcHoodRPM();
-    // }
-
-    
     RobotContainer.shooter.setShooterWheel(speedRpm);
     initTimer.reset();
     initTimer.start();

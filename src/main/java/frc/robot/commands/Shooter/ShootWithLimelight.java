@@ -47,12 +47,10 @@ public class ShootWithLimelight extends CommandBase {
     if(wallShot){
       speedRpm = Constants.WALL_SHOT_RPM;
     }
-    else if(RobotContainer.limelight.getDistance() > 96 && RobotContainer.limelight.getDistance() < 120){
-      speedRpm = 17500;
-    }
     else{
       speedRpm = Limelight.calcHoodRPM();
     }
+    
     RobotContainer.shooter.resetBallsShot();
     stateIndex = 4;
     RobotContainer.shooter.setShooterWheel(speedRpm);
