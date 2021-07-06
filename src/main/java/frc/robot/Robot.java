@@ -14,9 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.commands.AutoBarrelPath;
-import frc.robot.commands.AutoBouncePath;
-import frc.robot.commands.AutoSlalomPath;
 import frc.robot.subsystems.SwerveModule;
 
 /**
