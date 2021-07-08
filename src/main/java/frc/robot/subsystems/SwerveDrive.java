@@ -51,7 +51,7 @@ public class SwerveDrive extends SubsystemBase {
   public PIDController awayPosPidController;
 
   public Boolean isMinOutLimited = true;  
-
+  public boolean isOdometryRunning = true;
   
 
   /**
@@ -139,8 +139,12 @@ public class SwerveDrive extends SubsystemBase {
     //create an array to store the distance travelled by the robot since the last time this was called
     double[] deltaPosition = new double[]{0.0,0.0};
     double[] currentVelocities = new double[] {0.0,0.0};
+
+    //in order to save process time, this allows the odometry in module to be turned off
+    int countTo = isOdometryRunning?4:0;
+
     //velo array
-    for (int i=0; i<4; i++){
+    for (int i=0; i<countTo; i++){
       //pull the distance travelled by a module(robot centric)
       double[] deltaPerMod = swerveModules[i].periodic();
       //add the distance travelled in the x by this module to the others(with respect to the robot)
@@ -653,13 +657,23 @@ public class SwerveDrive extends SubsystemBase {
   public void setEnableLimitedOutput(boolean value){
     isMinOutLimited = value;
   }
+  
   /**  
-   *method to configure all modules DriveMotor PIDF
+   * method to configure all modules DriveMotor PIDF
+   * these are the PIDF on the TalonFX
    */
   public void setDrivePIDF(double P, double I, double D, double F){
     for (int i=0; i<4; i++){
       swerveModules[i].setDriveMotorPIDF(P, I, D, F);
     }
+  }
+
+  /**
+   * a function to allow odometry to be turned off and on
+   * @param isOdometryRunning
+   */
+  public void setOdometryActive(boolean isOdometryRunning){
+    this.isOdometryRunning = isOdometryRunning;
   }
 
   /**
