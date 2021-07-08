@@ -141,6 +141,7 @@ public class SwerveModule {
 
         // average the angle between this cycle and the previous
         double averAngle = (this.currentRotPos.getRadians() + this.prevAngle) / 2;
+        Rotation2d averRotPos = new Rotation2d(averAngle);
 
         // pull the distance travelled by the driveMotor
         this.currentPosition = driveMotor.getSensorCollection().getIntegratedSensorPosition()*Constants.DRIVE_ENC_TO_METERS_FACTOR;
@@ -149,8 +150,8 @@ public class SwerveModule {
 
         // Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
         double[] resultArray = new double[] { 
-            deltaPos * this.currentRotPos.getCos(),
-            deltaPos * this.currentRotPos.getSin(),
+            deltaPos * averRotPos.getCos(),
+            deltaPos * averRotPos.getSin(),
             getDriveVelocity() *  this.currentRotPos.getCos(),
             getDriveVelocity() * this.currentRotPos.getSin()
         };
