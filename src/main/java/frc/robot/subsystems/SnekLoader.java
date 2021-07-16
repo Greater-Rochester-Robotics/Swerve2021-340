@@ -58,7 +58,7 @@ public class SnekLoader extends SubsystemBase {
 
   private State state = State.kOff;
 
-  static final double MOTOR_IN_SPEED0 = 0.5;
+  static final double MOTOR_IN_SPEED0 = 0.75;
   static final double MOTOR_IN_SPEED1 = 0.4;
   static final double MOTOR_IN_SPEED2 = 0.5;
   static final double MOTOR_IN_SPEED3 = 0.6;

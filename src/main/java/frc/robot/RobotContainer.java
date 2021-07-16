@@ -137,7 +137,7 @@ public class RobotContainer {
     climber = new Climber();
     swerveDrive = new SwerveDrive();
     // SmartDashboard.putData("Harvester", snekLoader);
-    // swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
+    swerveDrive.setDefaultCommand(new DriveFieldCentricAdvanced());
 
     // Configure the button bindings
     configureButtonBindings();
@@ -179,7 +179,7 @@ public class RobotContainer {
     driverA.whenReleased(new GetSmol());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new ProgTBallWithHintOfLime());
+    driverX.whenPressed(new ProgTBallWithHintOfLime(0.0));
     driverX.whenReleased(new GetSmol());
     driverY.whenPressed(new FullWallShot());
     driverY.whenReleased(new GetSmol());

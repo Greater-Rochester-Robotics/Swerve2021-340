@@ -38,6 +38,8 @@ public class ClimberCoDriverFunction extends CommandBase {
       RobotContainer.climber.contract();
     }else if(Robot.robotContainer.getCoDriverButton(6)){
       RobotContainer.climber.extend();
+    }else if(Robot.robotContainer.getCoDriverButton(5)){
+      RobotContainer.climber.hardStop();
     }else{
       RobotContainer.climber.stop();
     }
