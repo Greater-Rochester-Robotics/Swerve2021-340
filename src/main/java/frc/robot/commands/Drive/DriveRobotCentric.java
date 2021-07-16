@@ -43,7 +43,12 @@ public class DriveRobotCentric extends CommandBase {
   public void execute() {
     double  forwardSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_Y);
     double strafeSpeed = Robot.robotContainer.getDriverAxis(Axis.LEFT_X);
-    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X);
+    if(Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y))>.1 ||
+      Math.abs(Robot.robotContainer.getDriverAxis(Axis.RIGHT_X))>.1){
+      forwardSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_Y)*.5;
+      strafeSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*.5;
+    }
+    double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_TRIGGER) - Robot.robotContainer.getDriverAxis(Axis.LEFT_TRIGGER);
 
     RobotContainer.swerveDrive.driveRobotCentric(
       forwardSpeed *-Constants.DRIVER_SPEED_SCALE_LATERAL ,

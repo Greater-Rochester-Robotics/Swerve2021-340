@@ -39,6 +39,7 @@ public class DriveFieldCentricAdvanced extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.swerveDrive.setOdometryActive(false);
     currentAngle = Robot.robotContainer.swerveDrive.getGyroInRad();
   }
 
@@ -78,7 +79,9 @@ public class DriveFieldCentricAdvanced extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    RobotContainer.swerveDrive.setOdometryActive(true);
+  }
 
   // Returns true when the command should end.
   @Override

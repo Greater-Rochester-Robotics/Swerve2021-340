@@ -159,7 +159,7 @@ public final class Constants {
 
     /*	Climber Speeds	*/
     public static final double CLIMBER_CONTRACT_SPEED = -.75;
-    public static final double CLIMBER_EXTEND_SPEED = .6;
+    public static final double CLIMBER_EXTEND_SPEED = .80;
 
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;
