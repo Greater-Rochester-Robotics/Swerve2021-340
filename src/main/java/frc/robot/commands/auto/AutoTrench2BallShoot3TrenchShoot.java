@@ -28,6 +28,7 @@ public class AutoTrench2BallShoot3TrenchShoot extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new Load(),//start loading
         sequence(
+          new WaitCommand(1.5),
           new DrivePathWeaverProfile("TrenchRunpt1"),//drive back to pick up first ball
           new DrivePathWeaverProfile("TrenchRunpt2"),
           new WaitCommand(2)
@@ -44,6 +45,7 @@ public class AutoTrench2BallShoot3TrenchShoot extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new Load(),
         sequence(
+          new WaitCommand(1.5),
           new DrivePathWeaverProfile("TrenchRunpt2"),
           new DrivePathWeaverProfile("TrenchRunpt3"),
           new WaitCommand(2)

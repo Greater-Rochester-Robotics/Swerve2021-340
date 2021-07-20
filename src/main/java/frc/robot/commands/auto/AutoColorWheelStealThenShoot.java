@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.PrepHoodShot;
+import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.*;
 import frc.robot.commands.Drive.autoFunc.*;
@@ -26,6 +27,7 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new Load(),//start loading
         sequence(
+          new WaitCommand(1.5),//wait for the harvest,, because slow now
           new DrivePathWeaverProfile("ColorWheelStealpt1"),//drive back to pick up balls
           // new DriveTurnToAngle(.17),
           // new DriveTurnToAngle(0),
@@ -38,7 +40,7 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
         new DrivePathWeaverProfile("ColorWheelStealpt2")
       ),
       new DriveTurnToTarget().withTimeout(3),
-      new FastBallWithHintOfLime().withTimeout(7.5),
+      new ProgTBallWithHintOfLime(.3).withTimeout(7.5),
       new GetSmol()
     );
   }

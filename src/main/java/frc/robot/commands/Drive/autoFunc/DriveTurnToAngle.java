@@ -11,6 +11,7 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveTurnToAngle extends CommandBase {
   private double angle = 0;
+  private int onTargetCount;
 
   /** Creates a new DriveTurnToAngle. This command 
    * is used in tuning PID for rotation and in 
@@ -27,12 +28,20 @@ public class DriveTurnToAngle extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    onTargetCount = 0;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     RobotContainer.swerveDrive.driveRobotCentric(0, 0, RobotContainer.swerveDrive.getRobotRotationPIDOut(angle), kDriveMode.percentOutput);
+    
+    if(Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03){
+      onTargetCount++;
+    }else{
+      onTargetCount = 0;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -44,6 +53,6 @@ public class DriveTurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03;
+    return onTargetCount >= 4;
   }
 }

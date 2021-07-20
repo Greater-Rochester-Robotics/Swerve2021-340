@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.PrepHoodShot;
+import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
 import frc.robot.commands.Shooter.ResetBallsShot;
 import frc.robot.commands.SnekLoader.Load;
 import frc.robot.commands.*;
@@ -32,23 +33,24 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
           new DriveTurnToTarget()//rotate to the target
         )
       ),
-      new FastBallWithHintOfLime().withTimeout(2.5),//shoot with the hood up, till we're out of balls
+      new ProgTBallWithHintOfLime(0.0).withTimeout(2.5),//shoot with the hood up, till we're out of balls
       new GetSmol(),// shrink back to fit under the color wheel thing
       new DriveTurnToAngle(0),//turn back to the starting position
       new ParallelRaceGroup(
         new Load(),//start loading
         sequence(
+          new WaitCommand(1.5),
           new DrivePathWeaverProfile("TrenchRunpt1"),//drive back to pick up first ball
           new DrivePathWeaverProfile("TrenchRunpt2"),//pick up second ball
           new DrivePathWeaverProfile("TrenchRunpt2"),//pick up third ball
-          new WaitCommand(1)//wait a moment to get the balls that might be stray
+          new WaitCommand(1.5)//wait a moment to get the balls that might be stray
         )
       ),
       new GetSmol(),
       new DrivePathWeaverProfile("TrenchRunpt5"),// drive forward enough to shoot
       new PrepHoodShot(),// once we're clear of color wheel, start the shooter, hood up
       new DriveTurnToTarget(),//target the goal
-      new FastBallWithHintOfLime().withTimeout(2.5)
+      new ProgTBallWithHintOfLime(0.0).withTimeout(2.5)
     );
   }
 }

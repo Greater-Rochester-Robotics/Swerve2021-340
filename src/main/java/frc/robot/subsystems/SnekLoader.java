@@ -41,6 +41,7 @@ public class SnekLoader extends SubsystemBase {
   // private static boolean hadBall;
   double[] speeds = new double[5];
   int smartCount = 0;
+  int currentEnabledBallSensor = 0;
   private boolean harvesterJammed = false; 
   private int ballsLoaded;
   private boolean isPaused;
@@ -301,17 +302,17 @@ public class SnekLoader extends SubsystemBase {
     }
 
     
-    smartCount = smartCount == 5 ? 0 : smartCount;
+    smartCount = (smartCount == 5) ? 0 : smartCount;
     SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
     SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
     
     smartCount++;
     //   SmartDashboard.putString("State", state.name());
-    SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
-    SmartDashboard.putNumber("Motor1", handleEncoders[1].getVelocity());
-    SmartDashboard.putNumber("Motor2", handleEncoders[2].getVelocity());
-    SmartDashboard.putNumber("Motor3", handleEncoders[3].getVelocity());
-    SmartDashboard.putNumber("Motor4", handleEncoders[4].getVelocity());
+    // SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
+    // SmartDashboard.putNumber("Motor1", handleEncoders[1].getVelocity());
+    // SmartDashboard.putNumber("Motor2", handleEncoders[2].getVelocity());
+    // SmartDashboard.putNumber("Motor3", handleEncoders[3].getVelocity());
+    // SmartDashboard.putNumber("Motor4", handleEncoders[4].getVelocity());
 
   }
 
@@ -349,8 +350,11 @@ public class SnekLoader extends SubsystemBase {
    * @param sensorOn the sensor you want on, -1 if you want all to be off
    */
   private void enableOneLimit(int sensorOn) {
-    for (int i = 0; i <= 4; i++) {
-      handleSensors[i].enableLimitSwitch(i == sensorOn);
+    if(currentEnabledBallSensor != sensorOn){
+      for (int i = 0; i <= 4; i++) {
+        handleSensors[i].enableLimitSwitch(i == sensorOn);
+      }
+      currentEnabledBallSensor = sensorOn;
     }
   }
 

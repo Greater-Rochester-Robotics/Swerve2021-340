@@ -19,12 +19,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.auto.AutoBarrelPath;
-import frc.robot.commands.auto.AutoBouncePath;
+
 import frc.robot.commands.auto.AutoColorWheelStealThenShoot;
 import frc.robot.commands.auto.AutoShootAndMove;
 import frc.robot.commands.auto.AutoShootThen3TrenchThenShoot;
-import frc.robot.commands.auto.AutoSlalomPath;
 import frc.robot.commands.auto.AutoTrench2BallShoot3TrenchShoot;
 import frc.robot.commands.Drive.autoFunc.DriveFollowPath;
 import frc.robot.commands.Drive.autoFunc.DriveStraightAtSpeed;
@@ -93,10 +91,10 @@ public class RobotContainer {
   final Button driverStart = new JoystickButton(driver, 8);
   final Button driverLS = new JoystickButton(driver, 9);
   final Button driverRS = new JoystickButton(driver, 10);
-  final Button driverDUp = new DPad(driver, DPad.Direction.UP);
+  // final Button driverDUp = new DPad(driver, DPad.Direction.UP);//Commented out because it is used in DriveFeildCentricAdvanced
   final Button driverDDown = new DPad(driver, DPad.Direction.DOWN);
   final Button driverDLeft = new DPad(driver, DPad.Direction.LEFT);
-  final Button driverDRight = new DPad(driver, DPad.Direction.RIGHT);
+  // final Button driverDRight = new DPad(driver, DPad.Direction.RIGHT);//Commented out because it is used in DriveFeildCentricAdvanced
   
   final Button coDriverA = new JoystickButton(coDriver, 1);
   final Button coDriverB = new JoystickButton(coDriver, 2);
@@ -183,12 +181,13 @@ public class RobotContainer {
     driverX.whenReleased(new GetSmol());
     driverY.whenPressed(new FullWallShot());
     driverY.whenReleased(new GetSmol());
-    // driverDDown.whenPressed(new PrepHoodShot());
+    
     driverLB.whenPressed(new DriveResetGyroToZero());
     driverRB.whileHeld(new DriveOnTargetWithLimeLight());
-    // driverRB.whileHeld(new DriveAimAndPrepHood());
-    driverStart.whenPressed(new DriveFieldCentricAdvanced());
+    
     driverBack.whenPressed(new DriveRobotCentric());
+    driverStart.whenPressed(new DriveFieldCentricAdvanced());
+
 
 
     //========== CODRIVER ==========
@@ -209,11 +208,11 @@ public class RobotContainer {
     
     autoChooser.setDefaultOption("Wait 1 sec(do nothing)", new WaitCommand(1));
 
-    autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
+    // autoChooser.addOption("Barrel Racing 64", new AutoBarrelPath());
 
-    autoChooser.addOption("Bouncy Path", new AutoBouncePath());
+    // autoChooser.addOption("Bouncy Path", new AutoBouncePath());
 
-    autoChooser.addOption("Slalom Path", new AutoSlalomPath());
+    // autoChooser.addOption("Slalom Path", new AutoSlalomPath());
 
     autoChooser.addOption("Shoot and Move", new AutoShootAndMove());
 

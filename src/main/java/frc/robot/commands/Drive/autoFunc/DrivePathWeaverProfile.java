@@ -74,6 +74,7 @@ public class DrivePathWeaverProfile extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    RobotContainer.swerveDrive.setOdometryActive(true);
     if(!angleTargeted){
       targetAngle = RobotContainer.swerveDrive.getGyroInRad();
     }
@@ -126,6 +127,7 @@ public class DrivePathWeaverProfile extends CommandBase {
   public void end(boolean interrupted) {
     timer.stop();
     RobotContainer.swerveDrive.stopAllModules();
+    RobotContainer.swerveDrive.setOdometryActive(false);
   }
 
   // Returns true when the command should end.

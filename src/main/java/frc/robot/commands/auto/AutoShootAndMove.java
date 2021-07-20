@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.Shooter.FastBallWithHintOfLime;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.ResetBallsShot;
+import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
 import frc.robot.commands.*;
 import frc.robot.commands.Drive.autoFunc.*;
 
@@ -26,7 +27,7 @@ public class AutoShootAndMove extends SequentialCommandGroup {
         new PrepHoodShot(),
         new DriveTurnToTarget()
       ),
-      new FastBallWithHintOfLime().withTimeout(3),
+      new ProgTBallWithHintOfLime(.25).withTimeout(3),
       new GetSmol(),
       new DrivePathWeaverProfile("Straight")
     );

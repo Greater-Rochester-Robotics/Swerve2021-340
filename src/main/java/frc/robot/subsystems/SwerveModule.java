@@ -150,8 +150,8 @@ public class SwerveModule {
 
         // Returns an array of 4 values: Delta x distance, delta y distance, current lateral(x) speed, current away(y) speed
         double[] resultArray = new double[] { 
-            deltaPos * averRotPos.getCos(),
-            deltaPos * averRotPos.getSin(),
+            deltaPos * this.currentRotPos.getCos(),
+            deltaPos * this.currentRotPos.getSin(),
             getDriveVelocity() *  this.currentRotPos.getCos(),
             getDriveVelocity() * this.currentRotPos.getSin()
         };

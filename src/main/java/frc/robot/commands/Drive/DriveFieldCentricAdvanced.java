@@ -54,7 +54,11 @@ public class DriveFieldCentricAdvanced extends CommandBase {
       lateralSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_X)*.5;
     }
     double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_TRIGGER) - Robot.robotContainer.getDriverAxis(Axis.LEFT_TRIGGER);
-
+    if(Robot.robotContainer.getDriverDPad() == 0){
+      currentAngle = 0.0;
+    }else if(Robot.robotContainer.getDriverDPad() == 90){
+      currentAngle = -1.1783;
+    }
     //test if the absolute rotational input is greater than .1
     //if the test is true, just copy the DriveFieldCentric execute method
     //if the test is false, still use driveFieldCentric(), but for last parameter use PIDController accessor function
@@ -80,7 +84,6 @@ public class DriveFieldCentricAdvanced extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.swerveDrive.setOdometryActive(true);
   }
 
   // Returns true when the command should end.

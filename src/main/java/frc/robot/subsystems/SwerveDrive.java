@@ -51,7 +51,7 @@ public class SwerveDrive extends SubsystemBase {
   public PIDController awayPosPidController;
 
   public Boolean isMinOutLimited = true;  
-  public boolean isOdometryRunning = true;
+  public boolean isOdometryRunning = false;//true;
   
 
   /**
