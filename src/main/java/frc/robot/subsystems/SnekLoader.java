@@ -7,9 +7,7 @@
 
 package frc.robot.subsystems;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
@@ -22,9 +20,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 /**
  * This class is for ball handling with 5 CANSparkMax objects with limit
@@ -40,6 +37,7 @@ public class SnekLoader extends SubsystemBase {
 
   // private static boolean hadBall;
   double[] speeds = new double[5];
+  double[] currentSpeeds = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
   int smartCount = 0;
   int currentEnabledBallSensor = 0;
   private boolean harvesterJammed = false; 
@@ -364,9 +362,12 @@ public class SnekLoader extends SubsystemBase {
    * @param speeds an array of numbers
    */
   private void setAllHandleMotors(double[] speeds) {
-    for (int i = 0; i <= 4; i++) {
-        handleMotors[i].set(speeds[i]);
-    }
+    // if(Arrays.equals(speeds,currentSpeeds)){
+      for (int i = 0; i <= 4; i++) {
+          handleMotors[i].set(speeds[i]);
+      }
+    //   currentSpeeds = speeds;
+    // }
   }
 
   /**
