@@ -62,6 +62,8 @@ public class SnekLoader extends SubsystemBase {
   static final double MOTOR_IN_SPEED2 = 0.5;
   static final double MOTOR_IN_SPEED3 = 0.6;
   static final double MOTOR_IN_SPEED4 = 0.35;
+  static final double[] ALL_STOP_SPEEDS
+    = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
 
   public SnekLoader() {
 
@@ -128,7 +130,6 @@ public class SnekLoader extends SubsystemBase {
     // if (!hadBall && handleSensors[0].get()) {
     //    ballsLoaded++;
     // }
-
 
     // This method will be called once per scheduler run
     switch (state) {
@@ -240,7 +241,7 @@ public class SnekLoader extends SubsystemBase {
           break;
         }
       case kOff:
-        speeds = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
+        speeds = ALL_STOP_SPEEDS;
         state= State.kOff;
         enableOneLimit(-1);
         break;
@@ -274,11 +275,11 @@ public class SnekLoader extends SubsystemBase {
         enableOneLimit(-1);
         break;
       default:
-          speeds = new double[] {0.0,0.0,0.0,0.0,0.0};
+          speeds = ALL_STOP_SPEEDS;
     }
-    if(isPaused){
-      speeds = new double[] {  0.0, 0.0, 0.0, 0.0 , 0.0};
-    }
+
+    speeds = isPaused ? ALL_STOP_SPEEDS : speeds;
+  
     setAllHandleMotors(speeds);
 
     //SmartDashboard Pushes
@@ -299,13 +300,14 @@ public class SnekLoader extends SubsystemBase {
       }
     }
 
-    
+    //To not call alll the sensors every loop, we call one per loop, on a rotating basis
     smartCount = (smartCount == 5) ? 0 : smartCount;
     SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
-    SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);
-    
     smartCount++;
-    //   SmartDashboard.putString("State", state.name());
+    
+    SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);//how much process does this take? is it used? 
+    
+    // SmartDashboard.putString("State", state.name());
     // SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
     // SmartDashboard.putNumber("Motor1", handleEncoders[1].getVelocity());
     // SmartDashboard.putNumber("Motor2", handleEncoders[2].getVelocity());
@@ -362,7 +364,8 @@ public class SnekLoader extends SubsystemBase {
    * @param speeds an array of numbers
    */
   private void setAllHandleMotors(double[] speeds) {
-    // if(Arrays.equals(speeds,currentSpeeds)){
+    // if(!DriverStation.getInstance().isDisabled() && 
+      // Arrays.equals(speeds,currentSpeeds)){
       for (int i = 0; i <= 4; i++) {
           handleMotors[i].set(speeds[i]);
       }
