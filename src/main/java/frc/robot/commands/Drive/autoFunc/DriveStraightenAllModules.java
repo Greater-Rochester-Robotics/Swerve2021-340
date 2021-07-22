@@ -10,7 +10,10 @@ import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
 public class DriveStraightenAllModules extends CommandBase {
   boolean isFinished;
-  /** Creates a new DriveStraightenAllModules. */
+  /** 
+   * This is a command used to make all the modules point 
+   * foward or backward so as to make the path driving easier.
+   */
   public DriveStraightenAllModules() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
@@ -25,12 +28,17 @@ public class DriveStraightenAllModules extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //first get all the current angles of the modules
     double[] currentAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
+    //default the finished boolean to true
     isFinished = true; 
+    // itterate trough all the modules
     for(int i=0 ; i<3 ; i++){
+      //tell this module to turn to 0.0
       RobotContainer.swerveDrive.driveOneModule(i, 0.0, 0.0, kDriveMode.percentOutput);
+      //run a rolling boolean check of each module, within -2 to 2 degrees, or outside -178 or 178
       isFinished = isFinished && 
-        (((currentAngles[i] > -2) && (currentAngles[i] < 2)) || ((currentAngles[i] < -178) || (currentAngles[i] > 178)));
+        (((currentAngles[i] > -2) && (currentAngles[i] < 2)) || (currentAngles[i] < -178) || (currentAngles[i] > 178) );
     }
 
   }
@@ -38,6 +46,7 @@ public class DriveStraightenAllModules extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    //stop the modules when done
     RobotContainer.swerveDrive.stopAllModules();
   }
 

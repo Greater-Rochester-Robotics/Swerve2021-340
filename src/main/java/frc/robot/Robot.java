@@ -67,6 +67,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     RobotContainer.limelight.setLightState(1);
+    //to make sure autos work right, the pose2d of the robot is re-zeroed once disabled
     RobotContainer.swerveDrive.setCurrentPos(new Pose2d());
   }
 

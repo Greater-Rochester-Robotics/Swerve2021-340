@@ -117,10 +117,25 @@ public class SnekLoader extends SubsystemBase {
     return ballsLoaded;
   }
 
+  /**
+   * Turns the paused feature on and off. 
+   * Pause allows the sneks to stop all 
+   * the motors, but retain the current 
+   * snek state.
+   * 
+   * @param pause pass true to pause, pass false to unpause
+   */
   public void setPause(boolean pause){
     isPaused = pause;
   }
 
+  /**
+   * Finds if the Sneklader is paused, a 
+   * feature that retains the state of the 
+   * snek, but stops all motor outputs.
+   * 
+   * @return true if paused, false if not paused
+   */
   public boolean getPause(){
     return isPaused;
   }
@@ -300,7 +315,7 @@ public class SnekLoader extends SubsystemBase {
       }
     }
 
-    //To not call alll the sensors every loop, we call one per loop, on a rotating basis
+    //To not call all the sensors every loop, we call one per loop, on a rotating basis
     smartCount = (smartCount == 5) ? 0 : smartCount;
     SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
     smartCount++;
@@ -335,7 +350,7 @@ public class SnekLoader extends SubsystemBase {
   }
 
   /**
-   * returns boolean of limit switch
+   * returns boolean of a single limit switch
    * 
    * @param sensor The number of the limit switch returned 0-4
    * @return boolean
@@ -350,14 +365,18 @@ public class SnekLoader extends SubsystemBase {
    * @param sensorOn the sensor you want on, -1 if you want all to be off
    */
   private void enableOneLimit(int sensorOn) {
+    //if the currently on switch isn't the one we need, change it
     if(currentEnabledBallSensor != sensorOn){
       for (int i = 0; i <= 4; i++) {
         if(i == sensorOn){
+          //turn the correct switch on
           handleSensors[i].enableLimitSwitch(true);
         }else if(i == currentEnabledBallSensor){
+          // turn the previously on switch off
           handleSensors[i].enableLimitSwitch(false);
         }
       }
+      //store the just turn on switch as currentEnabledBallSensor
       currentEnabledBallSensor = sensorOn;
     }
   }
@@ -368,11 +387,13 @@ public class SnekLoader extends SubsystemBase {
    * @param speeds an array of numbers
    */
   private void setAllHandleMotors(double[] speeds) {
+    //to reduce periodic call time, only update motors on value change/when robot enabled
     if(!DriverStation.getInstance().isDisabled() && 
       !Arrays.equals(speeds,currentSpeeds)){
       for (int i = 0; i <= 4; i++) {
           handleMotors[i].set(speeds[i]);
       }
+      //store the speeds sent to the motors as current speeds
       currentSpeeds = speeds;
     }
   }

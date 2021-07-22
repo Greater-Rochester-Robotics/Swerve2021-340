@@ -105,8 +105,12 @@ public class Limelight extends SubsystemBase {
   }
 
   /**
-   * Calculate the speed
-   *  
+   * Calculate the speed based on a distance in feet.
+   * numbers greater than 22.5 feet and numbers less 
+   * than 4.5 feet will just very large values as this 
+   * is not in the shooting range.
+   * 
+   * @param distance distance read from the target in feet.
    */ 
   public static double calcSpeed(double distance){
     TreeMap<Double,Double> lookUp;
@@ -133,7 +137,13 @@ public class Limelight extends SubsystemBase {
     return ((highSpeed - lowSpeed) * decimal) + lowSpeed;
   }
 
-
+  /**
+   * return the distance from the target as 
+   * currently read by the limelight. this 
+   * distance is in inches.
+   * 
+   * @return distance in inches(a double)
+   */
   public static double getDistance(){
     //all distance values are in inches
     double cameraHeight =  25.5;    //not final value
