@@ -7,16 +7,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.SwerveModule;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -28,8 +25,7 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   public static RobotContainer robotContainer;
-  // public SwerveModule rearLeft;
-  // final Joystick driver = new Joystick(0);
+  
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -66,14 +62,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
-    RobotContainer.limelight.setLightState(1);
     //to make sure autos work right, the pose2d of the robot is re-zeroed once disabled
     RobotContainer.swerveDrive.setCurrentPos(new Pose2d());
   }
 
   @Override
   public void disabledPeriodic() {
-    
+    RobotContainer.limelight.setLightState(1);
     String command = RobotContainer.autoChooser.getSelected().getName();
     // SmartDashboard.putString("AutoInstrutions", RobotContainer.autoModes.get(mode6+).getAutoDescription());
     SmartDashboard.putString("Chosen Auto Mode", command);
