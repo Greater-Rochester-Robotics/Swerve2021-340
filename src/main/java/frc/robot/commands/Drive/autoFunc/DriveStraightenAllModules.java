@@ -5,43 +5,34 @@
 package frc.robot.commands.Drive.autoFunc;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveTurnToAngle extends CommandBase {
-  private double angle = 0;
-  private int onTargetCount;
-
-  /** Creates a new DriveTurnToAngle. This command 
-   * is used in tuning PID for rotation and in 
-   * autonomous to make a specific turn. 
-   * 
-   * @param angle angle in radians 
-   */
-  public DriveTurnToAngle(double angle) {
+public class DriveStraightenAllModules extends CommandBase {
+  boolean isFinished;
+  /** Creates a new DriveStraightenAllModules. */
+  public DriveStraightenAllModules() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
-
-    this.angle = angle;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    onTargetCount = 0;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.swerveDrive.driveRobotCentric(0, 0, RobotContainer.swerveDrive.getRobotRotationPIDOut(angle), kDriveMode.percentOutput);
-    
-    if(Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03){
-      onTargetCount++;
-    }else{
-      onTargetCount = 0;
+    double[] currentAngles = RobotContainer.swerveDrive.getAllAbsModuleAngles();
+    isFinished = true; 
+    for(int i=0 ; i<3 ; i++){
+      RobotContainer.swerveDrive.driveOneModule(i, 0.0, 0.0, kDriveMode.percentOutput);
+      isFinished = isFinished && 
+        (((currentAngles[i] > -2) && (currentAngles[i] < 2)) || ((currentAngles[i] < -178) || (currentAngles[i] > 178)));
     }
+
   }
 
   // Called once the command ends or is interrupted.
@@ -53,6 +44,6 @@ public class DriveTurnToAngle extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return onTargetCount >= 10;
+    return isFinished;
   }
 }

@@ -73,6 +73,6 @@ public class DriveTurnToTarget extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return onTargetCount >= 4;
+    return onTargetCount >= 20;
   }
 }

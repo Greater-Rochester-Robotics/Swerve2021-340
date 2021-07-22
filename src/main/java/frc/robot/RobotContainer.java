@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 
 import frc.robot.commands.auto.AutoColorWheelStealThenShoot;
+import frc.robot.commands.auto.AutoForwardThenWallShot;
 import frc.robot.commands.auto.AutoShootAndMove;
 import frc.robot.commands.auto.AutoShootThen3TrenchThenShoot;
 import frc.robot.commands.auto.AutoTrench2BallShoot3TrenchShoot;
@@ -28,6 +29,7 @@ import frc.robot.commands.Drive.autoFunc.DriveFollowPath;
 import frc.robot.commands.Drive.autoFunc.DriveStraightAtSpeed;
 import frc.robot.commands.Drive.autoFunc.DriveStraightTrapProfile;
 import frc.robot.commands.Drive.autoFunc.DriveStraightTrapProfile2;
+import frc.robot.commands.Drive.autoFunc.DriveStraightenAllModules;
 import frc.robot.commands.Drive.autoFunc.DriveToPosition;
 import frc.robot.commands.Drive.autoFunc.DriveTurnToAngle;
 import frc.robot.commands.Drive.autoFunc.DriveTurnToTarget;
@@ -158,6 +160,7 @@ public class RobotContainer {
     SmartDashboard.putData(new DrivePathWeaverProfile("Straight"));//,Math.PI/2));
     SmartDashboard.putData(new DriveTurnToTarget());
     SmartDashboard.putData(new ResetBallsShot());
+    SmartDashboard.putData(new DriveStraightenAllModules());
     // SmartDashboard.putData(new AutoBouncePath());
     // SmartDashboard.putData(new AutoSlalomPath());
     // SmartDashboard.putData(new AutoBarrelPath());
@@ -216,11 +219,13 @@ public class RobotContainer {
 
     autoChooser.addOption("Shoot and Move", new AutoShootAndMove());
 
+    autoChooser.addOption("Forward Then WallShot", new AutoForwardThenWallShot());
+    
     autoChooser.addOption("Color Wheel Steal", new AutoColorWheelStealThenShoot());
 
-    autoChooser.addOption("3 Balls Then Trench Run", new AutoShootThen3TrenchThenShoot());
+    autoChooser.addOption("Shoot Then 3 Trench Run", new AutoShootThen3TrenchThenShoot());
 
-    autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
+    // autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
 
     SmartDashboard.putData(RobotContainer.autoChooser);
 

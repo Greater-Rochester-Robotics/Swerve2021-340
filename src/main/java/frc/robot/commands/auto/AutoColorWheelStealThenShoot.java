@@ -27,6 +27,7 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
       new ParallelRaceGroup(
         new Load(),//start loading
         sequence(
+          //new DriveTurnToAngle(.2618),
           new WaitCommand(1.5),//wait for the harvest,, because slow now
           new DrivePathWeaverProfile("ColorWheelStealpt1"),//drive back to pick up balls
           // new DriveTurnToAngle(.17),

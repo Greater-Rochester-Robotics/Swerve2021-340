@@ -90,17 +90,8 @@ public class Limelight extends SubsystemBase {
   public static int calcHoodRPM(){
     double rpm;
     double distance = getDistance();
-    //Comp Bot Equation
-    //Base Equation: 111226.8065 - 2100.88141025641x + 16.945294289044288x^2 - 0.06080435767935767x^3 + 0.00008149964747186968x^4
-    // TODO: Translate the above equation and create a lookup table using the document on the desktop named "shootingdistances.txt"
-    // rpm = 111226.8065 - (2100.88141025641 * distance) + (16.945294289044288 * Math.pow(distance,2)) - 
-    // (0.06080435767935767 * Math.pow(distance,3)) + (0.00008149964747186968 * Math.pow(distance, 4)); 
-    if(distance > 96 && distance < 120){
-        rpm = 17500;
-      }
-      else{
-        rpm = calcSpeed(distance/12);
-      }
+    rpm = calcSpeed(distance/12);
+      
   
     rpm *= Constants.RPM_MUL_FACTOR;
     rpm += Constants.RPM_ADD_FACTOR; 
@@ -121,7 +112,9 @@ public class Limelight extends SubsystemBase {
     TreeMap<Double,Double> lookUp;
     //adding .5 to account for the distance between the front wall and 3 point hole
     distance += .5;
-    if(distance < 8){
+    if(distance < 5 || distance > 23){
+      return 16000;
+    } else if(distance < 8){
       lookUp = Constants.SHOOTER_HOOD_DOWN_LOOKUP_TABLE;
     }
     else{

@@ -39,7 +39,7 @@ public class SnekLoader extends SubsystemBase {
   double[] speeds = new double[5];
   double[] currentSpeeds = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0 };
   int smartCount = 0;
-  int currentEnabledBallSensor = 0;
+  int currentEnabledBallSensor = -1;
   private boolean harvesterJammed = false; 
   private int ballsLoaded;
   private boolean isPaused;
@@ -305,7 +305,7 @@ public class SnekLoader extends SubsystemBase {
     SmartDashboard.putBoolean("Ball " + smartCount, handleSensors[smartCount].get());
     smartCount++;
     
-    SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);//how much process does this take? is it used? 
+    // SmartDashboard.putString("BallsLoaded", ""+ ballsLoaded);//how much process does this take? is it used? 
     
     // SmartDashboard.putString("State", state.name());
     // SmartDashboard.putNumber("Motor0", handleEncoders[0].getVelocity());
@@ -352,7 +352,11 @@ public class SnekLoader extends SubsystemBase {
   private void enableOneLimit(int sensorOn) {
     if(currentEnabledBallSensor != sensorOn){
       for (int i = 0; i <= 4; i++) {
-        handleSensors[i].enableLimitSwitch(i == sensorOn);
+        if(i == sensorOn){
+          handleSensors[i].enableLimitSwitch(true);
+        }else if(i == currentEnabledBallSensor){
+          handleSensors[i].enableLimitSwitch(false);
+        }
       }
       currentEnabledBallSensor = sensorOn;
     }
@@ -364,13 +368,13 @@ public class SnekLoader extends SubsystemBase {
    * @param speeds an array of numbers
    */
   private void setAllHandleMotors(double[] speeds) {
-    // if(!DriverStation.getInstance().isDisabled() && 
-      // Arrays.equals(speeds,currentSpeeds)){
+    if(!DriverStation.getInstance().isDisabled() && 
+      !Arrays.equals(speeds,currentSpeeds)){
       for (int i = 0; i <= 4; i++) {
           handleMotors[i].set(speeds[i]);
       }
-    //   currentSpeeds = speeds;
-    // }
+      currentSpeeds = speeds;
+    }
   }
 
   /**

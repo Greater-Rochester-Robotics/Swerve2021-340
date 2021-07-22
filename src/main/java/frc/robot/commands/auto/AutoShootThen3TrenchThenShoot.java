@@ -36,14 +36,15 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
       new ProgTBallWithHintOfLime(0.0).withTimeout(2.5),//shoot with the hood up, till we're out of balls
       new GetSmol(),// shrink back to fit under the color wheel thing
       new DriveTurnToAngle(0),//turn back to the starting position
+      new DriveStraightenAllModules().withTimeout(.5),
       new ParallelRaceGroup(
         new Load(),//start loading
         sequence(
-          new WaitCommand(1.5),
+          new WaitCommand(.75),
           new DrivePathWeaverProfile("TrenchRunpt1"),//drive back to pick up first ball
           new DrivePathWeaverProfile("TrenchRunpt2"),//pick up second ball
           new DrivePathWeaverProfile("TrenchRunpt2"),//pick up third ball
-          new WaitCommand(1.5)//wait a moment to get the balls that might be stray
+          new WaitCommand(.75)//wait a moment to get the balls that might be stray
         )
       ),
       new GetSmol(),

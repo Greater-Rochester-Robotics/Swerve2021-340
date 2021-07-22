@@ -31,7 +31,7 @@ public class PrepWallShot extends CommandBase {
   public void initialize() {
     RobotContainer.shooter.setShooterWheel(Constants.WALL_SHOT_RPM);
     RobotContainer.shooter.lowerHood();
-    RobotContainer.snekLoader.setState(SnekLoader.State.kFillTo4);
+    RobotContainer.snekLoader.setState(SnekLoader.State.kOff);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

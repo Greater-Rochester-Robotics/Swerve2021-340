@@ -9,6 +9,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -65,11 +66,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    RobotContainer.limelight.setLightState(1);
+    RobotContainer.swerveDrive.setCurrentPos(new Pose2d());
   }
 
   @Override
   public void disabledPeriodic() {
-    RobotContainer.limelight.setLightState(1);
+    
     String command = RobotContainer.autoChooser.getSelected().getName();
     // SmartDashboard.putString("AutoInstrutions", RobotContainer.autoModes.get(mode6+).getAutoDescription());
     SmartDashboard.putString("Chosen Auto Mode", command);
