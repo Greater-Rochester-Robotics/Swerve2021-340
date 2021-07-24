@@ -180,7 +180,7 @@ public class RobotContainer {
     driverA.whenReleased(new GetSmol());
     driverB.whileHeld(new Regurgitate());
     // driverX.whenPressed(new SmartLimeShot());
-    driverX.whenPressed(new ProgTBallWithHintOfLime(0.0));
+    driverX.whenPressed(new ProgTBallWithHintOfLime(0.1));
     driverX.whenReleased(new GetSmol());
     driverY.whenPressed(new FullWallShot());
     driverY.whenReleased(new GetSmol());

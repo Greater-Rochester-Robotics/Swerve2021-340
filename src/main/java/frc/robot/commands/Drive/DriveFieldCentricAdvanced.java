@@ -55,9 +55,9 @@ public class DriveFieldCentricAdvanced extends CommandBase {
     }
     double rotSpeed = Robot.robotContainer.getDriverAxis(Axis.RIGHT_TRIGGER) - Robot.robotContainer.getDriverAxis(Axis.LEFT_TRIGGER);
     if(Robot.robotContainer.getDriverDPad() == 0){
-      currentAngle = 0.0;
+      currentAngle = Math.round(RobotContainer.swerveDrive.getGyroInRad()/Constants.TWO_PI) * Constants.TWO_PI;
     }else if(Robot.robotContainer.getDriverDPad() == 90){
-      currentAngle = -1.1783;
+      currentAngle = Math.round(RobotContainer.swerveDrive.getGyroInRad()/Constants.TWO_PI) * Constants.TWO_PI - 1.178;
     }
     //test if the absolute rotational input is greater than .1
     //if the test is true, just copy the DriveFieldCentric execute method

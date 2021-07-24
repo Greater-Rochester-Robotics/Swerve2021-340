@@ -40,6 +40,7 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
         new PrepHoodShot(),
         new DrivePathWeaverProfile("ColorWheelStealpt2")
       ),
+      new DriveTurnToAngle(-0.4).withTimeout(2.0),
       new DriveTurnToTarget().withTimeout(3),
       new ProgTBallWithHintOfLime(.3).withTimeout(7.5),
       new GetSmol()
