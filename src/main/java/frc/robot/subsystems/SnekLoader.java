@@ -267,7 +267,7 @@ public class SnekLoader extends SubsystemBase {
         break;
 
       case kAccShootBall4:
-        speeds = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0 };
+        speeds = new double[] { 0.0, 0.0, 0.0, .9, 1.0 };
         enableOneLimit(-1);
         break;
   
@@ -357,6 +357,18 @@ public class SnekLoader extends SubsystemBase {
    */
   public boolean getHandleSensor(int sensor) {
     return handleSensors[sensor].get();
+  }
+
+  /**
+   * This should not be called regularly, it is CAN netweork intensive.
+   * @return an array of 5
+   */
+  public boolean[] getAllSensors(){
+    boolean[] output = new boolean[5];
+    for (int i = 0; i <= 4; i++) {
+      output[i] = getHandleSensor(i);
+    }
+    return output;
   }
 
   /**
