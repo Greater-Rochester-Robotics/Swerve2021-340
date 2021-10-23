@@ -83,15 +83,16 @@ public class SnekLoader extends SubsystemBase {
     for (int i = 0; i <= 4; i++) {
       handleMotors[i].restoreFactoryDefaults();
       handleMotors[i].setIdleMode(IdleMode.kBrake);// set brake mode, so motors stop on a dime
-      handleMotors[i].enableVoltageCompensation(10.50);// enable volatge compensation mode 12V
-      handleMotors[i].setInverted(false);//Reverses the direction of the wheels
-      // handleMotors[i].setSmartCurrentLimit(40, 40);
+      handleMotors[i].enableVoltageCompensation(10.50);// enable volatge compensation mode
+      handleMotors[i].setInverted(i != 4);//invert all motors but number 4
+
       handleSensors[i] = handleMotors[i].getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
       handleSensors[i].enableLimitSwitch(false);// now disable limit switches, we'll turn these on later, one at a tim
       handleEncoders[i] = handleMotors[i].getEncoder();
-      handleMotors[i].setInverted(true);
+
+      handleMotors[i].burnFlash();//this saves settings, BUT MUST BE DONE LAST, SparkMAX won't accept commands for a moment after this call 
+
     }
-    handleMotors[4].setInverted(false);
   }
 
   public boolean isHarvesterJammed() {

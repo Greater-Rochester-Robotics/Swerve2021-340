@@ -51,6 +51,7 @@ import frc.robot.commands.Drive.DriveOnTargetWithLimeLight;
 import frc.robot.commands.Drive.autoFunc.DrivePathWeaverProfile;
 import frc.robot.commands.Drive.DriveRobotCentric;
 import frc.robot.commands.Drive.DriveStopAllModules;
+import frc.robot.commands.Shooter.ShootOneBallDemo;
 import frc.robot.commands.Shooter.FullWallShot;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;

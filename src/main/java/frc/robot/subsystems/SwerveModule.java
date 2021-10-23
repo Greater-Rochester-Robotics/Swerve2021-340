@@ -112,6 +112,8 @@ public class SwerveModule {
         rotatePID.setIZone(0,1);
         rotatePID.setFF(0,1);
 
+        // rotationMotor.burnFlash();
+
         //the following sensor is angle of the module, as an absolute value
         rotateAbsSensor = new CANCoder(canCoderID);
         rotateAbsSensor.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);

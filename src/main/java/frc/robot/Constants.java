@@ -151,7 +151,7 @@ public final class Constants {
     public static final int SECONDARY_PCM_ID = 11;// does not exist
 
     /* Shooter Speeds */
-    public static final int DEMO_SHOT_RPM = 5000;
+    public static final int DEMO_SHOT_RPM = 9000;
     public static final int INITIATION_SHOT_RPM = 11900; // Put real value here for safe keeping, rpm: 3425
     public static final int WALL_SHOT_RPM = 10000; // Old value 2550 MAX SPEED 21777
     public static final int TEST_SHOOTER = 12500; // Used for testing and recording distance for shooting
