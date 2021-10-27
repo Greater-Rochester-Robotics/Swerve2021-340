@@ -28,7 +28,10 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
         new Load(),//start loading
         sequence(
           //new DriveTurnToAngle(.2618),
-          new WaitCommand(1.5),//wait for the harvest,, because slow now
+          deadline(
+            new WaitCommand(1.5),//wait for the harvest,, because slow now
+            new DriveStraightenAllModules()
+          ),
           new DrivePathWeaverProfile("ColorWheelStealpt1"),//drive back to pick up balls
           // new DriveTurnToAngle(.17),
           // new DriveTurnToAngle(0),
@@ -41,8 +44,8 @@ public class AutoColorWheelStealThenShoot extends SequentialCommandGroup {
         new DrivePathWeaverProfile("ColorWheelStealpt2")
       ),
       new DriveTurnToAngle(-0.4).withTimeout(2.0),
-      new DriveTurnToTarget().withTimeout(3),
-      new ProgTBallWithHintOfLime(.3).withTimeout(7.5),
+      new DriveTurnToTarget().withTimeout(.5),
+      new ProgTBallWithHintOfLime(.1).withTimeout(7.5),
       new GetSmol()
     );
   }

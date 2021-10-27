@@ -39,6 +39,7 @@ public class Shooter extends SubsystemBase {
   private DigitalInput ballCountSensor;
   private Counter ballCounter;
   private Solenoid hoodMoverUp, hoodMoverDown;
+  private boolean isPrepped;
 
   private int totalBallsShot = 0;
   int smartCount = 0;
@@ -114,6 +115,13 @@ public class Shooter extends SubsystemBase {
     // }
   }
 
+  public boolean isShooterPrepped(){
+    return isPrepped;
+  }
+
+  public void setShooterPrepped(boolean isPrepped){
+    this.isPrepped = isPrepped;
+  }
   /**
    * stops the shooterWheel, this is motor is no 
    * in brake modde, so the wheel will coast for 
@@ -121,6 +129,7 @@ public class Shooter extends SubsystemBase {
    */
   public void stop() {
     shooterWheel.set(ControlMode.PercentOutput,0);
+    isPrepped = false;
   }
 
   /**

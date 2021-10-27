@@ -19,11 +19,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-
 import frc.robot.commands.auto.AutoColorWheelStealThenShoot;
 import frc.robot.commands.auto.AutoForwardThenWallShot;
 import frc.robot.commands.auto.AutoShootAndMove;
 import frc.robot.commands.auto.AutoShootThen3TrenchThenShoot;
+import frc.robot.commands.auto.AutoShootThenSwitchThenShoot;
 import frc.robot.commands.auto.AutoTrench2BallShoot3TrenchShoot;
 import frc.robot.commands.Drive.autoFunc.DriveFollowPath;
 import frc.robot.commands.Drive.autoFunc.DriveStraightAtSpeed;
@@ -193,7 +193,6 @@ public class RobotContainer {
     driverStart.whenPressed(new DriveFieldCentricAdvanced());
 
 
-
     //========== CODRIVER ==========
     coDriverA.whenReleased(new GetSmol());
     coDriverB.whenPressed(new SpinUpShooterWheel());
@@ -225,6 +224,8 @@ public class RobotContainer {
     autoChooser.addOption("Color Wheel Steal", new AutoColorWheelStealThenShoot());
 
     autoChooser.addOption("Shoot Then 3 Trench Run", new AutoShootThen3TrenchThenShoot());
+
+    autoChooser.addOption("Shoot and SwitchGrab", new AutoShootThenSwitchThenShoot());
 
     // autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
 

@@ -1,0 +1,43 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot.commands.auto;
+
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.GetSmol;
+import frc.robot.commands.Drive.autoFunc.DrivePathWeaverProfile;
+import frc.robot.commands.Drive.autoFunc.DriveStraightenAllModules;
+import frc.robot.commands.Drive.autoFunc.DriveTurnToAngle;
+import frc.robot.commands.Shooter.PrepHoodShot;
+import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
+import frc.robot.commands.Shooter.ResetBallsShot;
+import frc.robot.commands.SnekLoader.Load;
+
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class AutoShootThenSwitchThenShoot extends SequentialCommandGroup {
+  /** Creates a new AutoShootThenSwitchThenShoot. */
+  public AutoShootThenSwitchThenShoot() {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
+      new ResetBallsShot(),
+      new PrepHoodShot(),
+      deadline(
+        new ProgTBallWithHintOfLime(0.0,true).withTimeout(2.5),
+        new DriveStraightenAllModules()
+      ),
+      new GetSmol(),
+      // race(
+      //   new Load(),
+        sequence(
+          new DriveTurnToAngle(-1.1783),
+          new DrivePathWeaverProfile("SwitchGrabpt1")
+        )
+      // )
+      
+    );
+  }
+}

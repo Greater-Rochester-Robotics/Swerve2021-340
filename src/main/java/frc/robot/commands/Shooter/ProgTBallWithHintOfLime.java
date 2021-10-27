@@ -17,6 +17,7 @@ public class ProgTBallWithHintOfLime extends CommandBase {
   private Timer ballTimer = new Timer();
   private double timeBetweenBalls = .5;
   private int shootingBall = 1;
+  private boolean prepTime = true;
   
   /** 
    * This command shoots all the balls, but 
@@ -27,7 +28,7 @@ public class ProgTBallWithHintOfLime extends CommandBase {
    * @requires SnekLoader, Shooter 
    */
   public ProgTBallWithHintOfLime() { 
-    this(0.5);
+    this(0.5,true);
   }
 
   /** 
@@ -40,7 +41,12 @@ public class ProgTBallWithHintOfLime extends CommandBase {
    * @requires SnekLoader, Shooter 
    */
   public ProgTBallWithHintOfLime(double timeBetweenBalls) { 
+    this(timeBetweenBalls, true);
+  }
+
+  public ProgTBallWithHintOfLime(double timeBetweenBalls,boolean prepTime){
     this.timeBetweenBalls = timeBetweenBalls;
+    this.prepTime = prepTime;
     addRequirements(RobotContainer.shooter, RobotContainer.snekLoader);
   }
 
@@ -56,12 +62,13 @@ public class ProgTBallWithHintOfLime extends CommandBase {
     initTimer.reset();
     initTimer.start();
     shootingBall = 1;//in this command balls are counted up from the shooter
+    prepTime = !RobotContainer.shooter.isShooterPrepped();//if shooter already prepped, don't need prepTime
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(RobotContainer.shooter.isShooterAtSpeed() && initTimer.hasElapsed(1.5)){
+    if(RobotContainer.shooter.isShooterAtSpeed() && (!prepTime || initTimer.hasElapsed(1.5))){
       RobotContainer.snekLoader.setPause(false);
       if(shootingBall == 1){
         RobotContainer.snekLoader.setState(State.kShootBall4);

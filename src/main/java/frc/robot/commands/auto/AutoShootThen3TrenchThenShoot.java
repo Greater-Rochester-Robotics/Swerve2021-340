@@ -29,13 +29,13 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
       new ParallelCommandGroup(
         new PrepHoodShot(),//start the wheel, get the hood up
         new SequentialCommandGroup(
-          new DriveTurnToAngle(.25),
-          new DriveTurnToTarget()//rotate to the target
+          new DriveTurnToAngle(.25).withTimeout(.5),
+          new DriveTurnToTarget().withTimeout(.5)//rotate to the target
         )
       ),
-      new ProgTBallWithHintOfLime(0.0).withTimeout(2.5),//shoot with the hood up, till we're out of balls
+      new ProgTBallWithHintOfLime(0.0,false).withTimeout(1.5),//shoot with the hood up, till we're out of balls
       new GetSmol(),// shrink back to fit under the color wheel thing
-      new DriveTurnToAngle(0),//turn back to the starting position
+      new DriveTurnToAngle(0).withTimeout(1.5),//turn back to the starting position
       new DriveStraightenAllModules().withTimeout(.5),
       new ParallelRaceGroup(
         new Load(),//start loading
@@ -50,8 +50,8 @@ public class AutoShootThen3TrenchThenShoot extends SequentialCommandGroup {
       new GetSmol(),
       new DrivePathWeaverProfile("TrenchRunpt5"),// drive forward enough to shoot
       new PrepHoodShot(),// once we're clear of color wheel, start the shooter, hood up
-      new DriveTurnToTarget(),//target the goal
-      new ProgTBallWithHintOfLime(0.0).withTimeout(2.5)
+      new DriveTurnToTarget().withTimeout(.5),//target the goal
+      new ProgTBallWithHintOfLime(0.0,false).withTimeout(1.5)
     );
   }
 }
