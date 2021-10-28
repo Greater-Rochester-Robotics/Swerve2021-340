@@ -225,7 +225,7 @@ public class RobotContainer {
 
     autoChooser.addOption("Shoot Then 3 Trench Run", new AutoShootThen3TrenchThenShoot());
 
-    autoChooser.addOption("Shoot and SwitchGrab", new AutoShootThenSwitchThenShoot());
+    // autoChooser.addOption("Shoot and SwitchGrab", new AutoShootThenSwitchThenShoot());
 
     // autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
 
