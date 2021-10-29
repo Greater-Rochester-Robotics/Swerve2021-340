@@ -5,18 +5,19 @@
 package frc.robot.commands.Drive.autoFunc;
 
 import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.SwerveDrive.kDriveMode;
 
-public class DriveStraffToTarget extends CommandBase {
+public class DriveStrafeToTarget extends CommandBase {
   private double angle = 0;
   private int onTargetCount;
   public PIDController lateralPosController;
 
   /** Creates a new DriveStraffToTarget. */
-  public DriveStraffToTarget() {
+  public DriveStrafeToTarget() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(RobotContainer.swerveDrive);
     lateralPosController = new PIDController(Constants.AWAY_POS_P, Constants.AWAY_POS_I, Constants.AWAY_POS_D);
@@ -35,14 +36,17 @@ public class DriveStraffToTarget extends CommandBase {
   public void execute() {
     double targetPosition = 0;
     if(RobotContainer.limelight.haveTarget()){
-      targetPosition = -1*Math.tan(Math.toRadians(RobotContainer.limelight.angleToTarget()))*3.048;
+      targetPosition = -1*(Math.tan(Math.toRadians(RobotContainer.limelight.angleToTarget()))*3.048);
     }
-
+    
+    SmartDashboard.putString("Target Position", "" + targetPosition);
+    SmartDashboard.putString("Lateral Movement", "" + lateralPosController.calculate(targetPosition));
+    SmartDashboard.putString("On Target?", "" + onTargetCount);
     RobotContainer.swerveDrive.driveFieldCentric(0, 
-      lateralPosController.calculate(targetPosition,0), 
+      lateralPosController.calculate(targetPosition, 0), 
       RobotContainer.swerveDrive.getRobotRotationPIDOut(angle), kDriveMode.percentOutput);
     
-    if(Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03){
+    if(Math.abs(angle - RobotContainer.swerveDrive.getGyroInRad()) < .03 && targetPosition < -.06){
       onTargetCount++;
     }else{
       onTargetCount = 0;

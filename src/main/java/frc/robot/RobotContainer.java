@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.commands.auto.AutoColorWheelStealThenShoot;
 import frc.robot.commands.auto.AutoForwardThenWallShot;
+import frc.robot.commands.auto.AutoMoveShootPickup;
 import frc.robot.commands.auto.AutoShootAndMove;
 import frc.robot.commands.auto.AutoShootThen3TrenchThenShoot;
 import frc.robot.commands.auto.AutoShootThenSwitchThenShoot;
@@ -228,6 +229,9 @@ public class RobotContainer {
     // autoChooser.addOption("Shoot and SwitchGrab", new AutoShootThenSwitchThenShoot());
 
     // autoChooser.addOption("Trench Run, Shoot, More Trench", new AutoTrench2BallShoot3TrenchShoot());
+
+    autoChooser.addOption("Strafe, Shoot, Eat, Shoot", new AutoMoveShootPickup());
+
 
     SmartDashboard.putData(RobotContainer.autoChooser);
 

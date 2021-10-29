@@ -29,17 +29,17 @@ public class AutoMoveShootPickup extends SequentialCommandGroup {
       new WaitCommand(3.0),
       parallel(
         new PrepHoodShot(),//start the wheel, get the hood up
-        new DriveStraffToTarget()
+        new DriveStrafeToTarget().withTimeout(4.0)
       ),
       new ProgTBallWithHintOfLime(0.0,false).withTimeout(1.5),//shoot with the hood up, till we're out of balls
-      new GetSmol(),
-      parallel(
-        new Load().withTimeout(4.0),//start loading
-        new PrepHoodShot()
-      ),
-      new ProgTBallWithHintOfLime(0.0,false).withTimeout(1.5),
-      new GetSmol(),
-      new DrivePathWeaverProfile("CollabRunPt1")
+      new GetSmol()//,
+      // parallel(
+      //   new Load().withTimeout(4.0),//start loading
+      //   new PrepHoodShot()
+      // ),
+      // new ProgTBallWithHintOfLime(0.0,false).withTimeout(1.5),
+      // new GetSmol(),
+      // new DrivePathWeaverProfile("CollabRunPt1")
     );
   }
 }

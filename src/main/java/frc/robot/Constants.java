@@ -85,9 +85,9 @@ public final class Constants {
     public static final double SWERVE_MODULE_TOLERANCE = .051;//34;//this is in radians
     
     /* Robot Motion PID controller constants */
-    public static final double ROBOT_SPIN_P = 1;
+    public static final double ROBOT_SPIN_P = .8;
     public static final double ROBOT_SPIN_I = 0;
-    public static final double ROBOT_SPIN_D = 0;
+    public static final double ROBOT_SPIN_D = 0.02;
 
     /* Robot lateral and away pos PID controller constants */
     public static final double LATERAL_POS_P = 1;
@@ -160,7 +160,7 @@ public final class Constants {
 
     /*	Climber Speeds	*/
     public static final double CLIMBER_CONTRACT_SPEED = -.75;
-    public static final double CLIMBER_EXTEND_SPEED = .80;
+    public static final double CLIMBER_EXTEND_SPEED = 1.0;
 
     /* Sensors */
     public static final int BALL_COUNTER_SENSOR = 4;
