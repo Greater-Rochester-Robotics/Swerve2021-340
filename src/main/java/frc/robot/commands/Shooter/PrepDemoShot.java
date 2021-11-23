@@ -10,7 +10,10 @@ import frc.robot.RobotContainer;
 
 public class PrepDemoShot extends CommandBase {
   private boolean withHood;
-  /** Creates a new PrepDemoShot. */
+  /**
+   * Get shooter up to speed for a demo shot.
+   * @param withHood
+   */
   public PrepDemoShot(boolean withHood) {
     this.withHood = withHood;
     // Use addRequirements() here to declare subsystem dependencies.

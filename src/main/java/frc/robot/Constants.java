@@ -156,7 +156,7 @@ public final class Constants {
     public static final int WALL_SHOT_RPM = 10000; // Old value 2550 MAX SPEED 21777
     public static final int TEST_SHOOTER = 12500; // Used for testing and recording distance for shooting
     public static final double RPM_MUL_FACTOR = 1.0; // 1.35 is too high
-    public static final int RPM_ADD_FACTOR = 500;
+    public static final int RPM_ADD_FACTOR = 750;
 
     /*	Climber Speeds	*/
     public static final double CLIMBER_CONTRACT_SPEED = -.75;

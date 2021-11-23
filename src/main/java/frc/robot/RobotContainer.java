@@ -53,10 +53,12 @@ import frc.robot.commands.Drive.autoFunc.DrivePathWeaverProfile;
 import frc.robot.commands.Drive.DriveRobotCentric;
 import frc.robot.commands.Drive.DriveStopAllModules;
 import frc.robot.commands.Shooter.ShootOneBallDemo;
+import frc.robot.commands.Shooter.DemoHoodShot;
 import frc.robot.commands.Shooter.FullWallShot;
 import frc.robot.commands.Shooter.PrepHoodShot;
 import frc.robot.commands.Shooter.PrepWallShot;
 import frc.robot.commands.Shooter.ProgTBallWithHintOfLime;
+import frc.robot.commands.Shooter.ProgTWallShot;
 import frc.robot.commands.Shooter.ResetBallsShot;
 import frc.robot.commands.Shooter.SpinUpShooterWheel;
 import frc.robot.commands.Shooter.StopShoot;
@@ -184,7 +186,7 @@ public class RobotContainer {
     // driverX.whenPressed(new SmartLimeShot());
     driverX.whenPressed(new ProgTBallWithHintOfLime(0.1));
     driverX.whenReleased(new GetSmol());
-    driverY.whenPressed(new FullWallShot());
+    driverY.whenPressed(new ProgTWallShot(0.1));
     driverY.whenReleased(new GetSmol());
     
     driverLB.whenPressed(new DriveResetGyroToZero());
